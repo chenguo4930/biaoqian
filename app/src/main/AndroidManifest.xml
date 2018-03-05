@@ -6,6 +6,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
 
     <application
         android:name=".app.App"
@@ -26,8 +28,7 @@
         </activity>
 
         <activity
-            android:name=".ui.activity.BiaoQianActivity"
-            android:screenOrientation="landscape" />
+            android:name=".ui.activity.BiaoQianActivity" />
     </application>
 
 </manifest>
