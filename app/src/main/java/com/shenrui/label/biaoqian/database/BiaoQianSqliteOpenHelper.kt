@@ -77,8 +77,6 @@ class BookSqliteOpenHelper(private val myContext: Context) : SQLiteOpenHelper(my
     }
 
     companion object {
-
-
         private val DB_NAME = "book.db"
         private val ASSETS_NAME = "book.db"
     }

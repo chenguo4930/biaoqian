@@ -5,8 +5,6 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import com.hazz.kotlinmvp.base.BasePresenter
-import com.luckongo.tthd.mvp.base.IBaseContract
 
 /**
  * @author chengguo
