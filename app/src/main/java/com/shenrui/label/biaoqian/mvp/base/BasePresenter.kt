@@ -1,6 +1,5 @@
 package com.shenrui.label.biaoqian.mvp.base
 
-import com.luckongo.tthd.mvp.base.IBaseContract
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import java.lang.ref.WeakReference

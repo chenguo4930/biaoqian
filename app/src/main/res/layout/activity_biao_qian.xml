@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.shenrui.label.biaoqian.ui.activity.BiaoQianActivity">
+    android:orientation="horizontal"
+    android:layout_height="match_parent">
 
     <LinearLayout
+        android:id="@+id/tab_ll"
         android:layout_width="70dp"
         android:layout_height="match_parent"
         android:background="@color/black_30"
@@ -16,18 +15,23 @@
             android:id="@+id/home_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="首页" />
+            android:text="@string/btn_home" />
 
         <Button
             android:id="@+id/setting_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="设置" />
+            android:text="@string/btn_setting" />
 
         <Button
             android:id="@+id/scan_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="扫码" />
+            android:text="@string/btn_scan" />
     </LinearLayout>
-</RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/content_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</LinearLayout>
