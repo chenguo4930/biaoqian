@@ -55,25 +55,28 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
     }
 
     override fun initListener() {
-        home_btn.setOnClickListener {
+        home_img.setOnClickListener {
             if (mHomeFragment == null) {
                 mHomeFragment = HomeFragment()
             }
             supportFragmentManager.beginTransaction().replace(R.id.content_frame, mHomeFragment).commit()
+            setHomePressed()
         }
 
-        setting_btn.setOnClickListener {
+        setting_img.setOnClickListener {
             if (mSettingFragment == null) {
                 mSettingFragment = SettingFragment()
             }
             supportFragmentManager.beginTransaction().replace(R.id.content_frame, mSettingFragment).commit()
+            setSettingPressed()
         }
 
-        scan_btn.setOnClickListener {
+        scan_img.setOnClickListener {
             //            if (mScanFragment == null){
 //                mScanFragment = ScanFragment()
 //            }
 //            supportFragmentManager.beginTransaction().replace(R.id.content_frame,mScanFragment).commit()
+            setScanPressed()
             val permissionItems = ArrayList<PermissionItem>()
             permissionItems.add(PermissionItem(Manifest.permission.CAMERA, "Camera", R.drawable.permission_ic_camera))
             HiPermission.create(this@BiaoQianActivity)
@@ -98,6 +101,33 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
                     })
 
         }
+    }
+
+    /**
+     * 首页被点击
+     */
+    private fun setHomePressed() {
+        home_img.setImageDrawable(resources.getDrawable(R.mipmap.icon_homepage_pressed))
+        setting_img.setImageDrawable(resources.getDrawable(R.mipmap.icon_set_nor))
+        scan_img.setImageDrawable(resources.getDrawable(R.mipmap.icon_scan_nor))
+    }
+
+    /**
+     * 首页被点击
+     */
+    private fun setSettingPressed() {
+        home_img.setImageDrawable(resources.getDrawable(R.mipmap.icon_homepage_nor))
+        setting_img.setImageDrawable(resources.getDrawable(R.mipmap.icon_set_pressed))
+        scan_img.setImageDrawable(resources.getDrawable(R.mipmap.icon_scan_nor))
+    }
+
+    /**
+     * 首页被点击
+     */
+    private fun setScanPressed() {
+        home_img.setImageDrawable(resources.getDrawable(R.mipmap.icon_homepage_nor))
+        setting_img.setImageDrawable(resources.getDrawable(R.mipmap.icon_set_nor))
+        scan_img.setImageDrawable(resources.getDrawable(R.mipmap.icon_scan_pressed))
     }
 
     /**

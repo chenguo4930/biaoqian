@@ -1,37 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:orientation="horizontal"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
 
     <LinearLayout
         android:id="@+id/tab_ll"
-        android:layout_width="70dp"
+        android:layout_width="80dp"
         android:layout_height="match_parent"
-        android:background="@color/black_30"
+        android:background="@color/color_3b3b3b"
         android:orientation="vertical">
 
-        <Button
-            android:id="@+id/home_btn"
+        <ImageView
+            android:id="@+id/home_img"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/btn_home" />
+            android:layout_height="80dp"
+            android:scaleType="centerInside"
+            android:src="@mipmap/icon_homepage_pressed" />
 
-        <Button
-            android:id="@+id/setting_btn"
+        <ImageView
+            android:id="@+id/setting_img"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/btn_setting" />
+            android:layout_height="80dp"
+            android:scaleType="centerInside"
+            android:src="@mipmap/icon_set_nor" />
 
-        <Button
-            android:id="@+id/scan_btn"
+        <ImageView
+            android:id="@+id/scan_img"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/btn_scan" />
+            android:layout_height="80dp"
+            android:scaleType="centerInside"
+            android:src="@mipmap/icon_scan_nor" />
     </LinearLayout>
 
     <FrameLayout
         android:id="@+id/content_frame"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 </LinearLayout>

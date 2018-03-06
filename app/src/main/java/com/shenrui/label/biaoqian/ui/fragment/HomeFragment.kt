@@ -52,6 +52,10 @@ class HomeFragment : BaseFragment() {
         getData()
         mGridManager = GridLayoutManager(activity, HomeGridListAdapter.SPAN_COUNT_ONE)
         mAdapter = HomeGridListAdapter(mDataList, mGridManager, object : HomeGridListAdapter.StationClickListener {
+            override fun onDeleteItemClick(item: ConvertingStation) {
+                toast("删除变电站${item.name}")
+            }
+
             override fun onStationItemClick(name: String) {
                 toast("变电站名称$name")
             }
@@ -66,6 +70,9 @@ class HomeFragment : BaseFragment() {
         list_btn.setOnClickListener { switchLayout() }
     }
 
+    /**
+     * 切换布局；网格、列表
+     */
     private fun switchLayout() {
         if (mGridManager.spanCount == HomeGridListAdapter.SPAN_COUNT_ONE) {
             mGridManager.spanCount = HomeGridListAdapter.SPAN_COUNT_FOUR

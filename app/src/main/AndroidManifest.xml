@@ -28,7 +28,8 @@
         </activity>
 
         <activity
-            android:name=".ui.activity.BiaoQianActivity" />
+            android:name=".ui.activity.BiaoQianActivity"
+            android:screenOrientation="landscape" />
     </application>
 
 </manifest>
