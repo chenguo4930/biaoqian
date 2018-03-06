@@ -56,8 +56,10 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.6.1'
     //rxBus
     implementation 'com.hwangjr.rxbus:rxbus:1.0.6'
-    //ZXing扫描二维码
-    implementation 'cn.yipianfengye.android:zxing-library:2.2'
     //权限
     implementation 'me.weyye.hipermission:library:1.0.7'
+    //ZXing扫描二维码 lib
+    implementation project(':libzxing')
+    //fragment返回监听
+    implementation 'com.github.ikidou:FragmentBackHandler:2.1'
 }

@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import com.luckongo.tthd.mvp.model.bean.ConvertingStation
 import com.shenrui.label.biaoqian.R
@@ -45,6 +46,9 @@ class HomeGridListAdapter(private val mItems: List<ConvertingStation>,
         holder.itemView.setOnClickListener {
             mOnItemClickListener?.onStationItemClick(mItems[position].name)
         }
+        holder.delteImg.setOnClickListener {
+            mOnItemClickListener?.onDeleteItemClick(mItems[position])
+        }
     }
 
     override fun getItemCount(): Int {
@@ -54,6 +58,7 @@ class HomeGridListAdapter(private val mItems: List<ConvertingStation>,
 
     class ItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var nameTv: TextView = view.findViewById(R.id.name_tv)
+        val delteImg: ImageView = view.findViewById(R.id.img_delete)
     }
 
     companion object {
@@ -66,5 +71,6 @@ class HomeGridListAdapter(private val mItems: List<ConvertingStation>,
 
     interface StationClickListener {    //自定义的接口
         fun onStationItemClick(name: String)
+        fun onDeleteItemClick(item: ConvertingStation)
     }
 }

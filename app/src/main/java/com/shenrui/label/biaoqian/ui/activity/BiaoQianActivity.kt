@@ -4,7 +4,7 @@ import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
+import com.github.ikidou.fragmentBackHandler.BackHandlerHelper
 import com.shenrui.label.biaoqian.R
 import com.shenrui.label.biaoqian.mvp.base.BaseActivity
 import com.shenrui.label.biaoqian.mvp.contract.BiaoQianContract
@@ -12,8 +12,7 @@ import com.shenrui.label.biaoqian.mvp.presenter.BiaoQianPresenter
 import com.shenrui.label.biaoqian.ui.fragment.HomeFragment
 import com.shenrui.label.biaoqian.ui.fragment.ScanFragment
 import com.shenrui.label.biaoqian.ui.fragment.SettingFragment
-import com.uuzuche.lib_zxing.activity.CaptureActivity
-import com.uuzuche.lib_zxing.activity.CodeUtils
+import com.xys.libzxing.zxing.activity.CaptureActivity
 import kotlinx.android.synthetic.main.activity_biao_qian.*
 import me.weyye.hipermission.HiPermission
 import me.weyye.hipermission.PermissionCallback
@@ -55,25 +54,28 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
     }
 
     override fun initListener() {
-        home_btn.setOnClickListener {
+        home_img.setOnClickListener {
             if (mHomeFragment == null) {
                 mHomeFragment = HomeFragment()
             }
             supportFragmentManager.beginTransaction().replace(R.id.content_frame, mHomeFragment).commit()
+            setHomePressed()
         }
 
-        setting_btn.setOnClickListener {
+        setting_img.setOnClickListener {
             if (mSettingFragment == null) {
                 mSettingFragment = SettingFragment()
             }
             supportFragmentManager.beginTransaction().replace(R.id.content_frame, mSettingFragment).commit()
+            setSettingPressed()
         }
 
-        scan_btn.setOnClickListener {
+        scan_img.setOnClickListener {
             //            if (mScanFragment == null){
 //                mScanFragment = ScanFragment()
 //            }
 //            supportFragmentManager.beginTransaction().replace(R.id.content_frame,mScanFragment).commit()
+            setScanPressed()
             val permissionItems = ArrayList<PermissionItem>()
             permissionItems.add(PermissionItem(Manifest.permission.CAMERA, "Camera", R.drawable.permission_ic_camera))
             HiPermission.create(this@BiaoQianActivity)
@@ -101,6 +103,33 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
     }
 
     /**
+     * 首页被点击
+     */
+    private fun setHomePressed() {
+        home_img.setImageDrawable(resources.getDrawable(R.mipmap.icon_homepage_pressed))
+        setting_img.setImageDrawable(resources.getDrawable(R.mipmap.icon_set_nor))
+        scan_img.setImageDrawable(resources.getDrawable(R.mipmap.icon_scan_nor))
+    }
+
+    /**
+     * 首页被点击
+     */
+    private fun setSettingPressed() {
+        home_img.setImageDrawable(resources.getDrawable(R.mipmap.icon_homepage_nor))
+        setting_img.setImageDrawable(resources.getDrawable(R.mipmap.icon_set_pressed))
+        scan_img.setImageDrawable(resources.getDrawable(R.mipmap.icon_scan_nor))
+    }
+
+    /**
+     * 首页被点击
+     */
+    private fun setScanPressed() {
+        home_img.setImageDrawable(resources.getDrawable(R.mipmap.icon_homepage_nor))
+        setting_img.setImageDrawable(resources.getDrawable(R.mipmap.icon_set_nor))
+        scan_img.setImageDrawable(resources.getDrawable(R.mipmap.icon_scan_pressed))
+    }
+
+    /**
      * 打开默认二维码扫描界面
      */
     private fun goToScanActivity() {
@@ -115,29 +144,24 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        Log.e("-------", "---------onActivityResult----0  resultCode=$resultCode")
+        super.onActivityResult(requestCode, resultCode, data)
         /**
          * 处理二维码扫描结果
          */
         if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            Log.e("-------", "---------onActivityResult----1")
             //处理扫描结果（在界面上显示）
             if (null != data) {
-                Log.e("-------", "---------onActivityResult----2")
                 val bundle: Bundle? = data.extras ?: return
-                Log.e("-------", "---------onActivityResult----3")
-                if (bundle != null) {
-                    Log.e("-------", "---------onActivityResult----4")
-                    if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
-                        val result = bundle.getString(CodeUtils.RESULT_STRING)
-                        toast("解析结果:$result")
-                    } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
-                        toast("解析二维码失败")
-                    }
-                }
+                val result = bundle?.getString("result")
+                toast("解析结果:$result")
             }
         }
-        super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    override fun onBackPressed() {
+        if (!BackHandlerHelper.handleBackPress(this)) {
+            super.onBackPressed()
+        }
     }
 
 

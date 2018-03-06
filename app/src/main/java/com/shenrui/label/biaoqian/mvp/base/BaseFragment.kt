@@ -8,8 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 
 
-
- abstract class BaseFragment: Fragment() {
+abstract class BaseFragment : Fragment(){
 
     /**
      * 视图是否加载完毕
@@ -21,7 +20,7 @@ import android.view.ViewGroup
     private var hasLoadData = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(getLayoutId(),null)
+        return inflater.inflate(getLayoutId(), null)
     }
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
@@ -49,7 +48,7 @@ import android.view.ViewGroup
      * 加载布局
      */
     @LayoutRes
-    abstract fun getLayoutId():Int
+    abstract fun getLayoutId(): Int
 
     /**
      * 初始化 ViewI
