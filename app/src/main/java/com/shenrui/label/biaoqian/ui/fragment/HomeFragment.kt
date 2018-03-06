@@ -50,7 +50,7 @@ class HomeFragment : BaseFragment() {
 
     override fun lazyLoad() {
         getData()
-        mGridManager = GridLayoutManager(activity, HomeGridListAdapter.SPAN_COUNT_ONE)
+        mGridManager = GridLayoutManager(activity, HomeGridListAdapter.SPAN_COUNT_FOUR)
         mAdapter = HomeGridListAdapter(mDataList, mGridManager, object : HomeGridListAdapter.StationClickListener {
             override fun onDeleteItemClick(item: ConvertingStation) {
                 toast("删除变电站${item.name}")
@@ -58,6 +58,10 @@ class HomeFragment : BaseFragment() {
 
             override fun onStationItemClick(name: String) {
                 toast("变电站名称$name")
+                activity?.supportFragmentManager?.beginTransaction()?.
+                        add(R.id.content_frame, TestFragment())?.
+                        addToBackStack("TestFragment")?.
+                        commit()
             }
         })
 
@@ -66,20 +70,14 @@ class HomeFragment : BaseFragment() {
             adapter = mAdapter
         }
 
-        grid_btn.setOnClickListener { switchLayout() }
-        list_btn.setOnClickListener { switchLayout() }
-    }
-
-    /**
-     * 切换布局；网格、列表
-     */
-    private fun switchLayout() {
-        if (mGridManager.spanCount == HomeGridListAdapter.SPAN_COUNT_ONE) {
+        grid_btn.setOnClickListener {
             mGridManager.spanCount = HomeGridListAdapter.SPAN_COUNT_FOUR
-        } else {
-            mGridManager.spanCount = HomeGridListAdapter.SPAN_COUNT_ONE
+            mAdapter.notifyItemRangeChanged(0, mAdapter.itemCount)
         }
-        mAdapter.notifyItemRangeChanged(0, mAdapter.itemCount)
+        list_btn.setOnClickListener {
+            mGridManager.spanCount = HomeGridListAdapter.SPAN_COUNT_ONE
+            mAdapter.notifyItemRangeChanged(0, mAdapter.itemCount)
+        }
     }
 
     private fun getData() {

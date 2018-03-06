@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import com.github.ikidou.fragmentBackHandler.BackHandlerHelper
 import com.shenrui.label.biaoqian.R
 import com.shenrui.label.biaoqian.mvp.base.BaseActivity
 import com.shenrui.label.biaoqian.mvp.contract.BiaoQianContract
@@ -155,7 +156,12 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
                 toast("解析结果:$result")
             }
         }
+    }
 
+    override fun onBackPressed() {
+        if (!BackHandlerHelper.handleBackPress(this)) {
+            super.onBackPressed()
+        }
     }
 
 
