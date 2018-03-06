@@ -29,7 +29,8 @@
 
         <activity
             android:name=".ui.activity.BiaoQianActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            android:configChanges="orientation|keyboard|keyboardHidden"  />
     </application>
 
 </manifest>
