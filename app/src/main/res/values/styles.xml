@@ -8,7 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-
-    <style name="AppTheme" parent="AppBaseTheme">
+    <style name="MyAppTheme" parent="AppBaseTheme">
+        <item name="android:screenOrientation">landscape</item>
     </style>
 </resources>

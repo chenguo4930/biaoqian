@@ -4,7 +4,6 @@ import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import com.shenrui.label.biaoqian.R
 import com.shenrui.label.biaoqian.mvp.base.BaseActivity
 import com.shenrui.label.biaoqian.mvp.contract.BiaoQianContract
@@ -12,8 +11,7 @@ import com.shenrui.label.biaoqian.mvp.presenter.BiaoQianPresenter
 import com.shenrui.label.biaoqian.ui.fragment.HomeFragment
 import com.shenrui.label.biaoqian.ui.fragment.ScanFragment
 import com.shenrui.label.biaoqian.ui.fragment.SettingFragment
-import com.uuzuche.lib_zxing.activity.CaptureActivity
-import com.uuzuche.lib_zxing.activity.CodeUtils
+import com.xys.libzxing.zxing.activity.CaptureActivity
 import kotlinx.android.synthetic.main.activity_biao_qian.*
 import me.weyye.hipermission.HiPermission
 import me.weyye.hipermission.PermissionCallback
@@ -145,29 +143,19 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        Log.e("-------", "---------onActivityResult----0  resultCode=$resultCode")
+        super.onActivityResult(requestCode, resultCode, data)
         /**
          * 处理二维码扫描结果
          */
         if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            Log.e("-------", "---------onActivityResult----1")
             //处理扫描结果（在界面上显示）
             if (null != data) {
-                Log.e("-------", "---------onActivityResult----2")
                 val bundle: Bundle? = data.extras ?: return
-                Log.e("-------", "---------onActivityResult----3")
-                if (bundle != null) {
-                    Log.e("-------", "---------onActivityResult----4")
-                    if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
-                        val result = bundle.getString(CodeUtils.RESULT_STRING)
-                        toast("解析结果:$result")
-                    } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
-                        toast("解析二维码失败")
-                    }
-                }
+                val result = bundle?.getString("result")
+                toast("解析结果:$result")
             }
         }
-        super.onActivityResult(requestCode, resultCode, data)
+
     }
 
 

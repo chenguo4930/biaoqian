@@ -57,7 +57,8 @@ dependencies {
     //rxBus
     implementation 'com.hwangjr.rxbus:rxbus:1.0.6'
     //ZXing扫描二维码
-    implementation 'cn.yipianfengye.android:zxing-library:2.2'
+    //    implementation 'cn.yipianfengye.android:zxing-library:2.2'
     //权限
     implementation 'me.weyye.hipermission:library:1.0.7'
+    implementation project(':libzxing')
 }
