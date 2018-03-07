@@ -2,7 +2,7 @@ package com.shenrui.label.biaoqian.ui.fragment
 
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
-import com.luckongo.tthd.mvp.model.bean.ConvertingStation
+import com.luckongo.tthd.mvp.model.bean.SubStation
 import com.shenrui.label.biaoqian.R
 import com.shenrui.label.biaoqian.mvp.base.BaseFragment
 import com.shenrui.label.biaoqian.ui.adapter.HomeGridListAdapter
@@ -17,7 +17,7 @@ class HomeFragment : BaseFragment() {
     private var mParam2: String? = null
 
     private lateinit var mGridManager: GridLayoutManager
-    private lateinit var mDataList: ArrayList<ConvertingStation>
+    private lateinit var mDataList: ArrayList<SubStation>
     private lateinit var mAdapter: HomeGridListAdapter
 
     companion object {
@@ -52,8 +52,8 @@ class HomeFragment : BaseFragment() {
         getData()
         mGridManager = GridLayoutManager(activity, HomeGridListAdapter.SPAN_COUNT_FOUR)
         mAdapter = HomeGridListAdapter(mDataList, mGridManager, object : HomeGridListAdapter.StationClickListener {
-            override fun onDeleteItemClick(item: ConvertingStation) {
-                toast("删除变电站${item.name}")
+            override fun onDeleteItemClick(item: SubStation) {
+                toast("删除变电站${item.sub_name}")
             }
 
             override fun onStationItemClick(name: String) {
@@ -83,10 +83,11 @@ class HomeFragment : BaseFragment() {
     private fun getData() {
         var i = 0
         mDataList = ArrayList()
-        while (i < 30 ) {
+        while (i < 30) {
             i++
-            mDataList.add(ConvertingStation(i, "变电站$i"))
+            mDataList.add(SubStation("变电站$i", 1, 831,
+                    1, "SCBDZ"))
         }
-     }
+    }
 
 }

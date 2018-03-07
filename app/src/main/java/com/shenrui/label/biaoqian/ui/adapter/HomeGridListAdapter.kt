@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import com.luckongo.tthd.mvp.model.bean.ConvertingStation
+import com.luckongo.tthd.mvp.model.bean.SubStation
 import com.shenrui.label.biaoqian.R
 
 
@@ -15,7 +15,7 @@ import com.shenrui.label.biaoqian.R
  *
  * @author Chengguo on 2018/3/5.
  */
-class HomeGridListAdapter(private val mItems: List<ConvertingStation>,
+class HomeGridListAdapter(private val mItems: List<SubStation>,
                           private val mLayoutManager: GridLayoutManager,
                           private var mOnItemClickListener: StationClickListener?)
     : RecyclerView.Adapter<HomeGridListAdapter.ItemViewHolder>() {
@@ -71,6 +71,6 @@ class HomeGridListAdapter(private val mItems: List<ConvertingStation>,
 
     interface StationClickListener {    //自定义的接口
         fun onStationItemClick(name: String)
-        fun onDeleteItemClick(item: ConvertingStation)
+        fun onDeleteItemClick(item: SubStation)
     }
 }

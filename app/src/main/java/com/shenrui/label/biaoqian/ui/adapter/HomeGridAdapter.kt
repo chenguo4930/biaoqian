@@ -6,14 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.luckongo.tthd.mvp.model.bean.ConvertingStation
+import com.luckongo.tthd.mvp.model.bean.SubStation
 import com.shenrui.label.biaoqian.R
 
 /**
  *
  * @author Chengguo on 2018/3/5.
  */
-class HomeGridAdapter(context2: Context, list2: ArrayList<ConvertingStation>) : RecyclerView.Adapter<HomeGridAdapter.MyViewHolder>() {
+class HomeGridAdapter(context2: Context, list2: ArrayList<SubStation>) : RecyclerView.Adapter<HomeGridAdapter.MyViewHolder>() {
 
     var context = context2    //接收变量
     private val list = list2
