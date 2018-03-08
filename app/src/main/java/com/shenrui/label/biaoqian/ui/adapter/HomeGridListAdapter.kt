@@ -41,10 +41,10 @@ class HomeGridListAdapter(private val mItems: List<SubStation>,
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
 //        val item = mItems[position % 4]
 //        holder.nameTv.text = item.name
-        holder.nameTv.text = mItems[position].name
+        holder.nameTv.text = mItems[position].sub_name
 
         holder.itemView.setOnClickListener {
-            mOnItemClickListener?.onStationItemClick(mItems[position].name)
+            mOnItemClickListener?.onStationItemClick(mItems[position].sub_name)
         }
         holder.delteImg.setOnClickListener {
             mOnItemClickListener?.onDeleteItemClick(mItems[position])

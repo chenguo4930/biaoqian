@@ -49,7 +49,7 @@ class BookSqliteOpenHelper(private val myContext: Context) : SQLiteOpenHelper(my
             val myOutput = FileOutputStream(outFileName)
             val buffer = ByteArray(1024)
             var length: Int
-//            while ((length = myInput!!.read(buffer)) > 0) {
+//            while ((length = myInput.read(buffer)) > 0) {
 //                myOutput.write(buffer, 0, length)
 //            }
             myOutput.flush()

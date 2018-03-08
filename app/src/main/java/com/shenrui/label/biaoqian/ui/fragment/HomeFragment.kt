@@ -2,11 +2,16 @@ package com.shenrui.label.biaoqian.ui.fragment
 
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import android.widget.PopupWindow
+import android.widget.TextView
 import com.luckongo.tthd.mvp.model.bean.SubStation
 import com.shenrui.label.biaoqian.R
 import com.shenrui.label.biaoqian.mvp.base.BaseFragment
 import com.shenrui.label.biaoqian.ui.adapter.HomeGridListAdapter
 import kotlinx.android.synthetic.main.fragment_home.*
+import org.jetbrains.anko.find
 import org.jetbrains.anko.support.v4.toast
 
 
@@ -70,14 +75,53 @@ class HomeFragment : BaseFragment() {
             adapter = mAdapter
         }
 
-        grid_btn.setOnClickListener {
-            mGridManager.spanCount = HomeGridListAdapter.SPAN_COUNT_FOUR
-            mAdapter.notifyItemRangeChanged(0, mAdapter.itemCount)
+        img_menu.setOnClickListener {
+            showMenu()
         }
-        list_btn.setOnClickListener {
-            mGridManager.spanCount = HomeGridListAdapter.SPAN_COUNT_ONE
-            mAdapter.notifyItemRangeChanged(0, mAdapter.itemCount)
+
+    }
+
+    /**
+     * 显示菜单弹窗
+     */
+    private fun showMenu() {
+
+        val inflate = LayoutInflater.from(activity)
+        val view = inflate.inflate(R.layout.pop_home_menu, null)
+
+//        val mAppBasePopupWindow = AppBasePopupWindow(view, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        val mAppBasePopupWindow = PopupWindow(view, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+//        val mAppBasePopupWindow = PopupWindow(view)
+        mAppBasePopupWindow.isTouchable = true // 设置PopupWindow可触摸
+        mAppBasePopupWindow.isOutsideTouchable = true // 设置PopupWindow外部区域是否可触摸
+//        // 设置之后点击返回键 popwindow 会消失
+//        mAppBasePopupWindow.setAnimationStyle(R.style.popuStyle)
+//        mAppBasePopupWindow.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(App.mApplication, R.color.color_fafafa)))
+        mAppBasePopupWindow.isFocusable = true
+
+        // 监听点击事件，点击其他位置，popupwindow小窗口消失
+        view.setOnTouchListener({ v, event ->
+            if (!mAppBasePopupWindow.isShowing) {
+                mAppBasePopupWindow.dismiss()
+            }
+            true
+        })
+
+        view.find<TextView>(R.id.tv_grid).setOnClickListener {
+            if (mGridManager.spanCount == HomeGridListAdapter.SPAN_COUNT_ONE) {
+                mGridManager.spanCount = HomeGridListAdapter.SPAN_COUNT_FOUR
+                mAdapter.notifyItemRangeChanged(0, mAdapter.itemCount)
+            }
+            mAppBasePopupWindow.dismiss()
         }
+        view.find<TextView>(R.id.tv_list).setOnClickListener {
+            if (mGridManager.spanCount == HomeGridListAdapter.SPAN_COUNT_FOUR) {
+                mGridManager.spanCount = HomeGridListAdapter.SPAN_COUNT_ONE
+                mAdapter.notifyItemRangeChanged(0, mAdapter.itemCount)
+            }
+            mAppBasePopupWindow.dismiss()
+        }
+        mAppBasePopupWindow.showAsDropDown(img_menu)
     }
 
     private fun getData() {
