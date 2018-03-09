@@ -1,0 +1,18 @@
+# Created by .ignore support plugin (hsz.mobi)
+.gitignore
+.gradle/
+.idea/gradle.xml
+.idea/libraries/
+.idea/misc.xml
+.idea/modules.xml
+.idea/modules/
+.idea/runConfigurations.xml
+.idea/vcs.xml
+.idea/workspace.xml
+app/app.iml
+app/build/
+build/
+libzxing/build/
+local.properties
+/.gitignore
+/libzxing/libzxing.iml
