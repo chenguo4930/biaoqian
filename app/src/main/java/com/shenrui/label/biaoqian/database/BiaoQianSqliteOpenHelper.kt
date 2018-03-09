@@ -3,18 +3,19 @@ package com.shenrui.label.biaoqian.database
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
-import java.io.InputStream
+import java.io.*
 
 
 /**
+ * 数据库拷贝辅助类
  * Created by cheng on 2018/3/4.
  */
-class BookSqliteOpenHelper(private val myContext: Context) : SQLiteOpenHelper(myContext, "book.db", null, 1) {
+class BookSqliteOpenHelper(private val mContext: Context,
+                           private val mFilePath: String,
+                           private val mDbName: String)
+    : SQLiteOpenHelper(mContext, mDbName, null, 1) {
     //The Android's default system path of your application database.
-    private val DB_PATH = android.os.Environment.getExternalStorageDirectory().absolutePath + "/booksql/"
+    private val DB_PATH = android.os.Environment.getExternalStorageDirectory().absolutePath + "/biaoqiansql/"
     private val myDataBase: SQLiteDatabase? = null
 
     @Throws(IOException::class)
@@ -27,7 +28,7 @@ class BookSqliteOpenHelper(private val myContext: Context) : SQLiteOpenHelper(my
                 if (!dir.exists()) {
                     dir.mkdir()
                 }
-                val dbf = File(DB_PATH + DB_NAME)
+                val dbf = File(DB_PATH + mDbName)
                 if (dbf.exists()) {
                     dbf.delete()
                 }
@@ -36,34 +37,34 @@ class BookSqliteOpenHelper(private val myContext: Context) : SQLiteOpenHelper(my
             } catch (e: IOException) {
                 throw Error("数据库创建失败")
             }
-
         }
     }
 
     @Throws(IOException::class)
     private fun copyDataBase() {
-            var myInput: InputStream? = null
-            //        try {
-            myInput = myContext.assets.open(ASSETS_NAME)
-            val outFileName = DB_PATH + DB_NAME
-            val myOutput = FileOutputStream(outFileName)
-            val buffer = ByteArray(1024)
-            var length: Int
-//            while ((length = myInput.read(buffer)) > 0) {
-//                myOutput.write(buffer, 0, length)
-//            }
-            myOutput.flush()
-            myOutput.close()
-            myInput!!.close()
+        var myInput: InputStream? = null
+        myInput = FileInputStream(mFilePath)
+        val outFileName = DB_PATH + mDbName
+        val myOutput = FileOutputStream(outFileName)
+        val buffer = ByteArray(1024)
+        var length = myInput.read(buffer)
+        while (length > 0) {
+            myOutput.write(buffer, 0, length)
+            length = myInput.read(buffer)
+        }
+        myOutput.flush()
+        myOutput.close()
+        myInput!!.close()
     }
 
     private fun checkDataBase(): Boolean {
-        val myPath = DB_PATH + DB_NAME
+        val myPath = DB_PATH + mDbName
         val file = File(myPath)
         return file.exists()
     }
 
-    @Synchronized override fun close() {
+    @Synchronized
+    override fun close() {
         myDataBase?.close()
         super.close()
     }
@@ -74,10 +75,5 @@ class BookSqliteOpenHelper(private val myContext: Context) : SQLiteOpenHelper(my
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
 
-    }
-
-    companion object {
-        private val DB_NAME = "book.db"
-        private val ASSETS_NAME = "book.db"
     }
 }

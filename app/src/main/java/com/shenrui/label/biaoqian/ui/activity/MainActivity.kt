@@ -17,6 +17,11 @@ import android.widget.Toast
 import com.shenrui.label.biaoqian.R
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.toast
+import rx.Observable
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -33,7 +38,7 @@ class MainActivity : AppCompatActivity() {
         }
         btn_input.setOnClickListener {
             val intent = Intent(Intent.ACTION_GET_CONTENT)
-            intent.type = "*/db"
+            intent.type = "*/*"
             intent.addCategory(Intent.CATEGORY_OPENABLE)
             try {
                 startActivityForResult(intent, REQUEST_CODE)
@@ -60,7 +65,26 @@ class MainActivity : AppCompatActivity() {
                 getRealPathFromURI(uri)
             }
             tv_file_path.text = path
+            if (path == null) {
+                toast("")
+                return
+            }
+            //如果是“.db”结尾，则是数据库
+            if (path.trim().endsWith(".db")) {
+                readDB()
+            } else {
+                toast("你选择的文件不是\".db\"数据库文件")
+            }
         }
+    }
+
+    /**
+     * 读取数据库
+     */
+    private fun readDB() {
+
+        Observable.OnSubscribe<String> {  }
+
     }
 
     private fun getRealPathFromURI(contentUri: Uri): String? {
@@ -172,6 +196,46 @@ class MainActivity : AppCompatActivity() {
      */
     private fun isMediaDocument(uri: Uri): Boolean {
         return "com.android.providers.media.documents" == uri.getAuthority()
+    }
+
+    /**
+     *  将指定文件写入SD卡,说明一下,应用程序的数据库是存放到/data/data/包名/databases 下面
+     */
+    @Throws(IOException::class)
+    private fun toSDWriteFile(fileName: String): String {
+        // 获取assets下的数据库文件流
+        val inputStream = this.baseContext.assets.open(fileName)
+
+        // 获取应用包名
+        val sPackage = this.packageName
+
+        var mSaveFile: File? = File("/data/data/$sPackage/databases/")
+
+        if (!mSaveFile!!.exists()) {
+            mSaveFile.mkdirs()
+        }
+        val localFile = mSaveFile.absolutePath + "/" + fileName
+
+        mSaveFile = File(localFile)
+
+        if (mSaveFile.exists()) {
+            mSaveFile.delete()
+        }
+        mSaveFile.createNewFile()
+
+        val fos = FileOutputStream(mSaveFile, true)
+
+        val buffer = ByteArray(400000)
+        var count = inputStream.read(buffer)
+        while (count > 0) {
+            fos.write(buffer, 0, count)
+            count = inputStream.read(buffer)
+        }
+        mSaveFile = null
+        fos.close()
+        inputStream.close()
+
+        return localFile
     }
 }
 
