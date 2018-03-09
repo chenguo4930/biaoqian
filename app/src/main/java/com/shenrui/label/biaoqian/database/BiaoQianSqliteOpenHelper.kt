@@ -16,6 +16,7 @@ class BookSqliteOpenHelper(private val mContext: Context,
     : SQLiteOpenHelper(mContext, mDbName, null, 1) {
     //The Android's default system path of your application database.
     private val DB_PATH = android.os.Environment.getExternalStorageDirectory().absolutePath + "/biaoqiansql/"
+
     private val myDataBase: SQLiteDatabase? = null
 
     @Throws(IOException::class)
@@ -32,6 +33,7 @@ class BookSqliteOpenHelper(private val mContext: Context,
                 if (dbf.exists()) {
                     dbf.delete()
                 }
+
                 SQLiteDatabase.openOrCreateDatabase(dbf, null)
                 copyDataBase()
             } catch (e: IOException) {
@@ -62,6 +64,20 @@ class BookSqliteOpenHelper(private val mContext: Context,
         val file = File(myPath)
         return file.exists()
     }
+
+//    private fun checkDataBase(): Boolean {
+//        var checkDB: SQLiteDatabase? = null
+//        val myPath = DB_PATH + mDbName
+//        try {
+//            checkDB = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY)
+//        } catch (e: SQLiteException) { //database does't exist yet.
+//        }
+//
+//        if (checkDB != null) {
+//            checkDB.close()
+//        }
+//        return checkDB != null
+//    }
 
     @Synchronized
     override fun close() {

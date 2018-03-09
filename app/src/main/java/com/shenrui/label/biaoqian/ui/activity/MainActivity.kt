@@ -1,7 +1,9 @@
 package com.shenrui.label.biaoqian.ui.activity
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.ProgressDialog
 import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
@@ -15,13 +17,17 @@ import android.provider.MediaStore
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
 import com.shenrui.label.biaoqian.R
+import com.shenrui.label.biaoqian.database.BookSqliteOpenHelper
 import kotlinx.android.synthetic.main.activity_main.*
+import me.weyye.hipermission.HiPermission
+import me.weyye.hipermission.PermissionCallback
+import me.weyye.hipermission.PermissionItem
 import org.jetbrains.anko.toast
 import rx.Observable
+import rx.Subscriber
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -46,6 +52,36 @@ class MainActivity : AppCompatActivity() {
                 toast("请安装文件管理器")
             }
         }
+        getPermission()
+    }
+
+    private fun getPermission() {
+        val permissionItems = ArrayList<PermissionItem>()
+        permissionItems.add(PermissionItem(Manifest.permission.WRITE_EXTERNAL_STORAGE, "Write_storage", R.drawable.permission_ic_camera))
+        permissionItems.add(PermissionItem(Manifest.permission.READ_EXTERNAL_STORAGE, "Read_storage", R.drawable.permission_ic_camera))
+        permissionItems.add(PermissionItem(Manifest.permission.ACCESS_FINE_LOCATION, "Access_location", R.drawable.permission_ic_camera))
+        permissionItems.add(PermissionItem(Manifest.permission.ACCESS_COARSE_LOCATION, "Access_location", R.drawable.permission_ic_camera))
+        HiPermission.create(this)
+                .permissions(permissionItems)
+                .checkMutiPermission(object : PermissionCallback {
+                    override fun onFinish() {
+
+                    }
+
+                    override fun onDeny(permission: String?, position: Int) {
+                        toast("拒绝读取权限，无法获取数据库，请开启权限")
+                    }
+
+                    override fun onGuarantee(permission: String?, position: Int) {
+
+                    }
+
+                    override fun onClose() {
+
+                    }
+
+                })
+
     }
 
     @SuppressLint("ObsoleteSdkInt")
@@ -66,12 +102,12 @@ class MainActivity : AppCompatActivity() {
             }
             tv_file_path.text = path
             if (path == null) {
-                toast("")
+                toast("没有找到文件路劲")
                 return
             }
             //如果是“.db”结尾，则是数据库
             if (path.trim().endsWith(".db")) {
-                readDB()
+                readDB(path)
             } else {
                 toast("你选择的文件不是\".db\"数据库文件")
             }
@@ -81,10 +117,33 @@ class MainActivity : AppCompatActivity() {
     /**
      * 读取数据库
      */
-    private fun readDB() {
+    private fun readDB(filePath: String) {
+        val progressBar = ProgressDialog(this)
+        progressBar.run {
+            setMessage("正在读取数据库")
+            setCanceledOnTouchOutside(false)
+            show()
+        }
 
-        Observable.OnSubscribe<String> {  }
+        val dbName = filePath.split("/").last()
+        val helper = BookSqliteOpenHelper(this, filePath, dbName)
 
+        Observable.create(Observable.OnSubscribe<String> {
+            helper.createDataBase()
+        }).subscribe(object : Subscriber<String>() {
+            override fun onCompleted() {
+                progressBar.dismiss()
+                toast("成功读取数据库")
+            }
+
+            override fun onError(e: Throwable) {
+                progressBar.dismiss()
+                toast("读取数据库失败，请检查数据库是否存在")
+            }
+
+            override fun onNext(s: String) {
+            }
+        })
     }
 
     private fun getRealPathFromURI(contentUri: Uri): String? {
