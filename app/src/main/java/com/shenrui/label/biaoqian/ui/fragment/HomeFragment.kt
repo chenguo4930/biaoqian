@@ -130,7 +130,7 @@ class HomeFragment : BaseFragment() {
         while (i < 30) {
             i++
             mDataList.add(SubStation("变电站$i", 1, 831,
-                    1, "SCBDZ"))
+                    1, "SCBDZ",""))
         }
     }
 

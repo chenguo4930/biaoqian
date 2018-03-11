@@ -8,6 +8,7 @@ import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
 import android.database.Cursor
+import android.database.sqlite.SQLiteDatabase
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -15,13 +16,20 @@ import android.os.Environment
 import android.provider.DocumentsContract
 import android.provider.MediaStore
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.widget.Toast
+import com.luckongo.tthd.mvp.model.bean.SubStation
 import com.shenrui.label.biaoqian.R
 import com.shenrui.label.biaoqian.database.BookSqliteOpenHelper
+import com.shenrui.label.biaoqian.database.SubStationDatabase
+import com.shenrui.label.biaoqian.database.SubStationTable
 import kotlinx.android.synthetic.main.activity_main.*
 import me.weyye.hipermission.HiPermission
 import me.weyye.hipermission.PermissionCallback
 import me.weyye.hipermission.PermissionItem
+import org.jetbrains.anko.db.insert
+import org.jetbrains.anko.db.rowParser
+import org.jetbrains.anko.db.select
 import org.jetbrains.anko.toast
 import rx.Observable
 import rx.Subscriber
@@ -39,6 +47,34 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        initListener()
+        getPermission()
+        initData()
+    }
+
+    /**
+     * 读取本地变电站数据库
+     */
+    private fun initData() {
+
+        val subStation = SubStationDatabase.use {
+            select(SubStationTable.TABLE_NAME).parseList(
+                    rowParser { sub_name: String, volLevel_id: Int, province_id: Int,
+                                city_id: Int, sub_short_name: String, db_path: String ->
+                        (
+                                SubStation(sub_name, volLevel_id, province_id, city_id, sub_short_name, db_path))
+                    })
+        }
+        Log.e("------", "--------------subStation.size = ${subStation.size}")
+        subStation.forEach {
+            Log.e("------", "--------------读取数据库it=$it")
+        }
+    }
+
+    /**
+     * 初始监听器
+     */
+    private fun initListener() {
         btn_open.setOnClickListener {
             startActivity(Intent(this, BiaoQianActivity::class.java))
         }
@@ -52,15 +88,14 @@ class MainActivity : AppCompatActivity() {
                 toast("请安装文件管理器")
             }
         }
-        getPermission()
     }
 
     private fun getPermission() {
         val permissionItems = ArrayList<PermissionItem>()
-        permissionItems.add(PermissionItem(Manifest.permission.WRITE_EXTERNAL_STORAGE, "Write_storage", R.drawable.permission_ic_camera))
-        permissionItems.add(PermissionItem(Manifest.permission.READ_EXTERNAL_STORAGE, "Read_storage", R.drawable.permission_ic_camera))
-        permissionItems.add(PermissionItem(Manifest.permission.ACCESS_FINE_LOCATION, "Access_location", R.drawable.permission_ic_camera))
-        permissionItems.add(PermissionItem(Manifest.permission.ACCESS_COARSE_LOCATION, "Access_location", R.drawable.permission_ic_camera))
+        permissionItems.add(PermissionItem(Manifest.permission.WRITE_EXTERNAL_STORAGE, "写入存储", R.drawable.permission_ic_camera))
+        permissionItems.add(PermissionItem(Manifest.permission.READ_EXTERNAL_STORAGE, "读取存储", R.drawable.permission_ic_camera))
+        permissionItems.add(PermissionItem(Manifest.permission.ACCESS_FINE_LOCATION, "查找位置", R.drawable.permission_ic_camera))
+        permissionItems.add(PermissionItem(Manifest.permission.ACCESS_COARSE_LOCATION, "查找路径", R.drawable.permission_ic_camera))
         HiPermission.create(this)
                 .permissions(permissionItems)
                 .checkMutiPermission(object : PermissionCallback {
@@ -129,7 +164,9 @@ class MainActivity : AppCompatActivity() {
         val helper = BookSqliteOpenHelper(this, filePath, dbName)
 
         Observable.create(Observable.OnSubscribe<String> {
-            helper.createDataBase()
+            val dbPath = helper.createDataBase()
+            it.onNext(dbPath)
+            it.onCompleted()
         }).subscribe(object : Subscriber<String>() {
             override fun onCompleted() {
                 progressBar.dismiss()
@@ -141,9 +178,44 @@ class MainActivity : AppCompatActivity() {
                 toast("读取数据库失败，请检查数据库是否存在")
             }
 
-            override fun onNext(s: String) {
+            override fun onNext(dbPath: String) {
+                if (dbPath == "null") {
+                    toast("数据库打开失败")
+                } else {
+                    addToDb(dbPath)
+                }
             }
         })
+    }
+
+    /**
+     * 添加到数据库
+     */
+    private fun addToDb(dbPath: String) {
+        val database = SQLiteDatabase.openOrCreateDatabase(dbPath, null)
+        val cursor = database.query("SubStation", null, null, null, null, null, null)
+        var subStation: SubStation? = null
+        while (cursor.moveToNext()) {
+            val sub_name = cursor.getString(cursor.getColumnIndex("sub_name"))
+            val volLevel_id = cursor.getInt(cursor.getColumnIndex("volLevel_id"))
+            val provice_id = cursor.getInt(cursor.getColumnIndex("province_id"))
+            val city_id = cursor.getInt(cursor.getColumnIndex("city_id"))
+            val sub_short_name = cursor.getString(cursor.getColumnIndex("sub_short_name"))
+            subStation = SubStation(sub_name, volLevel_id, provice_id, city_id, sub_short_name, dbPath)
+        }
+        Log.e("----------", "----------subSation----${subStation.toString()}")
+        SubStationDatabase.use {
+            insert(SubStationTable.TABLE_NAME,
+                    SubStationTable.SUB_NAME to subStation!!.sub_name,
+                    SubStationTable.VOLLEVEL_ID to subStation.volLevel_id,
+                    SubStationTable.PROVINCE_ID to subStation.province_id,
+                    SubStationTable.CITY_ID to subStation.city_id,
+                    SubStationTable.SUB_SHORT_NAME to subStation.sub_short_name,
+                    SubStationTable.DB_PATH to subStation.db_path)
+            Log.e("---------", "------------插入数据库成功")
+        }
+
+        initData()
     }
 
     private fun getRealPathFromURI(contentUri: Uri): String? {

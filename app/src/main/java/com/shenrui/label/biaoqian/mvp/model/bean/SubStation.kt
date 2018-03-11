@@ -9,7 +9,7 @@ package com.luckongo.tthd.mvp.model.bean
  *  sub_short_name : 变电站名称拼音缩写
  */
 data class SubStation(val sub_name: String, val volLevel_id: Int, val province_id: Int,
-                      val city_id: Int, val sub_short_name: String)
+                      val city_id: Int, val sub_short_name: String,val db_path:String)
 
 /**
  * vol_id : 电压Id

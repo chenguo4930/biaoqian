@@ -3,6 +3,7 @@ package com.shenrui.label.biaoqian.database
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 import java.io.*
 
 
@@ -20,26 +21,35 @@ class BookSqliteOpenHelper(private val mContext: Context,
     private val myDataBase: SQLiteDatabase? = null
 
     @Throws(IOException::class)
-    fun createDataBase() {
+    fun createDataBase(): String {
         val dbExist = checkDataBase()
-
+        Log.e("-------", "----createDataBase---dbExist=$dbExist---")
         if (!dbExist) {
+            Log.e("-------", "------onError----1--")
             try {
                 val dir = File(DB_PATH)
+                Log.e("-------", "------onError---2---")
                 if (!dir.exists()) {
                     dir.mkdir()
                 }
+                Log.e("-------", "------onError---3---")
                 val dbf = File(DB_PATH + mDbName)
                 if (dbf.exists()) {
                     dbf.delete()
                 }
-
+                Log.e("-------", "------onError---4---")
                 SQLiteDatabase.openOrCreateDatabase(dbf, null)
+                Log.e("-------", "------onError---5---")
                 copyDataBase()
+                Log.e("-------", "------onError---6---")
+                return DB_PATH + mDbName
             } catch (e: IOException) {
                 throw Error("数据库创建失败")
+                Log.e("-------", "------onError----7--")
+                return "null"
             }
         }
+        return DB_PATH + mDbName
     }
 
     @Throws(IOException::class)
@@ -56,7 +66,7 @@ class BookSqliteOpenHelper(private val mContext: Context,
         }
         myOutput.flush()
         myOutput.close()
-        myInput!!.close()
+        myInput.close()
     }
 
     private fun checkDataBase(): Boolean {

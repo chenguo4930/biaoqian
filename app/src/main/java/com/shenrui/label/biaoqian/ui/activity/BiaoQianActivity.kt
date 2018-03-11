@@ -77,7 +77,7 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
 //            supportFragmentManager.beginTransaction().replace(R.id.content_frame,mScanFragment).commit()
             setScanPressed()
             val permissionItems = ArrayList<PermissionItem>()
-            permissionItems.add(PermissionItem(Manifest.permission.CAMERA, "Camera", R.drawable.permission_ic_camera))
+            permissionItems.add(PermissionItem(Manifest.permission.CAMERA, "开启摄像头", R.drawable.permission_ic_camera))
             HiPermission.create(this@BiaoQianActivity)
                     .permissions(permissionItems)
                     .checkMutiPermission(object : PermissionCallback {
