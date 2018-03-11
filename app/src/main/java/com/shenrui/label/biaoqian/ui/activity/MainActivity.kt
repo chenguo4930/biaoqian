@@ -192,7 +192,6 @@ class MainActivity : AppCompatActivity() {
                 val selection = "_id=?"
                 val selectionArgs = arrayOf<String>(split[1])
 
-
                 return getDataColumn(context, contentUri, selection, selectionArgs)
             }// MediaProvider
             // DownloadsProvider
