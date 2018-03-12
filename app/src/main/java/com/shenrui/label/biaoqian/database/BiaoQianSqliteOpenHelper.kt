@@ -3,6 +3,7 @@ package com.shenrui.label.biaoqian.database
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 import java.io.*
 
 
@@ -16,28 +17,39 @@ class BookSqliteOpenHelper(private val mContext: Context,
     : SQLiteOpenHelper(mContext, mDbName, null, 1) {
     //The Android's default system path of your application database.
     private val DB_PATH = android.os.Environment.getExternalStorageDirectory().absolutePath + "/biaoqiansql/"
+
     private val myDataBase: SQLiteDatabase? = null
 
     @Throws(IOException::class)
-    fun createDataBase() {
+    fun createDataBase(): String {
         val dbExist = checkDataBase()
-
+        Log.e("-------", "----createDataBase---dbExist=$dbExist---")
         if (!dbExist) {
+            Log.e("-------", "------onError----1--")
             try {
                 val dir = File(DB_PATH)
+                Log.e("-------", "------onError---2---")
                 if (!dir.exists()) {
                     dir.mkdir()
                 }
+                Log.e("-------", "------onError---3---")
                 val dbf = File(DB_PATH + mDbName)
                 if (dbf.exists()) {
                     dbf.delete()
                 }
+                Log.e("-------", "------onError---4---")
                 SQLiteDatabase.openOrCreateDatabase(dbf, null)
+                Log.e("-------", "------onError---5---")
                 copyDataBase()
+                Log.e("-------", "------onError---6---")
+                return DB_PATH + mDbName
             } catch (e: IOException) {
                 throw Error("数据库创建失败")
+                Log.e("-------", "------onError----7--")
+                return "null"
             }
         }
+        return DB_PATH + mDbName
     }
 
     @Throws(IOException::class)
@@ -54,7 +66,7 @@ class BookSqliteOpenHelper(private val mContext: Context,
         }
         myOutput.flush()
         myOutput.close()
-        myInput!!.close()
+        myInput.close()
     }
 
     private fun checkDataBase(): Boolean {
@@ -62,6 +74,20 @@ class BookSqliteOpenHelper(private val mContext: Context,
         val file = File(myPath)
         return file.exists()
     }
+
+//    private fun checkDataBase(): Boolean {
+//        var checkDB: SQLiteDatabase? = null
+//        val myPath = DB_PATH + mDbName
+//        try {
+//            checkDB = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY)
+//        } catch (e: SQLiteException) { //database does't exist yet.
+//        }
+//
+//        if (checkDB != null) {
+//            checkDB.close()
+//        }
+//        return checkDB != null
+//    }
 
     @Synchronized
     override fun close() {
