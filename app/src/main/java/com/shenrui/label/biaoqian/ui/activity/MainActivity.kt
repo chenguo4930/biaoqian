@@ -20,6 +20,7 @@ import android.util.Log
 import android.widget.Toast
 import com.luckongo.tthd.mvp.model.bean.SubStation
 import com.shenrui.label.biaoqian.R
+import com.shenrui.label.biaoqian.constrant.AllSubStation.Companion.subStation
 import com.shenrui.label.biaoqian.database.BookSqliteOpenHelper
 import com.shenrui.label.biaoqian.database.SubStationDatabase
 import com.shenrui.label.biaoqian.database.SubStationTable
@@ -57,7 +58,7 @@ class MainActivity : AppCompatActivity() {
      */
     private fun initData() {
 
-        val subStation = SubStationDatabase.use {
+        subStation = SubStationDatabase.use {
             select(SubStationTable.TABLE_NAME).parseList(
                     rowParser { sub_name: String, volLevel_id: Int, province_id: Int,
                                 city_id: Int, sub_short_name: String, db_path: String ->
@@ -65,8 +66,8 @@ class MainActivity : AppCompatActivity() {
                                 SubStation(sub_name, volLevel_id, province_id, city_id, sub_short_name, db_path))
                     })
         }
-        Log.e("------", "--------------subStation.size = ${subStation.size}")
-        subStation.forEach {
+        Log.e("------", "--------------subStation.size = ${subStation?.size}")
+        subStation?.forEach {
             Log.e("------", "--------------读取数据库it=$it")
         }
     }

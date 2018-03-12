@@ -3,11 +3,13 @@ package com.shenrui.label.biaoqian.ui.fragment
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
 import android.widget.TextView
 import com.luckongo.tthd.mvp.model.bean.SubStation
 import com.shenrui.label.biaoqian.R
+import com.shenrui.label.biaoqian.constrant.AllSubStation
 import com.shenrui.label.biaoqian.mvp.base.BaseFragment
 import com.shenrui.label.biaoqian.ui.adapter.HomeGridListAdapter
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -22,7 +24,6 @@ class HomeFragment : BaseFragment() {
     private var mParam2: String? = null
 
     private lateinit var mGridManager: GridLayoutManager
-    private lateinit var mDataList: ArrayList<SubStation>
     private lateinit var mAdapter: HomeGridListAdapter
 
     companion object {
@@ -54,29 +55,36 @@ class HomeFragment : BaseFragment() {
     }
 
     override fun lazyLoad() {
-        getData()
-        mGridManager = GridLayoutManager(activity, HomeGridListAdapter.SPAN_COUNT_FOUR)
-        mAdapter = HomeGridListAdapter(mDataList, mGridManager, object : HomeGridListAdapter.StationClickListener {
-            override fun onDeleteItemClick(item: SubStation) {
-                toast("删除变电站${item.sub_name}")
+
+        if (AllSubStation.subStation == null || AllSubStation.subStation!!.isEmpty()) {
+            toast("当前没有数据")
+            tv_empty.visibility = View.VISIBLE
+        } else {
+            mGridManager = GridLayoutManager(activity, HomeGridListAdapter.SPAN_COUNT_FOUR)
+            mAdapter = HomeGridListAdapter(AllSubStation.subStation!!, mGridManager, object : HomeGridListAdapter.StationClickListener {
+                override fun onDeleteItemClick(item: SubStation) {
+                    toast("删除变电站${item.sub_name}")
+                }
+
+                override fun onStationItemClick(name: String) {
+                    toast("变电站名称$name")
+                    activity?.supportFragmentManager?.beginTransaction()?.add(R.id.content_frame, TestFragment())?.addToBackStack("TestFragment")?.commit()
+                }
+            })
+
+            converting_station_rv.run {
+                layoutManager = mGridManager
+                adapter = mAdapter
             }
 
-            override fun onStationItemClick(name: String) {
-                toast("变电站名称$name")
-                activity?.supportFragmentManager?.beginTransaction()?.
-                        add(R.id.content_frame, TestFragment())?.
-                        addToBackStack("TestFragment")?.
-                        commit()
-            }
-        })
-
-        converting_station_rv.run {
-            layoutManager = mGridManager
-            adapter = mAdapter
+            tv_empty.visibility = View.GONE
         }
-
         img_menu.setOnClickListener {
-            showMenu()
+            if (AllSubStation.subStation == null || AllSubStation.subStation!!.isEmpty()) {
+                toast("当前没有数据")
+            } else {
+                showMenu()
+            }
         }
 
     }
@@ -124,14 +132,14 @@ class HomeFragment : BaseFragment() {
         mAppBasePopupWindow.showAsDropDown(img_menu)
     }
 
-    private fun getData() {
-        var i = 0
-        mDataList = ArrayList()
-        while (i < 30) {
-            i++
-            mDataList.add(SubStation("变电站$i", 1, 831,
-                    1, "SCBDZ",""))
-        }
-    }
+//    private fun getData() {
+//        var i = 0
+//        mDataList = ArrayList()
+//        while (i < 30) {
+//            i++
+//            mDataList.add(SubStation("变电站$i", 1, 831,
+//                    1, "SCBDZ",""))
+//        }
+//    }
 
 }

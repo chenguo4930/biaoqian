@@ -51,6 +51,11 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
     }
 
     override fun initData() {
+        if (mHomeFragment == null) {
+            mHomeFragment = HomeFragment()
+        }
+        supportFragmentManager.beginTransaction().replace(R.id.content_frame, mHomeFragment).commit()
+        setHomePressed()
     }
 
     override fun initListener() {
