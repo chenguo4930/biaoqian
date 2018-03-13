@@ -24,6 +24,7 @@ import com.shenrui.label.biaoqian.constrant.AllSubStation.Companion.subStation
 import com.shenrui.label.biaoqian.database.BookSqliteOpenHelper
 import com.shenrui.label.biaoqian.database.SubStationDatabase
 import com.shenrui.label.biaoqian.database.SubStationTable
+import com.shenrui.label.biaoqian.utils.DataBaseUtil
 import kotlinx.android.synthetic.main.activity_main.*
 import me.weyye.hipermission.HiPermission
 import me.weyye.hipermission.PermissionCallback
@@ -34,6 +35,8 @@ import org.jetbrains.anko.db.select
 import org.jetbrains.anko.toast
 import rx.Observable
 import rx.Subscriber
+import rx.android.schedulers.AndroidSchedulers
+import rx.schedulers.Schedulers
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -168,42 +171,34 @@ class MainActivity : AppCompatActivity() {
             val dbPath = helper.createDataBase()
             it.onNext(dbPath)
             it.onCompleted()
-        }).subscribe(object : Subscriber<String>() {
-            override fun onCompleted() {
-                progressBar.dismiss()
-                toast("成功读取数据库")
-            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(object : Subscriber<String>() {
+                    override fun onCompleted() {
+                        progressBar.dismiss()
+                        toast("成功读取数据库")
+                    }
 
-            override fun onError(e: Throwable) {
-                progressBar.dismiss()
-                toast("读取数据库失败，请检查数据库是否存在")
-            }
+                    override fun onError(e: Throwable) {
+                        progressBar.dismiss()
+                        toast("读取数据库失败，请检查数据库是否存在")
+                    }
 
-            override fun onNext(dbPath: String) {
-                if (dbPath == "null") {
-                    toast("数据库打开失败")
-                } else {
-                    addToDb(dbPath)
-                }
-            }
-        })
+                    override fun onNext(dbPath: String) {
+                        if (dbPath == "null") {
+                            toast("数据库打开失败")
+                        } else {
+                            addToDb(dbPath)
+                        }
+                    }
+                })
     }
 
     /**
      * 添加到数据库
      */
     private fun addToDb(dbPath: String) {
-        val database = SQLiteDatabase.openOrCreateDatabase(dbPath, null)
-        val cursor = database.query("SubStation", null, null, null, null, null, null)
-        var subStation: SubStation? = null
-        while (cursor.moveToNext()) {
-            val sub_name = cursor.getString(cursor.getColumnIndex("sub_name"))
-            val volLevel_id = cursor.getInt(cursor.getColumnIndex("volLevel_id"))
-            val provice_id = cursor.getInt(cursor.getColumnIndex("province_id"))
-            val city_id = cursor.getInt(cursor.getColumnIndex("city_id"))
-            val sub_short_name = cursor.getString(cursor.getColumnIndex("sub_short_name"))
-            subStation = SubStation(sub_name, volLevel_id, provice_id, city_id, sub_short_name, dbPath)
-        }
+        val subStation = DataBaseUtil.getSubstation(dbPath)
         Log.e("----------", "----------subSation----${subStation.toString()}")
         SubStationDatabase.use {
             insert(SubStationTable.TABLE_NAME,

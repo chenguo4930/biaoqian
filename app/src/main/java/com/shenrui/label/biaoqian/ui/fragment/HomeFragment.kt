@@ -66,9 +66,12 @@ class HomeFragment : BaseFragment() {
                     toast("删除变电站${item.sub_name}")
                 }
 
-                override fun onStationItemClick(name: String) {
-                    toast("变电站名称$name")
-                    activity?.supportFragmentManager?.beginTransaction()?.add(R.id.content_frame, TestFragment())?.addToBackStack("TestFragment")?.commit()
+                override fun onStationItemClick(item: SubStation) {
+                    toast("变电站名称${item.sub_name}")
+                    activity?.supportFragmentManager?.beginTransaction()?.
+                            add(R.id.content_frame, TestFragment.newInstance(item.db_path,item.sub_name))?.
+                            addToBackStack("TestFragment")?.
+                            commit()
                 }
             })
 
@@ -131,15 +134,5 @@ class HomeFragment : BaseFragment() {
         }
         mAppBasePopupWindow.showAsDropDown(img_menu)
     }
-
-//    private fun getData() {
-//        var i = 0
-//        mDataList = ArrayList()
-//        while (i < 30) {
-//            i++
-//            mDataList.add(SubStation("变电站$i", 1, 831,
-//                    1, "SCBDZ",""))
-//        }
-//    }
 
 }

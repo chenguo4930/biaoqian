@@ -51,8 +51,9 @@
     <color name="white_80">#cdffffff</color>
 
     <color name="color_3b3b3b">#3b3b3b</color>
-    <color name="color_eff5fd">#eff5fd</color>
+    <color name="color_recycler_item_title">#eff5fd</color>
     <color name="color_fafafa">#fafafa</color>
+    <color name="color_bg">#fafafa</color>
     <color name="color_station_text">#5b5c5e</color>
 
 </resources>

@@ -17,7 +17,7 @@ import com.shenrui.label.biaoqian.R
  */
 class HomeGridListAdapter(private val mItems: List<SubStation>,
                           private val mLayoutManager: GridLayoutManager,
-                          private var mOnItemClickListener: StationClickListener?)
+                          private var mOnItemClickListener: StationClickListener? = null)
     : RecyclerView.Adapter<HomeGridListAdapter.ItemViewHolder>() {
 
     override fun getItemViewType(position: Int): Int {
@@ -44,9 +44,9 @@ class HomeGridListAdapter(private val mItems: List<SubStation>,
         holder.nameTv.text = mItems[position].sub_name
 
         holder.itemView.setOnClickListener {
-            mOnItemClickListener?.onStationItemClick(mItems[position].sub_name)
+            mOnItemClickListener?.onStationItemClick(mItems[position])
         }
-        holder.delteImg.setOnClickListener {
+        holder.deleteImg.setOnClickListener {
             mOnItemClickListener?.onDeleteItemClick(mItems[position])
         }
     }
@@ -55,10 +55,9 @@ class HomeGridListAdapter(private val mItems: List<SubStation>,
         return mItems.size
     }
 
-
     class ItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var nameTv: TextView = view.findViewById(R.id.name_tv)
-        val delteImg: ImageView = view.findViewById(R.id.img_delete)
+        val deleteImg: ImageView = view.findViewById(R.id.img_delete)
     }
 
     companion object {
@@ -70,7 +69,7 @@ class HomeGridListAdapter(private val mItems: List<SubStation>,
     }
 
     interface StationClickListener {    //自定义的接口
-        fun onStationItemClick(name: String)
+        fun onStationItemClick(item: SubStation)
         fun onDeleteItemClick(item: SubStation)
     }
 }
