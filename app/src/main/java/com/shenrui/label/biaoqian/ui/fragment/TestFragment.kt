@@ -17,11 +17,9 @@ import com.shenrui.label.biaoqian.utils.DataBaseUtil
 import kotlinx.android.synthetic.main.fragment_test.*
 import kotlinx.android.synthetic.main.title_layout.*
 import org.jetbrains.anko.support.v4.toast
-import org.jetbrains.anko.toast
 import rx.Observable
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
-import rx.observables.AsyncOnSubscribe
 import rx.schedulers.Schedulers
 
 
