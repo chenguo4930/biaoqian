@@ -6,4 +6,5 @@
     <string name="btn_home">首页</string>
     <string name="btn_setting">设置</string>
     <string name="btn_scan">扫码</string>
+    <string name="no_data">当前没有数据,请导入数据库文件！</string>
 </resources>
