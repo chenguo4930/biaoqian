@@ -1,7 +1,6 @@
 package com.shenrui.label.biaoqian.ui.fragment
 
 import android.os.Bundle
-import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import com.github.ikidou.fragmentBackHandler.BackHandlerHelper
@@ -10,8 +9,6 @@ import com.luckongo.tthd.mvp.model.bean.Panel
 import com.shenrui.label.biaoqian.R
 import com.shenrui.label.biaoqian.mvp.base.BaseFragment
 import com.shenrui.label.biaoqian.mvp.model.bean.RegionBean
-import com.shenrui.label.biaoqian.ui.adapter.HomeGridListAdapter
-import com.shenrui.label.biaoqian.ui.adapter.HomeListAdapter
 import com.shenrui.label.biaoqian.ui.adapter.RegionListAdapter
 import com.shenrui.label.biaoqian.utils.DataBaseUtil
 import kotlinx.android.synthetic.main.fragment_test.*
@@ -56,7 +53,6 @@ class TestFragment : BaseFragment(), FragmentBackHandler {
     override fun getLayoutId() = R.layout.fragment_test
 
     override fun initView() {
-
 
     }
 
