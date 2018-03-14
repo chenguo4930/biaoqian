@@ -1,5 +1,8 @@
 package com.luckongo.tthd.mvp.model.bean
 
+import android.os.Parcel
+import android.os.Parcelable
+
 
 /**
  *  sub_name : 变电站名称
@@ -9,7 +12,7 @@ package com.luckongo.tthd.mvp.model.bean
  *  sub_short_name : 变电站名称拼音缩写
  */
 data class SubStation(val sub_name: String, val volLevel_id: Int, val province_id: Int,
-                      val city_id: Int, val sub_short_name: String,val db_path:String)
+                      val city_id: Int, val sub_short_name: String, val db_path: String)
 
 /**
  * vol_id : 电压Id
@@ -31,13 +34,59 @@ data class Area(val area_id: Int, val area_name: String, val fid: Int, val area_
  * region_name : 区域名称
  * region_code : 区域编号
  */
-data class Region(val region_id: Int, val region_name: String, val region_code: String)
+data class Region(val region_id: Int, val region_name: String, val region_code: String) : Parcelable {
+    constructor(source: Parcel) : this(
+            source.readInt(),
+            source.readString(),
+            source.readString()
+    )
+
+    override fun describeContents() = 0
+
+    override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
+        writeInt(region_id)
+        writeString(region_name)
+        writeString(region_code)
+    }
+
+    companion object {
+        @JvmField
+        val CREATOR: Parcelable.Creator<Region> = object : Parcelable.Creator<Region> {
+            override fun createFromParcel(source: Parcel): Region = Region(source)
+            override fun newArray(size: Int): Array<Region?> = arrayOfNulls(size)
+        }
+    }
+}
 
 /**
  * panel_id : 屏柜Id
  * region_id ：所属区域Id
  */
-data class Panel(val panel_id: Int, val panel_name: String, val panel_code: String, val region_id: Int)
+data class Panel(val panel_id: Int, val panel_name: String, val panel_code: String, val region_id: Int) : Parcelable {
+    constructor(source: Parcel) : this(
+            source.readInt(),
+            source.readString(),
+            source.readString(),
+            source.readInt()
+    )
+
+    override fun describeContents() = 0
+
+    override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
+        writeInt(panel_id)
+        writeString(panel_name)
+        writeString(panel_code)
+        writeInt(region_id)
+    }
+
+    companion object {
+        @JvmField
+        val CREATOR: Parcelable.Creator<Panel> = object : Parcelable.Creator<Panel> {
+            override fun createFromParcel(source: Parcel): Panel = Panel(source)
+            override fun newArray(size: Int): Array<Panel?> = arrayOfNulls(size)
+        }
+    }
+}
 
 /**
  * 装置Id
@@ -48,7 +97,35 @@ data class Panel(val panel_id: Int, val panel_name: String, val panel_code: Stri
  * 所属模型Id
  */
 data class Device(val device_id: Int, val device_desc: String, val device_iedname: String,
-                  val device_code: String, val panel_id: Int, val model_id: Int)
+                  val device_code: String, val panel_id: Int, val model_id: Int) : Parcelable {
+    constructor(source: Parcel) : this(
+            source.readInt(),
+            source.readString(),
+            source.readString(),
+            source.readString(),
+            source.readInt(),
+            source.readInt()
+    )
+
+    override fun describeContents() = 0
+
+    override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
+        writeInt(device_id)
+        writeString(device_desc)
+        writeString(device_iedname)
+        writeString(device_code)
+        writeInt(panel_id)
+        writeInt(model_id)
+    }
+
+    companion object {
+        @JvmField
+        val CREATOR: Parcelable.Creator<Device> = object : Parcelable.Creator<Device> {
+            override fun createFromParcel(source: Parcel): Device = Device(source)
+            override fun newArray(size: Int): Array<Device?> = arrayOfNulls(size)
+        }
+    }
+}
 
 /**
  * 交换机Id

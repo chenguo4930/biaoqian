@@ -27,8 +27,11 @@ class HomeListAdapter(context2: Context, list2: ArrayList<SubStation>) : Recycle
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int)
-            = MyViewHolder(LayoutInflater.from(context).inflate(R.layout.recyclerview_item_list_home, parent, false))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
+            MyViewHolder(LayoutInflater.from(context).inflate(
+                    R.layout.recyclerview_item_list_home,
+                    parent,
+                    false))
 
     fun setOnclickliseer(inter: MyInter) {
         this.inter = inter

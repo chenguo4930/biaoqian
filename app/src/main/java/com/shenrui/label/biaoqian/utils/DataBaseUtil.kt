@@ -1,6 +1,7 @@
 package com.shenrui.label.biaoqian.utils
 
 import android.database.sqlite.SQLiteDatabase
+import com.luckongo.tthd.mvp.model.bean.Device
 import com.luckongo.tthd.mvp.model.bean.Panel
 import com.luckongo.tthd.mvp.model.bean.Region
 import com.luckongo.tthd.mvp.model.bean.SubStation
@@ -67,6 +68,27 @@ class DataBaseUtil {
             }
             cursor.close()
             return panleList
+        }
+
+        /**
+         * 读取区域设备的数据
+         */
+        fun getDevice(dbPath: String): ArrayList<Device> {
+            val database = SQLiteDatabase.openOrCreateDatabase(dbPath, null)
+            val cursor = database.query("Device", null, null, null,
+                    null, null, null)
+            val deviceList = ArrayList<Device>()
+            while (cursor.moveToNext()) {
+                val device_id = cursor.getInt(cursor.getColumnIndex("device_id"))
+                val device_desc = cursor.getString(cursor.getColumnIndex("device_desc"))
+                val device_iedname = cursor.getString(cursor.getColumnIndex("device_iedname"))
+                val device_code = cursor.getString(cursor.getColumnIndex("device_code"))
+                val panel_id = cursor.getInt(cursor.getColumnIndex("panel_id"))
+                val model_id = cursor.getInt(cursor.getColumnIndex("model_id"))
+                deviceList.add(Device(device_id, device_desc, device_iedname, device_code, panel_id, model_id))
+            }
+            cursor.close()
+            return deviceList
         }
     }
 }

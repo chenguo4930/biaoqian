@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.TextView
+import com.luckongo.tthd.mvp.model.bean.Device
+import com.luckongo.tthd.mvp.model.bean.Panel
 import com.luckongo.tthd.mvp.model.bean.SubStation
 import com.shenrui.label.biaoqian.R
 import com.shenrui.label.biaoqian.mvp.model.bean.RegionBean
@@ -16,27 +18,17 @@ import com.shenrui.label.biaoqian.mvp.model.bean.RegionBean
  * 区域region Adapter
  * @author Chengguo on 2018/3/5.
  */
-class RegionListAdapter(private val context1: Context,
-                        private val list: ArrayList<RegionBean>,
-                        private val onItemClickListener: RegionClickListener? = null)
-    : RecyclerView.Adapter<RegionListAdapter.MyViewHolder>() {
+class PanelListItemRecyclerAdapter(private val context1: Context,
+                                   private val list: List<Device>)
+    : RecyclerView.Adapter<PanelListItemRecyclerAdapter.MyViewHolder>() {
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.nameTv.text = list[position].region_name
-
-        holder.panelRv.run {
-            layoutManager = GridLayoutManager(context1, 3)
-            adapter = RegionListItemRecyclerAdapter(context1, list[position].panel)
-        }
-
-        holder.itemView.setOnClickListener {
-            onItemClickListener?.onRegionItemClick(list[position])
-        }
+        holder.nameTv.text = list[position].device_iedname
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
             MyViewHolder(LayoutInflater.from(context1).inflate(
-                    R.layout.recyclerview_item_list_region,
+                    R.layout.recyclerview_item_list_panel_rv_item_device,
                     parent,
                     false))
 
@@ -45,11 +37,7 @@ class RegionListAdapter(private val context1: Context,
     }
 
     class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var nameTv: TextView = view.findViewById(R.id.tv_region_name)
-        var panelRv: RecyclerView = view.findViewById(R.id.rv_region_panel)
+        var nameTv: TextView = view.findViewById(R.id.tv_device_name)
     }
 
-    interface RegionClickListener {    //自定义的接口
-        fun onRegionItemClick(item: RegionBean)
-    }
 }

@@ -23,12 +23,13 @@ class RegionListItemRecyclerAdapter(private val context1: Context,
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.nameTv.text = list[position].panel_name
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-            MyViewHolder(LayoutInflater.from(context1).
-                    inflate(R.layout.recyclerview_item_list_region_rv_item_panel, parent, false))
+            MyViewHolder(LayoutInflater.from(context1).inflate(
+                    R.layout.recyclerview_item_list_region_rv_item_panel,
+                    parent,
+                    false))
 
     override fun getItemCount(): Int {
         return list.size
