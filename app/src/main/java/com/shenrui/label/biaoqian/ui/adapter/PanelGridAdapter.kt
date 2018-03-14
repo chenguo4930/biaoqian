@@ -45,8 +45,8 @@ class PanelGridAdapter(private val context1: Context,
     }
 
     class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var nameTv: TextView = view.findViewById(R.id.rv_panel_panel)
-        var panelRv: RecyclerView = view.findViewById(R.id.rv_panel_panel)
+        var nameTv: TextView = view.findViewById(R.id.tv_panel_name)
+        var panelRv: RecyclerView = view.findViewById(R.id.rv_panel)
     }
 
     interface PanelClickListener {    //自定义的接口

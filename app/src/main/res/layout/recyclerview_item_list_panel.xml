@@ -27,7 +27,7 @@
             android:textColor="@color/color_station_text" />
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_panel_panel"
+            android:id="@+id/rv_panel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
