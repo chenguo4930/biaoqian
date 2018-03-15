@@ -54,6 +54,10 @@
     <color name="color_recycler_item_title">#eff5fd</color>
     <color name="color_fafafa">#fafafa</color>
     <color name="color_bg">#fafafa</color>
-    <color name="color_station_text">#5b5c5e</color>
+    <color name="color_station_text">#454545</color>
+    <color name="color_wei_lan">#00cecb</color>
+    <color name="color_guang_lan">#d66ef7</color>
+    <color name="color_tiao_qian">#07a7fa</color>
+    <color name="color_title_text">#454545</color>
 
 </resources>

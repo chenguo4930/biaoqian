@@ -10,7 +10,9 @@
         android:layout_height="match_parent"
         android:layout_marginBottom="1dp"
         android:gravity="center_vertical"
+        android:paddingLeft="20dp"
         android:text="名称"
+        android:textColor="@color/color_title_text"
         android:textSize="16sp" />
 
     <ImageView
