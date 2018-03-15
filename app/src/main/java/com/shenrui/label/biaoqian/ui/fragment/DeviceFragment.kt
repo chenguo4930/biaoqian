@@ -14,7 +14,6 @@ import com.shenrui.label.biaoqian.mvp.base.BaseFragment
 import com.shenrui.label.biaoqian.mvp.model.bean.PanelBean
 import com.shenrui.label.biaoqian.mvp.model.bean.RegionBean
 import com.shenrui.label.biaoqian.ui.adapter.PanelGridAdapter
-import com.shenrui.label.biaoqian.ui.adapter.RegionListAdapter
 import com.shenrui.label.biaoqian.utils.DataBaseUtil
 import kotlinx.android.synthetic.main.fragment_device.*
 import kotlinx.android.synthetic.main.title_layout.*
