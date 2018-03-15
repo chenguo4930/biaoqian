@@ -1,34 +1,30 @@
 package com.shenrui.label.biaoqian.ui.adapter
 
 import android.content.Context
-import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.TextView
 import com.luckongo.tthd.mvp.model.bean.Device
-import com.luckongo.tthd.mvp.model.bean.Panel
-import com.luckongo.tthd.mvp.model.bean.SubStation
+import com.luckongo.tthd.mvp.model.bean.Switch
 import com.shenrui.label.biaoqian.R
-import com.shenrui.label.biaoqian.mvp.model.bean.RegionBean
 
 /**
  * 区域region Adapter
  * @author Chengguo on 2018/3/5.
  */
-class PanelListItemRecyclerAdapter(private val context1: Context,
-                                   private val list: List<Device>)
-    : RecyclerView.Adapter<PanelListItemRecyclerAdapter.MyViewHolder>() {
+class PanelListItemSwitchRecyclerAdapter(private val context1: Context,
+                                         private val list: List<Switch>)
+    : RecyclerView.Adapter<PanelListItemSwitchRecyclerAdapter.MyViewHolder>() {
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.nameTv.text = list[position].device_iedname
+        holder.nameTv.text = list[position].switch_name
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
             MyViewHolder(LayoutInflater.from(context1).inflate(
-                    R.layout.recyclerview_item_list_panel_rv_item_device,
+                    R.layout.recyclerview_item_list_panel_rv_item_switch,
                     parent,
                     false))
 
@@ -37,7 +33,7 @@ class PanelListItemRecyclerAdapter(private val context1: Context,
     }
 
     class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var nameTv: TextView = view.findViewById(R.id.tv_device_name)
+        var nameTv: TextView = view.findViewById(R.id.tv_switch_name)
     }
 
 }

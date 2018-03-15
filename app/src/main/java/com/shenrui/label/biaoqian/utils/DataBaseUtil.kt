@@ -1,10 +1,7 @@
 package com.shenrui.label.biaoqian.utils
 
 import android.database.sqlite.SQLiteDatabase
-import com.luckongo.tthd.mvp.model.bean.Device
-import com.luckongo.tthd.mvp.model.bean.Panel
-import com.luckongo.tthd.mvp.model.bean.Region
-import com.luckongo.tthd.mvp.model.bean.SubStation
+import com.luckongo.tthd.mvp.model.bean.*
 
 /**
  * 读取数据库的工具类
@@ -89,6 +86,26 @@ class DataBaseUtil {
             }
             cursor.close()
             return deviceList
+        }
+
+        /**
+         * 读取区域交换机的数据
+         */
+        fun getSwitch(dbPath: String): ArrayList<Switch> {
+            val database = SQLiteDatabase.openOrCreateDatabase(dbPath, null)
+            val cursor = database.query("Switch", null, null, null,
+                    null, null, null)
+            val switchList = ArrayList<Switch>()
+            while (cursor.moveToNext()) {
+                val switch_id = cursor.getInt(cursor.getColumnIndex("switch_id"))
+                val switch_name = cursor.getString(cursor.getColumnIndex("switch_name"))
+                val switch_code = cursor.getString(cursor.getColumnIndex("switch_code"))
+                val panel_id = cursor.getInt(cursor.getColumnIndex("panel_id"))
+                val model_id = cursor.getInt(cursor.getColumnIndex("model_id"))
+                switchList.add(Switch(switch_id, switch_name, switch_code, panel_id, model_id))
+            }
+            cursor.close()
+            return switchList
         }
     }
 }

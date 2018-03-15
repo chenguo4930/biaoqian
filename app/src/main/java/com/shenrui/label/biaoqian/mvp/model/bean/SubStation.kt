@@ -135,7 +135,33 @@ data class Device(val device_id: Int, val device_desc: String, val device_iednam
  * 所说模型Id
  */
 data class Switch(val switch_id: Int, val switch_name: String, val switch_code: String,
-                  val panel_id: Int, val mode_id: Int)
+                  val panel_id: Int, val mode_id: Int) : Parcelable {
+    constructor(source: Parcel) : this(
+            source.readInt(),
+            source.readString(),
+            source.readString(),
+            source.readInt(),
+            source.readInt()
+    )
+
+    override fun describeContents() = 0
+
+    override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
+        writeInt(switch_id)
+        writeString(switch_name)
+        writeString(switch_code)
+        writeInt(panel_id)
+        writeInt(mode_id)
+    }
+
+    companion object {
+        @JvmField
+        val CREATOR: Parcelable.Creator<Switch> = object : Parcelable.Creator<Switch> {
+            override fun createFromParcel(source: Parcel): Switch = Switch(source)
+            override fun newArray(size: Int): Array<Switch?> = arrayOfNulls(size)
+        }
+    }
+}
 
 /**
  * 模型Id

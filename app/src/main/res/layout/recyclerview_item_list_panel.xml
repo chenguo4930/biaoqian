@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:foreground="?android:attr/selectableItemBackground"
+    app:cardCornerRadius="4dp">
 
-    <android.support.v7.widget.CardView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:foreground="?android:attr/selectableItemBackground"
-        app:cardCornerRadius="4dp">
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/tv_panel_name"
@@ -19,19 +18,27 @@
             android:background="@color/color_recycler_item_title"
             android:drawableLeft="@mipmap/icon_panel"
             android:drawablePadding="10dp"
-            android:gravity="center_vertical"
+            android:gravity="center"
             android:maxLength="30"
             android:padding="5dp"
-            android:paddingRight="30dp"
-            android:text="标题"
+            android:text="屏柜名称"
             android:textColor="@color/color_station_text" />
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_panel"
+            android:id="@+id/rv_panel_device"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_panel_name"
             android:layout_marginBottom="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="40dp" />
-    </android.support.v7.widget.CardView>
-</RelativeLayout>
+            android:layout_marginLeft="5dp" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_panel_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rv_panel_device"
+            android:layout_marginLeft="5dp" />
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

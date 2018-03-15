@@ -7,6 +7,7 @@ import com.github.ikidou.fragmentBackHandler.BackHandlerHelper
 import com.github.ikidou.fragmentBackHandler.FragmentBackHandler
 import com.luckongo.tthd.mvp.model.bean.Device
 import com.luckongo.tthd.mvp.model.bean.Panel
+import com.luckongo.tthd.mvp.model.bean.Switch
 
 import com.shenrui.label.biaoqian.R
 import com.shenrui.label.biaoqian.mvp.base.BaseFragment
@@ -67,6 +68,7 @@ class DeviceFragment : BaseFragment(), FragmentBackHandler {
     private fun initData() {
         Observable.create(Observable.OnSubscribe<ArrayList<PanelBean>> {
             val deviceList = DataBaseUtil.getDevice(mDbPath!!)
+            val switchList = DataBaseUtil.getSwitch(mDbPath!!)
             val panelList = ArrayList<PanelBean>()
             mRegionBean?.panel?.forEach { item ->
                 val deviceBeanList = ArrayList<Device>()
@@ -75,9 +77,16 @@ class DeviceFragment : BaseFragment(), FragmentBackHandler {
                         deviceBeanList.add(it)
                     }
                 }
+
+                val switchBeanList = ArrayList<Switch>()
+                switchList.forEach {
+                    if (it.panel_id == item.panel_id) {
+                        switchBeanList.add(it)
+                    }
+                }
                 panelList.add(
                         PanelBean(item.panel_id, item.panel_name, item.panel_code,
-                                item.region_id, deviceBeanList))
+                                item.region_id, deviceBeanList, switchBeanList))
             }
             it.onNext(panelList)
             it.onCompleted()
@@ -117,7 +126,7 @@ class DeviceFragment : BaseFragment(), FragmentBackHandler {
             }
         })
         rv_panel.run {
-            layoutManager = GridLayoutManager(activity,4)
+            layoutManager = GridLayoutManager(activity, 4)
             adapter = mAdapter
         }
 
