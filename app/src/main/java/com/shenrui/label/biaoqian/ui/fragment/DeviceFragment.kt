@@ -56,7 +56,7 @@ class DeviceFragment : BaseFragment(), FragmentBackHandler {
             activity?.supportFragmentManager?.popBackStack()
         }
         tv_back_title.text = "测试数据库"
-        tv_title.text = mRegionBean?.region_name
+        tv_title.text = mRegionBean?.region_name + mRegionBean?.region_code
         if (mDbPath.isNullOrEmpty()) {
             toast("数据库路径为空")
         } else {
@@ -120,8 +120,8 @@ class DeviceFragment : BaseFragment(), FragmentBackHandler {
         mAdapter = PanelGridAdapter(activity!!, mPanelBeanList, object : PanelGridAdapter.PanelClickListener {
             override fun onPanelItemClick(item: PanelBean) {
 //                activity?.supportFragmentManager?.beginTransaction()?.
-//                        add(R.id.content_frame, DeviceFragment.newInstance(mDbPath!!,item))?.
-//                        addToBackStack("DeviceFragment")?.
+//                        add(R.id.content_frame, PanelFragment.newInstance(mDbPath!!, item))?.
+//                        addToBackStack("PanelFragment")?.
 //                        commit()
             }
         })

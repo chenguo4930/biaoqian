@@ -20,7 +20,7 @@ class PanelGridAdapter(private val context1: Context,
     : RecyclerView.Adapter<PanelGridAdapter.MyViewHolder>() {
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.nameTv.text = list[position].panel_name
+        holder.nameTv.text = list[position].panel_name + list[position].panel_code
 
         holder.panelDeviceRv.run {
             layoutManager = LinearLayoutManager(context1)

@@ -22,7 +22,7 @@ class RegionListAdapter(private val context1: Context,
     : RecyclerView.Adapter<RegionListAdapter.MyViewHolder>() {
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.nameTv.text = list[position].region_name
+        holder.nameTv.text = list[position].region_name + list[position].region_code
 
         holder.panelRv.run {
             layoutManager = GridLayoutManager(context1, 3)

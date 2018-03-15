@@ -22,7 +22,7 @@ class RegionListItemRecyclerAdapter(private val context1: Context,
     : RecyclerView.Adapter<RegionListItemRecyclerAdapter.MyViewHolder>() {
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.nameTv.text = list[position].panel_name
+        holder.nameTv.text = list[position].panel_name + list[position].panel_code
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
