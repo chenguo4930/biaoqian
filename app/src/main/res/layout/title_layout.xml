@@ -32,6 +32,6 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/black_30" />
+        android:background="@color/black_15" />
 
 </RelativeLayout>
