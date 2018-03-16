@@ -24,6 +24,7 @@ class DataBaseUtil {
                 val provice_id = cursor.getInt(cursor.getColumnIndex("province_id"))
                 val city_id = cursor.getInt(cursor.getColumnIndex("city_id"))
                 val sub_short_name = cursor.getString(cursor.getColumnIndex("sub_short_name"))
+
                 subStation = SubStation(sub_name, volLevel_id, provice_id, city_id, sub_short_name, dbPath)
             }
             cursor.close()
@@ -42,6 +43,7 @@ class DataBaseUtil {
                 val region_id = cursor.getInt(cursor.getColumnIndex("region_id"))
                 val region_name = cursor.getString(cursor.getColumnIndex("region_name"))
                 val region_code = cursor.getString(cursor.getColumnIndex("region_code"))
+
                 regionList.add(Region(region_id, region_name, region_code))
             }
             cursor.close()
@@ -61,6 +63,7 @@ class DataBaseUtil {
                 val panel_name = cursor.getString(cursor.getColumnIndex("panel_name"))
                 val panel_code = cursor.getString(cursor.getColumnIndex("panel_code"))
                 val region_id = cursor.getInt(cursor.getColumnIndex("region_id"))
+
                 panleList.add(Panel(panel_id, panel_name, panel_code, region_id))
             }
             cursor.close()
@@ -82,6 +85,7 @@ class DataBaseUtil {
                 val device_code = cursor.getString(cursor.getColumnIndex("device_code"))
                 val panel_id = cursor.getInt(cursor.getColumnIndex("panel_id"))
                 val model_id = cursor.getInt(cursor.getColumnIndex("model_id"))
+
                 deviceList.add(Device(device_id, device_desc, device_iedname, device_code, panel_id, model_id))
             }
             cursor.close()
@@ -102,6 +106,7 @@ class DataBaseUtil {
                 val switch_code = cursor.getString(cursor.getColumnIndex("switch_code"))
                 val panel_id = cursor.getInt(cursor.getColumnIndex("panel_id"))
                 val model_id = cursor.getInt(cursor.getColumnIndex("model_id"))
+
                 switchList.add(Switch(switch_id, switch_name, switch_code, panel_id, model_id))
             }
             cursor.close()
@@ -143,6 +148,7 @@ class DataBaseUtil {
                 val rt_type = cursor.getInt(cursor.getColumnIndex("rt_type"))
                 val timetick = cursor.getInt(cursor.getColumnIndex("timetick"))
                 val port_desc = cursor.getString(cursor.getColumnIndex("port_desc"))
+
                 devicePortList.add(DevicePort(model_id, device_port, port_type, port_plug,
                         rt_type, timetick, port_desc))
             }
@@ -233,6 +239,7 @@ class DataBaseUtil {
                 val tail_fiber_number = cursor.getInt(cursor.getColumnIndex("tail_fiber_number"))
                 val tail_fiber_color = cursor.getInt(cursor.getColumnIndex("tail_fiber_color"))
                 val tail_fiber_desc = cursor.getString(cursor.getColumnIndex("tail_fiber_desc"))
+
                 tailFiberList.add(TailFiber(tail_fiber_id, tail_cable_number, tail_fiber_number,
                         tail_fiber_color, tail_fiber_desc))
             }
@@ -256,6 +263,7 @@ class DataBaseUtil {
                 val to_dev_type = cursor.getString(cursor.getColumnIndex("to_dev_type"))
                 val tail_fiber_tx_id = cursor.getInt(cursor.getColumnIndex("tail_fiber_tx_id"))
                 val tail_fiber_rx_id = cursor.getInt(cursor.getColumnIndex("tail_fiber_rx_id"))
+
                 deviceConnectionList.add(DeviceConnection(from_id, from_port, to_id, to_port,
                         to_dev_type, tail_fiber_tx_id, tail_fiber_rx_id))
             }
@@ -279,6 +287,7 @@ class DataBaseUtil {
                 val to_dev_type = cursor.getString(cursor.getColumnIndex("to_dev_type"))
                 val tail_fiber_tx_id = cursor.getInt(cursor.getColumnIndex("tail_fiber_tx_id"))
                 val tail_fiber_rx_id = cursor.getInt(cursor.getColumnIndex("tail_fiber_rx_id"))
+
                 switchConnectionList.add(SwitchConnection(from_id, from_port, to_id, to_port,
                         to_dev_type, tail_fiber_tx_id, tail_fiber_rx_id))
             }
@@ -300,6 +309,7 @@ class DataBaseUtil {
                 val io_type = cursor.getInt(cursor.getColumnIndex("io_type"))
                 val gse_addr = cursor.getString(cursor.getColumnIndex("gse_addr"))
                 val gse_desc = cursor.getString(cursor.getColumnIndex("gse_desc"))
+
                 gSEModelList.add(GSEModel(id, model_id, io_type, gse_addr, gse_desc))
             }
             cursor.close()
