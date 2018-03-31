@@ -118,10 +118,10 @@ class DeviceFragment : BaseFragment(), FragmentBackHandler {
 
         mAdapter = PanelGridAdapter(activity!!, mPanelBeanList, object : PanelGridAdapter.PanelClickListener {
             override fun onPanelItemClick(item: PanelBean) {
-//                activity?.supportFragmentManager?.beginTransaction()?.
-//                        add(R.id.content_frame, PanelFragment.newInstance(mDbPath!!, item))?.
-//                        addToBackStack("PanelFragment")?.
-//                        commit()
+                activity?.supportFragmentManager?.beginTransaction()?.
+                        add(R.id.content_frame, PanelFragment.newInstance(mDbPath!!, item))?.
+                        addToBackStack("PanelFragment")?.
+                        commit()
             }
         })
         rv_panel.run {

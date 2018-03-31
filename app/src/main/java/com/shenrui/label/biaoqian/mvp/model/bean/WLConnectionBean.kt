@@ -5,4 +5,4 @@ package com.shenrui.label.biaoqian.mvp.model.bean
  *
  * Created by cheng on 2018/3/25.
  */
-data class WLConnectionBean(val glId: String, val glName: String, val glConnectionPanel: String)
+data class WLConnectionBean(val wlId: String, val wlName: String, val wlConnectionPanel: String)

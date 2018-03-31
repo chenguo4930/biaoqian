@@ -18,7 +18,7 @@ class PanelListItemDeviceRecyclerAdapter(private val context1: Context,
     : RecyclerView.Adapter<PanelListItemDeviceRecyclerAdapter.MyViewHolder>() {
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.nameTv.text = list[position].device_iedname + list[position].device_code
+        holder.nameTv.text = list[position].device_iedname +"("+ list[position].device_code+")"
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =

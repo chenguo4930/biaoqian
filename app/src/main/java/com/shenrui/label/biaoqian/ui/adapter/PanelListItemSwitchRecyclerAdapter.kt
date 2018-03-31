@@ -19,7 +19,7 @@ class PanelListItemSwitchRecyclerAdapter(private val context1: Context,
     : RecyclerView.Adapter<PanelListItemSwitchRecyclerAdapter.MyViewHolder>() {
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.nameTv.text = list[position].switch_name + list[position].switch_code
+        holder.nameTv.text = list[position].switch_name +"(" +list[position].switch_code+")"
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
