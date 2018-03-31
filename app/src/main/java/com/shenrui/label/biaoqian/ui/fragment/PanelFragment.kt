@@ -28,7 +28,7 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
     }
 
     override fun getLayoutId() = R.layout.fragment_panel
-
+ 
     override fun initView() {
 
     }
