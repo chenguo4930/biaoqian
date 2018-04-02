@@ -25,10 +25,16 @@
         android:text="端口"
         android:textColor="@color/color_station_text" />
 
-    <View
+
+    <TextView
+        android:id="@+id/tv_tx_device_connect"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:background="@drawable/shape_rectangle_solid_ffffff_border_1dp_c0"
+        android:gravity="center"
+        android:text="连线Tx"
+        android:textColor="@color/color_station_text" />
 
     <TextView
         android:id="@+id/tv_tx_device_out_port"
