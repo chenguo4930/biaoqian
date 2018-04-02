@@ -6,9 +6,7 @@ import android.util.Log
 import com.github.ikidou.fragmentBackHandler.BackHandlerHelper
 import com.github.ikidou.fragmentBackHandler.FragmentBackHandler
 import com.luckongo.tthd.mvp.model.bean.Device
-import com.luckongo.tthd.mvp.model.bean.Panel
 import com.luckongo.tthd.mvp.model.bean.Switch
-
 import com.shenrui.label.biaoqian.R
 import com.shenrui.label.biaoqian.mvp.base.BaseFragment
 import com.shenrui.label.biaoqian.mvp.model.bean.PanelBean
@@ -55,7 +53,7 @@ class DeviceFragment : BaseFragment(), FragmentBackHandler {
             activity?.supportFragmentManager?.popBackStack()
         }
         tv_back_title.text = "测试数据库"
-        tv_title.text = mRegionBean?.region_name + mRegionBean?.region_code
+        tv_title.text = mRegionBean?.region_name + "(" + mRegionBean?.region_code + ")"
         if (mDbPath.isNullOrEmpty()) {
             toast("数据库路径为空")
         } else {
@@ -118,10 +116,7 @@ class DeviceFragment : BaseFragment(), FragmentBackHandler {
 
         mAdapter = PanelGridAdapter(activity!!, mPanelBeanList, object : PanelGridAdapter.PanelClickListener {
             override fun onPanelItemClick(item: PanelBean) {
-                activity?.supportFragmentManager?.beginTransaction()?.
-                        add(R.id.content_frame, PanelFragment.newInstance(mDbPath!!, item))?.
-                        addToBackStack("PanelFragment")?.
-                        commit()
+                activity?.supportFragmentManager?.beginTransaction()?.add(R.id.content_frame, PanelFragment.newInstance(mDbPath!!, item))?.addToBackStack("PanelFragment")?.commit()
             }
         })
         rv_panel.run {

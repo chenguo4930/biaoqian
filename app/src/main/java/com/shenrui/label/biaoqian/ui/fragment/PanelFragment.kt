@@ -1,8 +1,8 @@
 package com.shenrui.label.biaoqian.ui.fragment
 
+import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import com.github.ikidou.fragmentBackHandler.BackHandlerHelper
@@ -16,9 +16,11 @@ import com.shenrui.label.biaoqian.mvp.model.bean.PanelBean
 import com.shenrui.label.biaoqian.mvp.model.bean.TXConnectionBean
 import com.shenrui.label.biaoqian.mvp.model.bean.WLConnectionBean
 import com.shenrui.label.biaoqian.ui.adapter.PanelGLConnectionListItemRecyclerAdapter
+import com.shenrui.label.biaoqian.ui.adapter.PanelTXConnectionListItemRecyclerAdapter
 import com.shenrui.label.biaoqian.ui.adapter.PanelWLConnectionListItemRecyclerAdapter
 import com.shenrui.label.biaoqian.utils.DataBaseUtil
 import kotlinx.android.synthetic.main.fragment_panel.*
+import kotlinx.android.synthetic.main.title_layout.*
 import org.jetbrains.anko.support.v4.toast
 import rx.Observable
 import rx.Subscriber
@@ -51,8 +53,15 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
 
     override fun getLayoutId() = R.layout.fragment_panel
 
+    @SuppressLint("SetTextI18n")
     override fun initView() {
+        tv_title.text = mPanelBean?.panel_name + "(" + mPanelBean?.panel_code + ")"
 
+        tv_panel_name.text = mPanelBean?.panel_name + "(" + mPanelBean?.panel_code + ")"
+
+        img_back.setOnClickListener {
+            activity?.supportFragmentManager?.popBackStack()
+        }
     }
 
     override fun lazyLoad() {
@@ -78,7 +87,7 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
             val switchConnection = ArrayList<SwitchConnection>()
             val switchDateList = DataBaseUtil.getSwitch(mPath!!)
 
-            //帅选出当前屏柜中所有设备的连接情况
+            //筛选出当前屏柜中所有设备的连接情况
             deviceList?.forEach { item ->
                 deviceDataConnectionList.forEach {
                     if (it.from_id == item.device_id) {
@@ -131,8 +140,8 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
                     }
                     //如果to设备的panelId等于当前屏柜的id，说明这条deviceConnection是跳纤，如果不是就是尾缆（WL）
                     if (switch[0].panel_id == mPanelBean?.panel_id) {
-                        val inSwitch = switchList?.filter { item ->
-                            it.from_id == item.switch_id
+                        val inDevice = deviceList?.filter { item ->
+                            it.from_id == item.device_id
                         }
                         val tailFiberTx = tailFiberDataList.filter { item ->
                             it.tail_fiber_tx_id == item.tail_fiber_id
@@ -140,10 +149,11 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
                         val tailFiberRx = tailFiberDataList.filter { item ->
                             it.tail_fiber_rx_id == item.tail_fiber_id
                         }
-                        mTXConnectionList.add(TXConnectionBean(inSwitch!![0].switch_name, it.from_port + "/Tx",
+
+                        mTXConnectionList.add(TXConnectionBean(inDevice!![0].device_desc, it.from_port + "/Tx",
                                 tailFiberTx[0].tail_cable_number, it.to_port.toString() + "/Rx",
                                 switch[0].switch_name, tailFiberTx[0].tail_fiber_desc))
-                        mTXConnectionList.add(TXConnectionBean(inSwitch[0].switch_name, it.from_port + "/Rx",
+                        mTXConnectionList.add(TXConnectionBean(inDevice[0].device_desc, it.from_port + "/Rx",
                                 tailFiberRx[0].tail_cable_number, it.to_port.toString() + "/Tx",
                                 switch[0].switch_name, tailFiberRx[0].tail_fiber_desc))
 
@@ -215,8 +225,8 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
                     }
                     //如果to设备的panelId等于当前屏柜的id，说明这条deviceConnection是跳纤，如果不是就是尾缆（WL）
                     if (device[0].panel_id == mPanelBean?.panel_id) {
-                        val inDevice = deviceList?.filter { item ->
-                            it.from_id == item.device_id
+                        val inSwitch = switchList?.filter { item ->
+                            it.from_id == item.switch_id
                         }
                         val tailFiberTx = tailFiberDataList.filter { item ->
                             it.tail_fiber_tx_id == item.tail_fiber_id
@@ -224,10 +234,10 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
                         val tailFiberRx = tailFiberDataList.filter { item ->
                             it.tail_fiber_rx_id == item.tail_fiber_id
                         }
-                        mTXConnectionList.add(TXConnectionBean(inDevice!![0].device_iedname, it.from_port + "/Tx",
+                        mTXConnectionList.add(TXConnectionBean(inSwitch!![0].switch_name, it.from_port + "/Tx",
                                 tailFiberTx[0].tail_cable_number, it.to_port + "/Rx",
                                 device[0].device_desc, tailFiberTx[0].tail_fiber_desc))
-                        mTXConnectionList.add(TXConnectionBean(inDevice[0].device_iedname, it.from_port + "/Rx",
+                        mTXConnectionList.add(TXConnectionBean(inSwitch[0].switch_name, it.from_port + "/Rx",
                                 tailFiberRx[0].tail_cable_number, it.to_port + "/Tx",
                                 device[0].device_desc, tailFiberRx[0].tail_fiber_desc))
 
@@ -299,11 +309,17 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
 
                     }
                 })
-        rv_panel_wl.run {
+        rv_panel_gl.run {
             layoutManager = LinearLayoutManager(activity)
             adapter = glAdapter
         }
 
+        //TX链接图
+        val txAdapter = PanelTXConnectionListItemRecyclerAdapter(activity!!, mTXConnectionList)
+        rv_tx_connection.run {
+            layoutManager = LinearLayoutManager(activity)
+            adapter = txAdapter
+        }
 
     }
 
