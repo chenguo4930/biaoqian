@@ -292,8 +292,7 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
         val wlAdapter = PanelWLConnectionListItemRecyclerAdapter(activity!!, mWLConnectionList,
                 object : PanelWLConnectionListItemRecyclerAdapter.WLConnectionClickListener {
                     override fun onWLConnectionItemClick(item: WLConnectionBean) {
-//               activity?.supportFragmentManager?.beginTransaction()?.add(R.id.content_frame, DeviceFragment.newInstance(mDbPath!!, item))?.addToBackStack("DeviceFragment")?.commit()
-
+                        activity?.supportFragmentManager?.beginTransaction()?.add(R.id.content_frame, WLConnectionFragment.newInstance(mPath!!, item.wlName))?.addToBackStack("WLConnectionFragment")?.commit()
                     }
                 })
         rv_panel_wl.run {
@@ -305,8 +304,7 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
         val glAdapter = PanelGLConnectionListItemRecyclerAdapter(activity!!, mGLConnectionList,
                 object : PanelGLConnectionListItemRecyclerAdapter.GLConnectionClickListener {
                     override fun onGLConnectionItemClick(item: GLConnectionBean) {
-//               activity?.supportFragmentManager?.beginTransaction()?.add(R.id.content_frame, DeviceFragment.newInstance(mDbPath!!, item))?.addToBackStack("DeviceFragment")?.commit()
-
+                        activity?.supportFragmentManager?.beginTransaction()?.add(R.id.content_frame, GLConnectionFragment.newInstance(mPath!!, item.glName))?.addToBackStack("DeviceFragment")?.commit()
                     }
                 })
         rv_panel_gl.run {
