@@ -29,10 +29,12 @@
     <TextView
         android:id="@+id/tv_tx_device_connect"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:background="@drawable/shape_rectangle_solid_ffffff_border_1dp_c0"
+        android:background="@drawable/icon_connection"
         android:gravity="center"
+        android:paddingBottom="3dp"
+        android:paddingTop="3dp"
         android:text="连线Tx"
         android:textColor="@color/color_station_text" />
 
