@@ -131,8 +131,8 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
                             it.tail_fiber_tx_id == item.tail_fiber_id
                         }
                         //找到尾缆
-                       val wlBean =  WLConnectionBean(panel[0].panel_id.toString(), tailFiberWL[0].tail_cable_number, panel[0].panel_name)
-                        if (!mWLConnectionList.contains(wlBean)){
+                        val wlBean = WLConnectionBean(panel[0].panel_id.toString(), tailFiberWL[0].tail_cable_number, panel[0].panel_name)
+                        if (!mWLConnectionList.contains(wlBean)) {
                             mWLConnectionList.add(wlBean)
                         }
                     }
@@ -169,8 +169,8 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
                             it.tail_fiber_tx_id == item.tail_fiber_id
                         }
                         //找到尾缆
-                        val wlBean =  WLConnectionBean(panel[0].panel_id.toString(), tailFiberWL[0].tail_cable_number, panel[0].panel_name)
-                        if (!mWLConnectionList.contains(wlBean)){
+                        val wlBean = WLConnectionBean(panel[0].panel_id.toString(), tailFiberWL[0].tail_cable_number, panel[0].panel_name)
+                        if (!mWLConnectionList.contains(wlBean)) {
                             mWLConnectionList.add(wlBean)
                         }
                     }
@@ -221,8 +221,8 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
                             it.tail_fiber_tx_id == item.tail_fiber_id
                         }
                         //找到尾缆
-                        val wlBean =  WLConnectionBean(panel[0].panel_id.toString(), tailFiberWL[0].tail_cable_number, panel[0].panel_name)
-                        if (!mWLConnectionList.contains(wlBean)){
+                        val wlBean = WLConnectionBean(panel[0].panel_id.toString(), tailFiberWL[0].tail_cable_number, panel[0].panel_name)
+                        if (!mWLConnectionList.contains(wlBean)) {
                             mWLConnectionList.add(wlBean)
                         }
                     }
@@ -259,8 +259,8 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
                             it.tail_fiber_tx_id == item.tail_fiber_id
                         }
                         //找到尾缆
-                        val wlBean =  WLConnectionBean(panel[0].panel_id.toString(), tailFiberWL[0].tail_cable_number, panel[0].panel_name)
-                        if (!mWLConnectionList.contains(wlBean)){
+                        val wlBean = WLConnectionBean(panel[0].panel_id.toString(), tailFiberWL[0].tail_cable_number, panel[0].panel_name)
+                        if (!mWLConnectionList.contains(wlBean)) {
                             mWLConnectionList.add(wlBean)
                         }
                     }

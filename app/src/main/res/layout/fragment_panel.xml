@@ -1,177 +1,185 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/color_bg"
+    android:orientation="vertical"
     tools:context="com.shenrui.label.biaoqian.ui.fragment.TestFragment">
 
-    <LinearLayout
+    <include layout="@layout/title_layout" />
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/color_bg"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <include layout="@layout/title_layout" />
-
-        <android.support.v7.widget.CardView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="10dp"
-            android:background="@color/white"
-            app:cardCornerRadius="4dp">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tv_panel_connection"
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/color_recycler_item_title"
-                android:drawablePadding="10dp"
-                android:gravity="center"
-                android:maxLength="30"
-                android:padding="5dp"
-                android:text="拼柜连接图"
-                android:textColor="@color/color_station_text" />
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/white"
+                app:cardCornerRadius="4dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
-                android:orientation="horizontal"
-                android:padding="10dp"
-                android:weightSum="5">
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/rv_panel_wl"
-                    android:layout_width="0dp"
+                <TextView
+                    android:id="@+id/tv_panel_connection"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2" />
-
-                <android.support.v7.widget.CardView
-                    android:layout_width="0dp"
-                    android:layout_height="200dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_weight="1"
-                    app:cardCornerRadius="4dp">
-
-                    <TextView
-                        android:id="@+id/tv_panel_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/color_recycler_item_title"
-                        android:drawableLeft="@mipmap/icon_panel"
-                        android:drawablePadding="10dp"
-                        android:gravity="center"
-                        android:maxLength="30"
-                        android:padding="5dp"
-                        android:text="屏柜名称"
-                        android:textColor="@color/color_station_text" />
-
-                </android.support.v7.widget.CardView>
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/rv_panel_gl"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2" />
-            </LinearLayout>
-
-        </android.support.v7.widget.CardView>
-
-        <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="10dp"
-            android:layout_weight="1"
-            app:cardCornerRadius="4dp">
-
-            <TextView
-                android:id="@+id/tv_tx_connection"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/color_recycler_item_title"
-                android:gravity="center"
-                android:padding="5dp"
-                android:text="跳纤连接图"
-                android:textColor="@color/color_station_text" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="40dp"
-                android:orientation="vertical">
+                    android:background="@color/color_recycler_item_title"
+                    android:drawablePadding="10dp"
+                    android:gravity="center"
+                    android:maxLength="30"
+                    android:padding="5dp"
+                    android:text="拼柜连接图"
+                    android:textColor="@color/color_station_text" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="40dp"
                     android:orientation="horizontal"
-                    android:weightSum="6">
+                    android:padding="10dp"
+                    android:weightSum="5">
 
-                    <TextView
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/rv_panel_wl"
                         android:layout_width="0dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2" />
+
+                    <android.support.v7.widget.CardView
+                        android:layout_width="0dp"
+                        android:layout_height="200dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
                         android:layout_weight="1"
-                        android:background="@drawable/shape_rectangle_solid_eff5fd_border_1dp_c0"
-                        android:gravity="center"
-                        android:text="设备"
-                        android:textColor="@color/color_station_text" />
+                        app:cardCornerRadius="4dp">
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@drawable/shape_rectangle_solid_eff5fd_border_1dp_c0"
-                        android:gravity="center"
-                        android:text="端口"
-                        android:textColor="@color/color_station_text" />
+                        <TextView
+                            android:id="@+id/tv_panel_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/color_recycler_item_title"
+                            android:drawableLeft="@mipmap/icon_panel"
+                            android:drawablePadding="10dp"
+                            android:gravity="center"
+                            android:maxLength="30"
+                            android:padding="5dp"
+                            android:text="屏柜名称"
+                            android:textColor="@color/color_station_text" />
 
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1" />
+                    </android.support.v7.widget.CardView>
 
-                    <TextView
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/rv_panel_gl"
                         android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@drawable/shape_rectangle_solid_eff5fd_border_1dp_c0"
-                        android:gravity="center"
-                        android:text="端口"
-                        android:textColor="@color/color_station_text" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@drawable/shape_rectangle_solid_eff5fd_border_1dp_c0"
-                        android:gravity="center"
-                        android:text="设备"
-                        android:textColor="@color/color_station_text" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@drawable/shape_rectangle_solid_eff5fd_border_1dp_c0"
-                        android:gravity="center"
-                        android:text="用途"
-                        android:textColor="@color/color_station_text" />
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2" />
                 </LinearLayout>
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/rv_tx_connection"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
+            </android.support.v7.widget.CardView>
 
-        </android.support.v7.widget.CardView>
-    </LinearLayout>
-</ScrollView>
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                app:cardCornerRadius="4dp">
+
+                <TextView
+                    android:id="@+id/tv_tx_connection"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/color_recycler_item_title"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:text="跳纤连接图"
+                    android:textColor="@color/color_station_text" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="40dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:orientation="horizontal"
+                        android:weightSum="6">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@drawable/shape_rectangle_solid_eff5fd_border_1dp_c0"
+                            android:gravity="center"
+                            android:text="设备"
+                            android:textColor="@color/color_station_text" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@drawable/shape_rectangle_solid_eff5fd_border_1dp_c0"
+                            android:gravity="center"
+                            android:text="端口"
+                            android:textColor="@color/color_station_text" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@drawable/shape_rectangle_solid_eff5fd_border_1dp_c0"
+                            android:gravity="center"
+                            android:text="端口"
+                            android:textColor="@color/color_station_text" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@drawable/shape_rectangle_solid_eff5fd_border_1dp_c0"
+                            android:gravity="center"
+                            android:text="设备"
+                            android:textColor="@color/color_station_text" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@drawable/shape_rectangle_solid_eff5fd_border_1dp_c0"
+                            android:gravity="center"
+                            android:text="用途"
+                            android:textColor="@color/color_station_text" />
+                    </LinearLayout>
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/rv_tx_connection"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
+
