@@ -283,7 +283,7 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
                 }
             }
             //帅选出所有odf的连接信息
-            odfDataList.forEach out@{
+            odfList.forEach out@{
                 odfConnectionDataList.forEach { item ->
                     if (item.odf_id == it.odf_id) {
                         var inDeviceName = ""

@@ -20,9 +20,9 @@ class GLConnectionListItemRecyclerAdapter(private val context1: Context,
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.deviceInTv.text = list[position].inDeviceName
         val inTxTypeStr = if (list[position].odfConnection.internal_rt_type == 0) {
-            "Tx"
-        } else {
             "Rx"
+        } else {
+            "Tx"
         }
         holder.deviceInPortTv.text = list[position].odfConnection.internal_device_port + "/" + inTxTypeStr
         holder.deviceInTxTv.text = list[position].odfConnection.internal_optical_fiber_number
@@ -31,9 +31,9 @@ class GLConnectionListItemRecyclerAdapter(private val context1: Context,
 
         holder.deviceOutODFTv.text =  list[position].odfOut.odf_layer + list[position].odfOut.odf_port
         val outTxTypeStr = if (list[position].odfOutConnection.internal_rt_type == 0) {
-            "Tx"
-        } else {
             "Rx"
+        } else {
+            "Tx"
         }
         holder.deviceOutTxTv.text = list[position].odfOutConnection.internal_optical_fiber_number
         holder.deviceOutPortTv.text = list[position].odfOutConnection.internal_device_port + "/" + outTxTypeStr
