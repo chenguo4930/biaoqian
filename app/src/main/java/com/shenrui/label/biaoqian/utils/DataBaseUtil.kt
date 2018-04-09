@@ -215,11 +215,11 @@ class DataBaseUtil {
                 val internal_device_port = cursor.getString(cursor.getColumnIndex("internal_device_port"))
                 val internal_rt_type = cursor.getInt(cursor.getColumnIndex("internal_rt_type"))
                 val internal_optical_fiber_number = cursor.getString(cursor.getColumnIndex("internal_optical_fiber_number"))
-                val internal_odf_id = cursor.getInt(cursor.getColumnIndex("internal_odf_id"))
+                val external_odf_id = cursor.getInt(cursor.getColumnIndex("external_odf_id"))
 
                 oDFConnectionList.add(ODFConnection(odf_id, optical_cable_number, optical_fiber_number,
                         optical_fiber_color, internal_device_type, internal_device_id,
-                        internal_device_port, internal_rt_type, internal_optical_fiber_number, internal_odf_id))
+                        internal_device_port, internal_rt_type, internal_optical_fiber_number, external_odf_id))
             }
             cursor.close()
             return oDFConnectionList

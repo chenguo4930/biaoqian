@@ -8,6 +8,8 @@ import android.util.Log
 import com.github.ikidou.fragmentBackHandler.BackHandlerHelper
 import com.github.ikidou.fragmentBackHandler.FragmentBackHandler
 import com.luckongo.tthd.mvp.model.bean.DeviceConnection
+import com.luckongo.tthd.mvp.model.bean.ODF
+import com.luckongo.tthd.mvp.model.bean.ODFConnection
 import com.luckongo.tthd.mvp.model.bean.SwitchConnection
 import com.shenrui.label.biaoqian.R
 import com.shenrui.label.biaoqian.mvp.base.BaseFragment
@@ -86,6 +88,8 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
             val switchDataConnection = DataBaseUtil.getSwitchConnection(mPath!!)
             val switchConnection = ArrayList<SwitchConnection>()
             val switchDateList = DataBaseUtil.getSwitch(mPath!!)
+
+            //解析WeiLan数据和跳纤数据------------------start-----------------------
 
             //筛选出当前屏柜中所有设备的连接情况
             deviceList?.forEach { item ->
@@ -266,6 +270,103 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
                     }
                 }
             }
+            //解析WeiLan数据和跳纤数据------------------end-----------------------
+
+            //解析光缆数据-------------------------start-----------------------
+            val odfDataList = DataBaseUtil.getODF(mPath!!)
+            val odfConnectionDataList = DataBaseUtil.getODFConnection(mPath!!)
+            //筛选出屏柜中的所有odf
+            val odfList = ArrayList<ODF>()
+            odfDataList.forEach {
+                if (it.panel_id == mPanelBean?.panel_id) {
+                    odfList.add(it)
+                }
+            }
+            //帅选出所有odf的连接信息
+            odfDataList.forEach out@{
+                odfConnectionDataList.forEach { item ->
+                    if (item.odf_id == it.odf_id) {
+                        var inDeviceName = ""
+                        var outDeviceName = ""
+                        var outPanelName = ""
+                        var outODF: ODF? = null
+                        var outODFConnection: ODFConnection? = null
+
+                        for (bean in odfConnectionDataList) {
+                            if (bean.odf_id == item.external_odf_id) {
+                                //获取外部连接的odf和odfConnection
+                                outODFConnection = bean
+                                for (odf in odfDataList) {
+                                    if (odf.odf_id == item.external_odf_id) {
+                                        outODF = odf
+                                        break
+                                    }
+                                }
+
+                                if (bean.internal_device_type == 1001) {
+                                    //如果外部连接的设备是装置
+                                    for (device in deviceDateList) {
+                                        if (device.device_id == bean.internal_device_id) {
+                                            outDeviceName = device.device_desc
+                                            for (panel in panelDataList) {
+                                                if (panel.panel_id == device.panel_id) {
+                                                    outPanelName = panel.panel_name
+                                                    break
+                                                }
+                                            }
+                                            break
+                                        }
+                                    }
+                                } else if (bean.internal_device_type == 1000) {
+                                    //如果外部连接的设备是交换机
+                                    for (switch in switchDateList) {
+                                        if (switch.switch_id == bean.internal_device_id) {
+                                            outDeviceName = switch.switch_name
+                                            for (panel in panelDataList) {
+                                                if (panel.panel_id == switch.panel_id) {
+                                                    outPanelName = panel.panel_name
+                                                    break
+                                                }
+                                            }
+                                            break
+                                        }
+                                    }
+                                } else {
+                                    return@out
+                                }
+                                break
+                            }
+                        }
+
+                        //获取in设备的名称
+                        if (item.internal_device_type == 1001) {
+                            //如果设备是装置
+                            for (device in deviceDateList) {
+                                if (device.device_id == item.internal_device_id) {
+                                    inDeviceName = device.device_desc
+                                    break
+                                }
+                            }
+                        } else if (item.internal_device_type == 1000) {
+                            //如果设备是交换机
+                            for (switch in switchDateList) {
+                                if (switch.switch_id == item.internal_device_id) {
+                                    inDeviceName = switch.switch_name
+                                    break
+                                }
+                            }
+                        } else {
+                            return@out
+                        }
+
+                        mGLConnectionList.add(GLConnectionBean(inDeviceName, outDeviceName, outPanelName, it, item, outODF!!, outODFConnection!!))
+                        return@out
+                    }
+                }
+            }
+            Log.e("--------", "----------odfDataList.size() = ${mGLConnectionList.size}-")
+
+            //解析光缆数据-------------------------end-----------------------
 
 //            it.onNext(panelList)
             it.onCompleted()
@@ -300,7 +401,7 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
             return
         }
 
-        //尾缆Recycleriew
+        //----------------尾缆Recycleriew--------------
         val wlAdapter = PanelWLConnectionListItemRecyclerAdapter(activity!!, mWLConnectionList,
                 object : PanelWLConnectionListItemRecyclerAdapter.WLConnectionClickListener {
                     override fun onWLConnectionItemClick(item: WLConnectionBean) {
@@ -312,11 +413,27 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
             adapter = wlAdapter
         }
 
-        //光缆Recycleriew
-        val glAdapter = PanelGLConnectionListItemRecyclerAdapter(activity!!, mGLConnectionList,
+        //--------------光缆Recycleriew----------------
+        //去除光缆重复的
+        val glConnectionList = ArrayList<GLConnectionBean>()
+        mGLConnectionList.forEach {
+            for (bean in glConnectionList) {
+                if (bean.odfConnection.optical_cable_number == it.odfConnection.optical_cable_number) {
+                    return@forEach
+                }
+            }
+            glConnectionList.add(it)
+        }
+        val glAdapter = PanelGLConnectionListItemRecyclerAdapter(activity!!, glConnectionList,
                 object : PanelGLConnectionListItemRecyclerAdapter.GLConnectionClickListener {
                     override fun onGLConnectionItemClick(item: GLConnectionBean) {
-                        activity?.supportFragmentManager?.beginTransaction()?.add(R.id.content_frame, GLConnectionFragment.newInstance(mPath!!, item.glName))?.addToBackStack("DeviceFragment")?.commit()
+                        val glList = ArrayList<GLConnectionBean>()
+                        mGLConnectionList.forEach {
+                            if (it.odfConnection.optical_cable_number == item.odfConnection.optical_cable_number) {
+                                glList.add(it)
+                            }
+                        }
+                        activity?.supportFragmentManager?.beginTransaction()?.add(R.id.content_frame, GLConnectionFragment.newInstance(mPath!!, glList))?.addToBackStack("DeviceFragment")?.commit()
                     }
                 })
         rv_panel_gl.run {
@@ -324,7 +441,7 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
             adapter = glAdapter
         }
 
-        //TX链接图
+        //--------------TX链接图------------------
         val txAdapter = PanelTXConnectionListItemRecyclerAdapter(activity!!, mTXConnectionList)
         rv_tx_connection.run {
             layoutManager = LinearLayoutManager(activity)

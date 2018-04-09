@@ -25,8 +25,8 @@ class PanelGLConnectionListItemRecyclerAdapter(private val context1: Context,
 ) : RecyclerView.Adapter<PanelGLConnectionListItemRecyclerAdapter.MyViewHolder>() {
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.panelTv.text = list[position].glConnectionPanel
-        holder.glNameTv.text = list[position].glName
+        holder.panelTv.text = list[position].outPanelName
+        holder.glNameTv.text = list[position].odfConnection.optical_cable_number
         holder.itemView.setOnClickListener {
             onItemClickListener?.onGLConnectionItemClick(list[position])
         }

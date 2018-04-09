@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/color_bg">
 
     <include layout="@layout/title_layout" />
 
@@ -18,12 +19,12 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:orientation="horizontal"
-            android:weightSum="6">
+            android:weightSum="13">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:background="@drawable/shape_rectangle_solid_eff5fd_border_1dp_c0"
                 android:gravity="center"
                 android:text="设备"
@@ -38,10 +39,46 @@
                 android:text="端口"
                 android:textColor="@color/color_station_text" />
 
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/shape_rectangle_solid_eff5fd_border_1dp_c0"
+                android:gravity="center"
+                android:text="TX"
+                android:textColor="@color/color_station_text" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/shape_rectangle_solid_eff5fd_border_1dp_c0"
+                android:gravity="center"
+                android:text="ODF"
+                android:textColor="@color/color_station_text" />
+
             <View
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1" />
+                android:layout_weight="2" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/shape_rectangle_solid_eff5fd_border_1dp_c0"
+                android:gravity="center"
+                android:text="ODF"
+                android:textColor="@color/color_station_text" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/shape_rectangle_solid_eff5fd_border_1dp_c0"
+                android:gravity="center"
+                android:text="TX"
+                android:textColor="@color/color_station_text" />
 
             <TextView
                 android:layout_width="0dp"
@@ -55,7 +92,7 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:background="@drawable/shape_rectangle_solid_eff5fd_border_1dp_c0"
                 android:gravity="center"
                 android:text="设备"
@@ -72,7 +109,7 @@
         </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_wl_connection"
+            android:id="@+id/rv_gl_connection"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>

@@ -197,7 +197,35 @@ data class SwitchPort(val switch_id: Int, val switch_port: String)
  * 光配端口类型（0:电口交换机类型 10:光口SC  11:光口FC  12:光口ST  13:光口LC）
  */
 data class ODF(val odf_id: Int, val panel_id: Int, val odf_code: String,
-               val odf_layer: String, val odf_port: String, val odf_port_type: Int)
+               val odf_layer: String, val odf_port: String, val odf_port_type: Int) : Parcelable {
+    constructor(source: Parcel) : this(
+            source.readInt(),
+            source.readInt(),
+            source.readString(),
+            source.readString(),
+            source.readString(),
+            source.readInt()
+    )
+
+    override fun describeContents() = 0
+
+    override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
+        writeInt(odf_id)
+        writeInt(panel_id)
+        writeString(odf_code)
+        writeString(odf_layer)
+        writeString(odf_port)
+        writeInt(odf_port_type)
+    }
+
+    companion object {
+        @JvmField
+        val CREATOR: Parcelable.Creator<ODF> = object : Parcelable.Creator<ODF> {
+            override fun createFromParcel(source: Parcel): ODF = ODF(source)
+            override fun newArray(size: Int): Array<ODF?> = arrayOfNulls(size)
+        }
+    }
+}
 
 /**
  * 光缆端口Id
@@ -211,11 +239,47 @@ data class ODF(val odf_id: Int, val panel_id: Int, val odf_code: String,
  *  内连跳纤编号
  *  对侧光配ID
  */
-data class ODFConnection(val odf_id: Int, val optical_cable_number: String, val optical_fiber_number: Int,
+data class ODFConnection(val odf_id: Int, val optical_cable_number: String?, val optical_fiber_number: Int,
                          val optical_fiber_color: Int, val internal_device_type: Int,
-                         val internal_device_id: Int, val internal_device_port: String,
-                         val internal_rt_type: Int, val internal_optical_fiber_number: String,
-                         val external_odf_id: Int)
+                         val internal_device_id: Int, val internal_device_port: String?,
+                         val internal_rt_type: Int, val internal_optical_fiber_number: String?,
+                         val external_odf_id: Int) : Parcelable {
+    constructor(source: Parcel) : this(
+            source.readInt(),
+            source.readString(),
+            source.readInt(),
+            source.readInt(),
+            source.readInt(),
+            source.readInt(),
+            source.readString(),
+            source.readInt(),
+            source.readString(),
+            source.readInt()
+    )
+
+    override fun describeContents() = 0
+
+    override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
+        writeInt(odf_id)
+        writeString(optical_cable_number)
+        writeInt(optical_fiber_number)
+        writeInt(optical_fiber_color)
+        writeInt(internal_device_type)
+        writeInt(internal_device_id)
+        writeString(internal_device_port)
+        writeInt(internal_rt_type)
+        writeString(internal_optical_fiber_number)
+        writeInt(external_odf_id)
+    }
+
+    companion object {
+        @JvmField
+        val CREATOR: Parcelable.Creator<ODFConnection> = object : Parcelable.Creator<ODFConnection> {
+            override fun createFromParcel(source: Parcel): ODFConnection = ODFConnection(source)
+            override fun newArray(size: Int): Array<ODFConnection?> = arrayOfNulls(size)
+        }
+    }
+}
 
 /**
  *  尾纤Id

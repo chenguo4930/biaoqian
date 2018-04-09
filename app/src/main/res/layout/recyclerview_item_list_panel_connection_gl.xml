@@ -36,7 +36,7 @@
             android:id="@+id/tv_gl_panel_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:background="@color/color_recycler_item_title"
             android:drawableLeft="@mipmap/icon_panel"
             android:gravity="center"
             android:maxLength="30"

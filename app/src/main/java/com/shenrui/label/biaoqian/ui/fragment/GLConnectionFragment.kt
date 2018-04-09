@@ -3,6 +3,7 @@ package com.shenrui.label.biaoqian.ui.fragment
 import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.os.Bundle
+import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import com.github.ikidou.fragmentBackHandler.BackHandlerHelper
 import com.github.ikidou.fragmentBackHandler.FragmentBackHandler
@@ -10,9 +11,12 @@ import com.luckongo.tthd.mvp.model.bean.DeviceConnection
 import com.luckongo.tthd.mvp.model.bean.SwitchConnection
 import com.shenrui.label.biaoqian.R
 import com.shenrui.label.biaoqian.mvp.base.BaseFragment
+import com.shenrui.label.biaoqian.mvp.model.bean.GLConnectionBean
 import com.shenrui.label.biaoqian.mvp.model.bean.TXConnectionBean
 import com.shenrui.label.biaoqian.mvp.model.bean.WLConnectionBean
+import com.shenrui.label.biaoqian.ui.adapter.GLConnectionListItemRecyclerAdapter
 import com.shenrui.label.biaoqian.utils.DataBaseUtil
+import kotlinx.android.synthetic.main.fragment_gl_connection.*
 import kotlinx.android.synthetic.main.title_layout.*
 import org.jetbrains.anko.support.v4.toast
 import rx.Observable
@@ -24,17 +28,13 @@ import rx.schedulers.Schedulers
 class GLConnectionFragment : BaseFragment(), FragmentBackHandler {
 
     private var mPath: String? = null
-    private var mWLName: String? = null
-
-    private val mWLConnectionList: ArrayList<WLConnectionBean> by lazy {
-        ArrayList<WLConnectionBean>()
-    }
+    private var mGLList: ArrayList<GLConnectionBean>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
             mPath = arguments!!.getString(ARG_PARAM1)
-            mWLName = arguments!!.getString(ARG_PARAM2)
+            mGLList = arguments!!.getParcelableArrayList<GLConnectionBean>(ARG_PARAM2)
         }
     }
 
@@ -42,7 +42,7 @@ class GLConnectionFragment : BaseFragment(), FragmentBackHandler {
 
     @SuppressLint("SetTextI18n")
     override fun initView() {
-        tv_back_title.text = mWLName
+        tv_back_title.text = mGLList!![0].odfConnection.optical_cable_number
 
         tv_title.text = "纤芯信息"
 
@@ -52,51 +52,7 @@ class GLConnectionFragment : BaseFragment(), FragmentBackHandler {
     }
 
     override fun lazyLoad() {
-        val progressDialog = ProgressDialog.show(activity, null, "正在查询数据...", false, false)
-        progressDialog.show()
-
-        Observable.create(Observable.OnSubscribe<ArrayList<TXConnectionBean>> {
-            //得到数据库中所有的屏柜
-            val panelDataList = DataBaseUtil.getPanel(mPath!!)
-            //获取所有尾缆
-            val tailFiberDataList = DataBaseUtil.getTailFiber(mPath!!)
-
-            val deviceConnection = ArrayList<DeviceConnection>()
-            //刷选出设备相关的设备连接情况
-            val deviceDateList = DataBaseUtil.getDevice(mPath!!)
-            //得到数据库中所有的设备连接
-            val deviceDataConnectionList = DataBaseUtil.getDeviceConnection(mPath!!)
-
-            //交换机
-            val switchDataConnection = DataBaseUtil.getSwitchConnection(mPath!!)
-            val switchConnection = ArrayList<SwitchConnection>()
-            val switchDateList = DataBaseUtil.getSwitch(mPath!!)
-
-
-
-//            it.onNext(panelList)
-            it.onCompleted()
-        }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : Subscriber<ArrayList<TXConnectionBean>>() {
-                    override fun onCompleted() {
-//                        toast("成功读取数据库")
-                        progressDialog.dismiss()
-                        initRecycleView()
-                    }
-
-                    override fun onError(e: Throwable) {
-                        toast("读取数据库失败，请检查数据库是否存在")
-                        progressDialog.dismiss()
-                    }
-
-                    override fun onNext(dataList: ArrayList<TXConnectionBean>) {
-                        dataList.forEach {
-                            Log.e("-----", "-----PanelBean=$it")
-                        }
-                    }
-                })
-
+        initRecycleView()
     }
 
     /**
@@ -107,12 +63,12 @@ class GLConnectionFragment : BaseFragment(), FragmentBackHandler {
             return
         }
 
-//        //TX链接图
-//        val txAdapter = PanelTXConnectionListItemRecyclerAdapter(activity!!, mTXConnectionList)
-//        rv_tx_connection.run {
-//            layoutManager = LinearLayoutManager(activity)
-//            adapter = txAdapter
-//        }
+        //TX链接图
+        val txAdapter = GLConnectionListItemRecyclerAdapter(activity!!, mGLList!!)
+        rv_gl_connection.run {
+            layoutManager = LinearLayoutManager(activity)
+            adapter = txAdapter
+        }
 
     }
 
@@ -122,11 +78,11 @@ class GLConnectionFragment : BaseFragment(), FragmentBackHandler {
         private val ARG_PARAM1 = "param1"
         private val ARG_PARAM2 = "param2"
 
-        fun newInstance(param1: String, param2: String): GLConnectionFragment {
+        fun newInstance(param1: String, param2: ArrayList<GLConnectionBean>): GLConnectionFragment {
             val fragment = GLConnectionFragment()
             val args = Bundle()
             args.putString(ARG_PARAM1, param1)
-            args.putString(ARG_PARAM2, param2)
+            args.putParcelableArrayList(ARG_PARAM2, param2)
             fragment.arguments = args
             return fragment
         }
