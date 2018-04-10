@@ -7,23 +7,41 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.shenrui.label.biaoqian.R
-import com.shenrui.label.biaoqian.mvp.model.bean.WLConnectionDetailBean
+import com.shenrui.label.biaoqian.mvp.model.bean.WLConnectionBean
 
 /**
  * 区域region Adapter
  * @author Chengguo on 2018/3/5.
  */
 class WLConnectionListItemRecyclerAdapter(private val context1: Context,
-                                          private val list: List<WLConnectionDetailBean>)
+                                          private val list: ArrayList<WLConnectionBean>)
     : RecyclerView.Adapter<WLConnectionListItemRecyclerAdapter.MyViewHolder>() {
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.deviceInTv.text = list[position].inDeviceName
-        holder.deviceInPortTv.text = list[position].inPort
-        holder.deviceConnectTv.text = list[position].tailFiberNumber.toString()
-        holder.deviceOutPortTv.text = list[position].outPort
-        holder.deviceOutTv.text = list[position].outDeviceName
-        holder.txDescTv.text = list[position].desc
+        val item = list[position]
+        if (item.inDevice != null) {
+            holder.deviceInTv.text = item.inDevice?.device_desc
+            holder.deviceInPortTv.text = item.inDeviceConnection?.from_port
+            holder.deviceConnectTv.text = item.wlTailFiber.tail_fiber_number.toString()
+            holder.deviceOutPortTv.text = item.inDeviceConnection?.to_port.toString()
+            holder.txDescTv.text = item.wlTailFiber.tail_fiber_desc
+            if (item.toDevice != null) {
+                holder.deviceOutTv.text = item.toDevice?.device_desc
+            } else {
+                holder.deviceOutTv.text = item.toSwitch?.switch_name
+            }
+        } else {
+            holder.deviceInTv.text = item.inSwitch?.switch_name
+            holder.deviceInPortTv.text = item.inSwitchConnection?.from_port
+            holder.deviceConnectTv.text = item.wlTailFiber.tail_fiber_number.toString()
+            holder.deviceOutPortTv.text = item.inSwitchConnection?.to_port
+            holder.txDescTv.text = item.wlTailFiber.tail_fiber_desc
+            if (item.toDevice != null) {
+                holder.deviceOutTv.text = item.toDevice?.device_desc
+            } else {
+                holder.deviceOutTv.text = item.toSwitch?.switch_name
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
