@@ -293,7 +293,33 @@ data class ODFConnection(val odf_id: Int, val optical_cable_number: String?, val
  *  尾缆纤芯作用描述
  */
 data class TailFiber(val tail_fiber_id: Int, val tail_cable_number: String, val tail_fiber_number: Int,
-                     val tail_fiber_color: Int, val tail_fiber_desc: String)
+                     val tail_fiber_color: Int, val tail_fiber_desc: String) : Parcelable {
+    constructor(source: Parcel) : this(
+            source.readInt(),
+            source.readString(),
+            source.readInt(),
+            source.readInt(),
+            source.readString()
+    )
+
+    override fun describeContents() = 0
+
+    override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
+        writeInt(tail_fiber_id)
+        writeString(tail_cable_number)
+        writeInt(tail_fiber_number)
+        writeInt(tail_fiber_color)
+        writeString(tail_fiber_desc)
+    }
+
+    companion object {
+        @JvmField
+        val CREATOR: Parcelable.Creator<TailFiber> = object : Parcelable.Creator<TailFiber> {
+            override fun createFromParcel(source: Parcel): TailFiber = TailFiber(source)
+            override fun newArray(size: Int): Array<TailFiber?> = arrayOfNulls(size)
+        }
+    }
+}
 
 /**
  * 装置Id
@@ -306,7 +332,37 @@ data class TailFiber(val tail_fiber_id: Int, val tail_cable_number: String, val 
  */
 data class DeviceConnection(val from_id: Int, val from_port: String, val to_id: Int,
                             val to_port: Int, val to_dev_type: String,
-                            val tail_fiber_tx_id: Int, val tail_fiber_rx_id: Int)
+                            val tail_fiber_tx_id: Int, val tail_fiber_rx_id: Int) : Parcelable {
+    constructor(source: Parcel) : this(
+            source.readInt(),
+            source.readString(),
+            source.readInt(),
+            source.readInt(),
+            source.readString(),
+            source.readInt(),
+            source.readInt()
+    )
+
+    override fun describeContents() = 0
+
+    override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
+        writeInt(from_id)
+        writeString(from_port)
+        writeInt(to_id)
+        writeInt(to_port)
+        writeString(to_dev_type)
+        writeInt(tail_fiber_tx_id)
+        writeInt(tail_fiber_rx_id)
+    }
+
+    companion object {
+        @JvmField
+        val CREATOR: Parcelable.Creator<DeviceConnection> = object : Parcelable.Creator<DeviceConnection> {
+            override fun createFromParcel(source: Parcel): DeviceConnection = DeviceConnection(source)
+            override fun newArray(size: Int): Array<DeviceConnection?> = arrayOfNulls(size)
+        }
+    }
+}
 
 /**
  * 交换机ID
@@ -319,7 +375,37 @@ data class DeviceConnection(val from_id: Int, val from_port: String, val to_id: 
  */
 data class SwitchConnection(val from_id: Int, val from_port: String, val to_id: Int,
                             val to_port: String, val to_dev_type: String,
-                            val tail_fiber_tx_id: Int, val tail_fiber_rx_id: Int)
+                            val tail_fiber_tx_id: Int, val tail_fiber_rx_id: Int) : Parcelable {
+    constructor(source: Parcel) : this(
+            source.readInt(),
+            source.readString(),
+            source.readInt(),
+            source.readString(),
+            source.readString(),
+            source.readInt(),
+            source.readInt()
+    )
+
+    override fun describeContents() = 0
+
+    override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
+        writeInt(from_id)
+        writeString(from_port)
+        writeInt(to_id)
+        writeString(to_port)
+        writeString(to_dev_type)
+        writeInt(tail_fiber_tx_id)
+        writeInt(tail_fiber_rx_id)
+    }
+
+    companion object {
+        @JvmField
+        val CREATOR: Parcelable.Creator<SwitchConnection> = object : Parcelable.Creator<SwitchConnection> {
+            override fun createFromParcel(source: Parcel): SwitchConnection = SwitchConnection(source)
+            override fun newArray(size: Int): Array<SwitchConnection?> = arrayOfNulls(size)
+        }
+    }
+}
 
 /**
  * 模型数据id
