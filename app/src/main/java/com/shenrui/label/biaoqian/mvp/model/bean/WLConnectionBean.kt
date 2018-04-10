@@ -1,6 +1,5 @@
 package com.shenrui.label.biaoqian.mvp.model.bean
 
-import android.bluetooth.BluetoothClass
 import android.os.Parcel
 import android.os.Parcelable
 import com.luckongo.tthd.mvp.model.bean.*
@@ -10,11 +9,12 @@ import com.luckongo.tthd.mvp.model.bean.*
  *
  * Created by cheng on 2018/3/25.
  */
-data class WLConnectionBean(val wlTailFiber: TailFiber, val wlConnectionPanel: String,
+data class WLConnectionBean(val type: String, val wlTailFiber: TailFiber, val wlConnectionPanel: String,
                             val inDevice: Device?, val inDeviceConnection: DeviceConnection?,
                             val inSwitch: Switch?, val inSwitchConnection: SwitchConnection?,
                             val toDevice: Device?, val toSwitch: Switch?) : Parcelable {
     constructor(source: Parcel) : this(
+            source.readString(),
             source.readParcelable<TailFiber>(TailFiber::class.java.classLoader),
             source.readString(),
             source.readParcelable<Device>(Device::class.java.classLoader),
@@ -28,6 +28,7 @@ data class WLConnectionBean(val wlTailFiber: TailFiber, val wlConnectionPanel: S
     override fun describeContents() = 0
 
     override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
+        writeString(type)
         writeParcelable(wlTailFiber, 0)
         writeString(wlConnectionPanel)
         writeParcelable(inDevice, 0)

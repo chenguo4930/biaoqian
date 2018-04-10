@@ -21,9 +21,13 @@ class WLConnectionListItemRecyclerAdapter(private val context1: Context,
         val item = list[position]
         if (item.inDevice != null) {
             holder.deviceInTv.text = item.inDevice?.device_desc
-            holder.deviceInPortTv.text = item.inDeviceConnection?.from_port
             holder.deviceConnectTv.text = item.wlTailFiber.tail_fiber_number.toString()
-            holder.deviceOutPortTv.text = item.inDeviceConnection?.to_port.toString()
+            holder.deviceInPortTv.text = item.inDeviceConnection?.from_port+"/"+item.type
+            if (item.type == "Tx"){
+                holder.deviceOutPortTv.text = item.inDeviceConnection?.to_port.toString()+"/Rx"
+            }else{
+                holder.deviceOutPortTv.text = item.inDeviceConnection?.to_port.toString()+"/Tx"
+            }
             holder.txDescTv.text = item.wlTailFiber.tail_fiber_desc
             if (item.toDevice != null) {
                 holder.deviceOutTv.text = item.toDevice?.device_desc
@@ -32,10 +36,14 @@ class WLConnectionListItemRecyclerAdapter(private val context1: Context,
             }
         } else {
             holder.deviceInTv.text = item.inSwitch?.switch_name
-            holder.deviceInPortTv.text = item.inSwitchConnection?.from_port
             holder.deviceConnectTv.text = item.wlTailFiber.tail_fiber_number.toString()
-            holder.deviceOutPortTv.text = item.inSwitchConnection?.to_port
             holder.txDescTv.text = item.wlTailFiber.tail_fiber_desc
+            holder.deviceInPortTv.text = item.inDeviceConnection?.from_port+"/"+item.type
+            if (item.type == "Tx"){
+                holder.deviceOutPortTv.text = item.inDeviceConnection?.to_port.toString()+"/Rx"
+            }else{
+                holder.deviceOutPortTv.text = item.inDeviceConnection?.to_port.toString()+"/Tx"
+            }
             if (item.toDevice != null) {
                 holder.deviceOutTv.text = item.toDevice?.device_desc
             } else {
