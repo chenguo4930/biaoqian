@@ -1,17 +1,12 @@
 package com.shenrui.label.biaoqian.ui.adapter
 
 import android.content.Context
-import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.TextView
-import com.luckongo.tthd.mvp.model.bean.Panel
-import com.luckongo.tthd.mvp.model.bean.SubStation
 import com.shenrui.label.biaoqian.R
-import com.shenrui.label.biaoqian.mvp.model.bean.RegionBean
 import com.shenrui.label.biaoqian.mvp.model.bean.WLConnectionBean
 
 /**
@@ -25,7 +20,7 @@ class PanelWLConnectionListItemRecyclerAdapter(private val context1: Context,
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.panelTv.text = list[position].wlConnectionPanel
-        holder.wlNameTv.text = list[position].wlName
+        holder.wlNameTv.text = list[position].wlTailFiber.tail_cable_number
         holder.itemView.setOnClickListener {
             onItemClickListener?.onWLConnectionItemClick(list[position])
         }

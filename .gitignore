@@ -16,3 +16,8 @@ libzxing/build/
 local.properties
 /.gitignore
 /libzxing/libzxing.iml
+/.idea/
+.idea/assetWizardSettings.xml
+.idea/caches/
+app/libs/
+app/src/main/java/com/shenrui/label/biaoqian/view/
