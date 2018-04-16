@@ -60,8 +60,7 @@ class TestFragment : BaseFragment(), FragmentBackHandler {
         img_back.setOnClickListener {
             activity?.supportFragmentManager?.popBackStack()
         }
-        tv_back_title.text = "测试数据库"
-        tv_title.text = mSubStationName
+        tv_back_title.text = mSubStationName
         if (mDbPath.isNullOrEmpty()) {
             toast("数据库路径为空")
         } else {

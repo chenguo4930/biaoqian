@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.LinearLayout
 import android.widget.TextView
 import com.luckongo.tthd.mvp.model.bean.Panel
 import com.luckongo.tthd.mvp.model.bean.SubStation
@@ -27,7 +28,7 @@ class PanelGLConnectionListItemRecyclerAdapter(private val context1: Context,
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.panelTv.text = list[position].outPanelName
         holder.glNameTv.text = list[position].odfConnection.optical_cable_number
-        holder.itemView.setOnClickListener {
+        holder.glLayout.setOnClickListener {
             onItemClickListener?.onGLConnectionItemClick(list[position])
         }
     }
@@ -45,6 +46,7 @@ class PanelGLConnectionListItemRecyclerAdapter(private val context1: Context,
     class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val panelTv: TextView = view.findViewById(R.id.tv_gl_panel_name)
         val glNameTv: TextView = view.findViewById(R.id.tv_gl_name)
+        val glLayout: LinearLayout = view.findViewById(R.id.gl_layout)
     }
 
     interface GLConnectionClickListener {    //自定义的接口

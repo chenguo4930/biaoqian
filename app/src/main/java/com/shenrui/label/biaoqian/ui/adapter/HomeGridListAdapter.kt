@@ -62,7 +62,7 @@ class HomeGridListAdapter(private val mItems: List<SubStation>,
 
     companion object {
         val SPAN_COUNT_ONE = 1
-        val SPAN_COUNT_FOUR = 4
+        val SPAN_COUNT_FOUR = 3
 
         private val VIEW_TYPE_SMALL = 1
         private val VIEW_TYPE_BIG = 2

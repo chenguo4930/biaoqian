@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import com.shenrui.label.biaoqian.R
 import com.shenrui.label.biaoqian.mvp.model.bean.WLConnectionBean
@@ -21,7 +22,7 @@ class PanelWLConnectionListItemRecyclerAdapter(private val context1: Context,
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.panelTv.text = list[position].wlConnectionPanel
         holder.wlNameTv.text = list[position].wlTailFiber.tail_cable_number
-        holder.itemView.setOnClickListener {
+        holder.wlLayout.setOnClickListener {
             onItemClickListener?.onWLConnectionItemClick(list[position])
         }
     }
@@ -39,6 +40,7 @@ class PanelWLConnectionListItemRecyclerAdapter(private val context1: Context,
     class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val panelTv: TextView = view.findViewById(R.id.tv_wl_panel_name)
         val wlNameTv: TextView = view.findViewById(R.id.tv_wl_name)
+        val wlLayout: LinearLayout = view.findViewById(R.id.wl_layout)
     }
 
     interface WLConnectionClickListener {    //自定义的接口
