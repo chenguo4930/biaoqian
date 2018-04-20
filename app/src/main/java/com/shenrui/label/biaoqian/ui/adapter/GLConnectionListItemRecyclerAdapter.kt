@@ -14,31 +14,37 @@ import com.shenrui.label.biaoqian.mvp.model.bean.GLConnectionBean
  * @author Chengguo on 2018/3/5.
  */
 class GLConnectionListItemRecyclerAdapter(private val context1: Context,
-                                          private val list: ArrayList<GLConnectionBean>)
+                                          private val list: ArrayList<GLConnectionBean>,
+                                          private val listener: AddOnClickListener? = null)
     : RecyclerView.Adapter<GLConnectionListItemRecyclerAdapter.MyViewHolder>() {
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.deviceInTv.text = list[position].inDeviceName
-        val inTxTypeStr = if (list[position].odfConnection.internal_rt_type == 0) {
+        val item = list[position]
+        holder.deviceInTv.text = item.inDeviceName
+        val inTxTypeStr = if (item.odfConnection.internal_rt_type == 0) {
             "Rx"
         } else {
             "Tx"
         }
-        holder.deviceInPortTv.text = list[position].odfConnection.internal_device_port + "/" + inTxTypeStr
-        holder.deviceInTxTv.text = list[position].odfConnection.internal_optical_fiber_number
-        holder.deviceInODFTv.text = list[position].odf.odf_layer + list[position].odf.odf_port
-        holder.deviceConnectTv.text = list[position].odfConnection.optical_fiber_number.toString()
+        holder.deviceInPortTv.text = item.odfConnection.internal_device_port + "/" + inTxTypeStr
+        holder.deviceInTxTv.text = item.odfConnection.internal_optical_fiber_number
+        holder.deviceInODFTv.text = item.odf.odf_layer + item.odf.odf_port
+        holder.deviceConnectTv.text = item.odfConnection.optical_fiber_number.toString()
 
-        holder.deviceOutODFTv.text =  list[position].odfOut.odf_layer + list[position].odfOut.odf_port
-        val outTxTypeStr = if (list[position].odfOutConnection.internal_rt_type == 0) {
+        holder.deviceOutODFTv.text = item.odfOut.odf_layer + item.odfOut.odf_port
+        val outTxTypeStr = if (item.odfOutConnection.internal_rt_type == 0) {
             "Rx"
         } else {
             "Tx"
         }
-        holder.deviceOutTxTv.text = list[position].odfOutConnection.internal_optical_fiber_number
-        holder.deviceOutPortTv.text = list[position].odfOutConnection.internal_device_port + "/" + outTxTypeStr
-        holder.deviceOutTv.text = list[position].outDeviceName
+        holder.deviceOutTxTv.text = item.odfOutConnection.internal_optical_fiber_number
+        holder.deviceOutPortTv.text = item.odfOutConnection.internal_device_port + "/" + outTxTypeStr
+        holder.deviceOutTv.text = item.outDeviceName
         holder.txDescTv.text = "暂无"
+
+        holder.deviceConnectTv.setOnClickListener {
+            listener?.onItemClick(item)
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
@@ -62,6 +68,10 @@ class GLConnectionListItemRecyclerAdapter(private val context1: Context,
         var deviceOutTxTv: TextView = view.findViewById(R.id.tv_tx_device_out_tx)
         var deviceOutTv: TextView = view.findViewById(R.id.tv_tx_device_out)
         var txDescTv: TextView = view.findViewById(R.id.tv_tx_desc)
+    }
+
+    interface AddOnClickListener {
+        fun onItemClick(item: GLConnectionBean)
     }
 
 }

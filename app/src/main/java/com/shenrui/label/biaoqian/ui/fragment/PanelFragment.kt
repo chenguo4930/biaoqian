@@ -57,7 +57,7 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
 
     @SuppressLint("SetTextI18n")
     override fun initView() {
-        tv_title.text = mPanelBean?.panel_name + "(" + mPanelBean?.panel_code + ")"
+        tv_back_title.text = mPanelBean?.panel_name + "(" + mPanelBean?.panel_code + ")"
 
         tv_panel_name.text = mPanelBean?.panel_name + "(" + mPanelBean?.panel_code + ")"
 

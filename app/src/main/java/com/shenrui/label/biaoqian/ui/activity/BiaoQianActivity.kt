@@ -123,6 +123,8 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
         home_img.setImageDrawable(resources.getDrawable(R.mipmap.icon_homepage_nor))
         setting_img.setImageDrawable(resources.getDrawable(R.mipmap.icon_set_pressed))
         scan_img.setImageDrawable(resources.getDrawable(R.mipmap.icon_scan_nor))
+        //关掉当前Activity，回到主页
+        finish()
     }
 
     /**
@@ -168,6 +170,4 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
             super.onBackPressed()
         }
     }
-
-
 }
