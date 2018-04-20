@@ -440,11 +440,12 @@ data class ExcelGSEModel(val excel_id: Int, val excel_model_id: Int, val excel_i
  * 发送数据描述
  * 虚端子描述
  * 接收端口
+ * isInput //用于RecyclerView显示输入还是输入。
  */
 data class Inputs(val model_id_from: Int, val from_index: Int, val model_id_to: Int,
                   val to_index: Int, val is_goose: Int, val p2p: Int, val in_addr: String,
                   val desc_to: String, val out_addr: String, val desc_from: String,
-                  val input_desc: String, val port_to: String)
+                  val input_desc: String, val port_to: String, var isInput: Boolean = false)
 
 
 

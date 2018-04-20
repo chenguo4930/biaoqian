@@ -14,7 +14,8 @@ import com.shenrui.label.biaoqian.mvp.model.bean.WLConnectionBean
  * @author Chengguo on 2018/3/5.
  */
 class WLConnectionListItemRecyclerAdapter(private val context1: Context,
-                                          private val list: ArrayList<WLConnectionBean>)
+                                          private val list: ArrayList<WLConnectionBean>,
+                                          private val listener: AddOnClickListener? = null)
     : RecyclerView.Adapter<WLConnectionListItemRecyclerAdapter.MyViewHolder>() {
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
@@ -22,11 +23,11 @@ class WLConnectionListItemRecyclerAdapter(private val context1: Context,
         if (item.inDevice != null) {
             holder.deviceInTv.text = item.inDevice?.device_desc
             holder.deviceConnectTv.text = item.wlTailFiber.tail_fiber_number.toString()
-            holder.deviceInPortTv.text = item.inDeviceConnection?.from_port+"/"+item.type
-            if (item.type == "Tx"){
-                holder.deviceOutPortTv.text = item.inDeviceConnection?.to_port.toString()+"/Rx"
-            }else{
-                holder.deviceOutPortTv.text = item.inDeviceConnection?.to_port.toString()+"/Tx"
+            holder.deviceInPortTv.text = item.inDeviceConnection?.from_port + "/" + item.type
+            if (item.type == "Tx") {
+                holder.deviceOutPortTv.text = item.inDeviceConnection?.to_port.toString() + "/Rx"
+            } else {
+                holder.deviceOutPortTv.text = item.inDeviceConnection?.to_port.toString() + "/Tx"
             }
             holder.txDescTv.text = item.wlTailFiber.tail_fiber_desc
             if (item.toDevice != null) {
@@ -38,17 +39,21 @@ class WLConnectionListItemRecyclerAdapter(private val context1: Context,
             holder.deviceInTv.text = item.inSwitch?.switch_name
             holder.deviceConnectTv.text = item.wlTailFiber.tail_fiber_number.toString()
             holder.txDescTv.text = item.wlTailFiber.tail_fiber_desc
-            holder.deviceInPortTv.text = item.inDeviceConnection?.from_port+"/"+item.type
-            if (item.type == "Tx"){
-                holder.deviceOutPortTv.text = item.inDeviceConnection?.to_port.toString()+"/Rx"
-            }else{
-                holder.deviceOutPortTv.text = item.inDeviceConnection?.to_port.toString()+"/Tx"
+            holder.deviceInPortTv.text = item.inDeviceConnection?.from_port + "/" + item.type
+            if (item.type == "Tx") {
+                holder.deviceOutPortTv.text = item.inDeviceConnection?.to_port.toString() + "/Rx"
+            } else {
+                holder.deviceOutPortTv.text = item.inDeviceConnection?.to_port.toString() + "/Tx"
             }
             if (item.toDevice != null) {
                 holder.deviceOutTv.text = item.toDevice?.device_desc
             } else {
                 holder.deviceOutTv.text = item.toSwitch?.switch_name
             }
+        }
+
+        holder.deviceConnectTv.setOnClickListener {
+            listener?.onItemClick(item)
         }
     }
 
@@ -71,4 +76,7 @@ class WLConnectionListItemRecyclerAdapter(private val context1: Context,
         var txDescTv: TextView = view.findViewById(R.id.tv_tx_desc)
     }
 
+    interface AddOnClickListener {
+        fun onItemClick(item: WLConnectionBean)
+    }
 }
