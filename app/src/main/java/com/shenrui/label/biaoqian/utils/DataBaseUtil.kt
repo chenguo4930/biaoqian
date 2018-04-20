@@ -368,12 +368,16 @@ class DataBaseUtil {
 
 
         /**
-         *
+         * from: 输出设备
+         * to:输入设备
+         * portTo:输入设备的端口号
          */
-        fun getInputsFilter(dbPath: String,from:String,to:String): ArrayList<Inputs> {
+        fun getInputsFilter(dbPath: String, from: String, to: String, portTo: String): ArrayList<Inputs> {
             val database = SQLiteDatabase.openOrCreateDatabase(dbPath, null)
-            val cursor = database.query("Inputs",null, "model_id_from == ? and model_id_to == ?", arrayOf(from,to),
-                    null, null, null)
+//            val cursor = database.query("Inputs", null, "model_id_from == ? and model_id_to == ? and port_to == ?",
+//                    arrayOf(from, to, portTo), null, null, null)
+            val cursor = database.query("Inputs", null, "model_id_from == ? and model_id_to == ? ",
+                    arrayOf(from, to), null, null, null)
             val inputsList = ArrayList<Inputs>()
             while (cursor.moveToNext()) {
                 val model_id_from = cursor.getInt(cursor.getColumnIndex("model_id_from"))

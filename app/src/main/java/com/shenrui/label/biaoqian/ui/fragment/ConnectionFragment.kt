@@ -9,10 +9,8 @@ import com.luckongo.tthd.mvp.model.bean.Inputs
 import com.shenrui.label.biaoqian.R
 import com.shenrui.label.biaoqian.mvp.base.BaseFragment
 import com.shenrui.label.biaoqian.mvp.model.bean.GLConnectionBean
-import com.shenrui.label.biaoqian.mvp.model.bean.RegionBean
 import com.shenrui.label.biaoqian.mvp.model.bean.WLConnectionBean
 import com.shenrui.label.biaoqian.ui.adapter.ConnectionListItemRecyclerAdapter
-import com.shenrui.label.biaoqian.ui.adapter.RegionListAdapter
 import com.shenrui.label.biaoqian.utils.DataBaseUtil
 import kotlinx.android.synthetic.main.fragment_gx_connection.*
 import kotlinx.android.synthetic.main.title_layout.*
@@ -21,7 +19,6 @@ import rx.Observable
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
-import java.util.logging.Logger
 
 /**
  * 纤芯点击后，显示设备间具体的连接信息
@@ -131,15 +128,27 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
                 } else {
                     mWLBean!!.inSwitch!!.switch_id.toString()
                 }
+                //输出端口Tx
+                val inModelPort = if (mWLBean!!.inDeviceConnection != null) {
+                    mWLBean!!.inDeviceConnection!!.from_port
+                } else {
+                    mWLBean!!.inSwitchConnection!!.from_port
+                }
                 val outModelId = if (mWLBean!!.toDevice != null) {
                     mWLBean!!.toDevice!!.device_id.toString()
                 } else {
                     mWLBean!!.toSwitch!!.switch_id.toString()
                 }
+                //输入端口Rx
+                val outModelPort = if (mWLBean!!.inDeviceConnection != null) {
+                    mWLBean!!.inDeviceConnection!!.to_port.toString()
+                } else {
+                    mWLBean!!.inSwitchConnection!!.to_port.toString()
+                }
                 //从数据库中获取inModel 到outModel的连接信息
-                val inList = DataBaseUtil.getInputsFilter(mDbPath!!, inModelId, outModelId)
+                val inList = DataBaseUtil.getInputsFilter(mDbPath!!, inModelId, outModelId, inModelPort)
                 //从数据库中获取outModel 到intModel的连接信息
-                val outList = DataBaseUtil.getInputsFilter(mDbPath!!, outModelId, inModelId)
+                val outList = DataBaseUtil.getInputsFilter(mDbPath!!, outModelId, inModelId, outModelPort)
                 Log.e("----", "---------mWLBean:$mWLBean")
                 inList.forEach {
                     Log.e("----", "---------inList each:$it")
