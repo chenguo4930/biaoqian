@@ -276,6 +276,7 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
                                 tailFiberRx[0].tail_cable_number, it.to_port + "/Tx",
                                 toDevice[0].device_desc, tailFiberRx[0].tail_fiber_desc))
 
+
                     } else {
                         //找到这条连线连接的外部屏柜panel
                         val panel = panelDataList.filter {
