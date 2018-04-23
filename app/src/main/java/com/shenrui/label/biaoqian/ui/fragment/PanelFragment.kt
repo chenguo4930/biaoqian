@@ -140,9 +140,9 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
                             it.tail_fiber_rx_id == item.tail_fiber_id
                         }
                         //找到尾缆
-                        val wlTxBean = WLConnectionBean("Tx",tailFiberTxWL[0], panel[0].panel_name,
+                        val wlTxBean = WLConnectionBean("Tx", tailFiberTxWL[0], panel[0].panel_name,
                                 inDevice!![0], it, null, null, toDevice[0], null)
-                        val wlRxBean = WLConnectionBean("Rx",tailFiberRxWL[0], panel[0].panel_name,
+                        val wlRxBean = WLConnectionBean("Rx", tailFiberRxWL[0], panel[0].panel_name,
                                 inDevice!![0], it, null, null, toDevice[0], null)
                         mWLConnectionList.add(wlTxBean)
                         mWLConnectionList.add(wlRxBean)
@@ -185,9 +185,9 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
                         }
 
                         //找到尾缆
-                        val wlTxBean = WLConnectionBean("Tx",tailFiberTxWL[0], panel[0].panel_name,
+                        val wlTxBean = WLConnectionBean("Tx", tailFiberTxWL[0], panel[0].panel_name,
                                 inDevice!![0], it, null, null, null, toSwitch[0])
-                        val wlRxBean = WLConnectionBean("Rx",tailFiberRxWL[0], panel[0].panel_name,
+                        val wlRxBean = WLConnectionBean("Rx", tailFiberRxWL[0], panel[0].panel_name,
                                 inDevice!![0], it, null, null, null, toSwitch[0])
 
                         mWLConnectionList.add(wlTxBean)
@@ -245,9 +245,9 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
                             it.tail_fiber_rx_id == item.tail_fiber_id
                         }
                         //找到尾缆
-                        val wlTxBean = WLConnectionBean("Tx",tailFiberTxWL[0], panel[0].panel_name,
+                        val wlTxBean = WLConnectionBean("Tx", tailFiberTxWL[0], panel[0].panel_name,
                                 null, null, inSwitch!![0], it, null, toSwitch[0])
-                        val wlRxBean = WLConnectionBean("Rx",tailFiberRxWL[0], panel[0].panel_name,
+                        val wlRxBean = WLConnectionBean("Rx", tailFiberRxWL[0], panel[0].panel_name,
                                 null, null, inSwitch!![0], it, null, toSwitch[0])
                         mWLConnectionList.add(wlTxBean)
                         mWLConnectionList.add(wlRxBean)
@@ -289,10 +289,10 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
                             it.tail_fiber_rx_id == item.tail_fiber_id
                         }
                         //找到尾缆
-                        val wlTxBean = WLConnectionBean("Tx",tailFiberTxWL[0], panel[0].panel_name,
+                        val wlTxBean = WLConnectionBean("Tx", tailFiberTxWL[0], panel[0].panel_name,
                                 null, null, inSwitch!![0], it, toDevice[0], null)
                         mWLConnectionList.add(wlTxBean)
-                        val wlRxBean = WLConnectionBean("Rx",tailFiberRxWL[0], panel[0].panel_name,
+                        val wlRxBean = WLConnectionBean("Rx", tailFiberRxWL[0], panel[0].panel_name,
                                 null, null, inSwitch!![0], it, toDevice[0], null)
                         mWLConnectionList.add(wlRxBean)
                     }
@@ -315,7 +315,11 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
                 odfConnectionDataList.forEach { item ->
                     if (item.odf_id == it.odf_id) {
                         var inDeviceName = ""
+                        var inDeviceId = ""
+                        var inDeviceCode = ""
                         var outDeviceName = ""
+                        var outDeviceId = ""
+                        var outDeviceCode = ""
                         var outPanelName = ""
                         var outODF: ODF? = null
                         var outODFConnection: ODFConnection? = null
@@ -336,6 +340,8 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
                                     for (device in deviceDateList) {
                                         if (device.device_id == bean.internal_device_id) {
                                             outDeviceName = device.device_desc
+                                            outDeviceId = device.device_id.toString()
+                                            outDeviceCode = device.device_iedname
                                             for (panel in panelDataList) {
                                                 if (panel.panel_id == device.panel_id) {
                                                     outPanelName = panel.panel_name
@@ -350,6 +356,8 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
                                     for (switch in switchDateList) {
                                         if (switch.switch_id == bean.internal_device_id) {
                                             outDeviceName = switch.switch_name
+                                            outDeviceId = switch.switch_id.toString()
+                                            outDeviceCode = switch.switch_code
                                             for (panel in panelDataList) {
                                                 if (panel.panel_id == switch.panel_id) {
                                                     outPanelName = panel.panel_name
@@ -372,6 +380,8 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
                             for (device in deviceDateList) {
                                 if (device.device_id == item.internal_device_id) {
                                     inDeviceName = device.device_desc
+                                    inDeviceId = device.device_id.toString()
+                                    inDeviceCode = device.device_iedname
                                     break
                                 }
                             }
@@ -380,6 +390,8 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
                             for (switch in switchDateList) {
                                 if (switch.switch_id == item.internal_device_id) {
                                     inDeviceName = switch.switch_name
+                                    inDeviceId = switch.switch_id.toString()
+                                    inDeviceCode = switch.switch_code
                                     break
                                 }
                             }
@@ -387,7 +399,9 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
                             return@out
                         }
 
-                        mGLConnectionList.add(GLConnectionBean(inDeviceName, outDeviceName, outPanelName, it, item, outODF!!, outODFConnection!!))
+                        mGLConnectionList.add(GLConnectionBean(inDeviceName, inDeviceId, inDeviceCode,
+                                outDeviceName, outDeviceId, outDeviceCode, outPanelName,
+                                it, item, outODF!!, outODFConnection!!))
                         return@out
                     }
                 }

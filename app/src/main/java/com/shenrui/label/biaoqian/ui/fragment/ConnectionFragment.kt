@@ -107,7 +107,10 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
 
         //----------如果是光缆连线点击进来------------
         if (mGLBean != null) {
-
+            tvInDeviceName.text = mGLBean!!.inDeviceName
+            tvInModeTitle.text = mGLBean!!.inDeviceCode
+            tvOutDeviceName.text = mGLBean!!.outDeviceName
+            tvOutModeTitle.text = mGLBean!!.outDeviceCode
         }
 
         //----------如果是跳纤连线点击进来------------
@@ -164,7 +167,36 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
 
             //--------------------光缆连线点击进来-----start----------------------
             if (mGLBean != null) {
-
+//                val inTxTypeStr = if (mGLBean!!.odfConnection.internal_rt_type == 0) {
+//                    "Rx"
+//                } else {
+//                    "Tx"
+//                }
+                val inPort = if (mGLBean!!.odfConnection.internal_rt_type == 0) {
+                    mGLBean!!.odfConnection.internal_device_port!!
+                } else {
+                    mGLBean!!.odfOutConnection.internal_device_port!!
+                }
+                val outPort = if (mGLBean!!.odfOutConnection.internal_rt_type == 0) {
+                    mGLBean!!.odfOutConnection.internal_device_port!!
+                } else {
+                    mGLBean!!.odfConnection.internal_device_port!!
+                }
+                //从数据库中获取inModel 到outModel的连接信息
+                val inList = DataBaseUtil.getInputsFilter(mDbPath!!, mGLBean!!.inDeviceId, mGLBean!!.outDeviceId, inPort)
+                //从数据库中获取outModel 到intModel的连接信息
+                val outList = DataBaseUtil.getInputsFilter(mDbPath!!, mGLBean!!.outDeviceId, mGLBean!!.inDeviceId, outPort)
+                Log.e("----", "---------mGLBean:$mGLBean")
+                inList.forEach {
+                    Log.e("----", "---------inList each:$it")
+                    it.isInput = true
+                }
+                outList.forEach {
+                    Log.e("----", "---------outList each:$it")
+                    it.isInput = false
+                }
+                mConnectionList.addAll(inList)
+                mConnectionList.addAll(outList)
             }
 
             //--------------------跳纤连线点击进来-----start----------------------

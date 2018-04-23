@@ -11,13 +11,21 @@ import com.luckongo.tthd.mvp.model.bean.ODFConnection
  * Created by cheng on 2018/3/25.
  */
 data class GLConnectionBean(val inDeviceName: String,
+                            val inDeviceId: String,
+                            val inDeviceCode: String,
                             val outDeviceName: String,
+                            val outDeviceId: String,
+                            val outDeviceCode: String,
                             val outPanelName: String,
                             val odf: ODF,
                             val odfConnection: ODFConnection,
                             val odfOut: ODF,
                             val odfOutConnection: ODFConnection) : Parcelable {
     constructor(source: Parcel) : this(
+            source.readString(),
+            source.readString(),
+            source.readString(),
+            source.readString(),
             source.readString(),
             source.readString(),
             source.readString(),
@@ -31,7 +39,11 @@ data class GLConnectionBean(val inDeviceName: String,
 
     override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
         writeString(inDeviceName)
+        writeString(inDeviceId)
+        writeString(inDeviceCode)
         writeString(outDeviceName)
+        writeString(outDeviceId)
+        writeString(outDeviceCode)
         writeString(outPanelName)
         writeParcelable(odf, 0)
         writeParcelable(odfConnection, 0)
@@ -47,3 +59,4 @@ data class GLConnectionBean(val inDeviceName: String,
         }
     }
 }
+
