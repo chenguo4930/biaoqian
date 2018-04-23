@@ -98,9 +98,6 @@ class DeviceFragment : BaseFragment(), FragmentBackHandler {
                     }
 
                     override fun onNext(dataList: ArrayList<PanelBean>) {
-                        dataList.forEach {
-                            Log.e("-----", "-----PanelBean=$it")
-                        }
                         mPanelBeanList = dataList
                         initRecycler()
                     }
