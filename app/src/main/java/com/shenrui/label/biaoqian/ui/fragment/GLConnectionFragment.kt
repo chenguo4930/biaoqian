@@ -51,7 +51,7 @@ class GLConnectionFragment : BaseFragment(), FragmentBackHandler {
             return
         }
 
-        //TX链接图
+        //GL链接图
         val txAdapter = GLConnectionListItemRecyclerAdapter(activity!!, mGLList!!, object : GLConnectionListItemRecyclerAdapter.AddOnClickListener {
             override fun onItemClick(item: GLConnectionBean) {
                 activity?.supportFragmentManager?.beginTransaction()?.
