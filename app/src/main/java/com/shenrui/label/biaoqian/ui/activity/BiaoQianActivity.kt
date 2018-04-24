@@ -6,18 +6,26 @@ import android.content.Intent
 import android.os.Bundle
 import com.github.ikidou.fragmentBackHandler.BackHandlerHelper
 import com.shenrui.label.biaoqian.R
+import com.shenrui.label.biaoqian.constrant.AllSubStation.Companion.subStation
+import com.shenrui.label.biaoqian.extension.logE
 import com.shenrui.label.biaoqian.mvp.base.BaseActivity
 import com.shenrui.label.biaoqian.mvp.contract.BiaoQianContract
+import com.shenrui.label.biaoqian.mvp.model.bean.PanelBean
 import com.shenrui.label.biaoqian.mvp.presenter.BiaoQianPresenter
 import com.shenrui.label.biaoqian.ui.fragment.HomeFragment
 import com.shenrui.label.biaoqian.ui.fragment.ScanFragment
 import com.shenrui.label.biaoqian.ui.fragment.SettingFragment
+import com.shenrui.label.biaoqian.utils.DataBaseUtil
 import com.xys.libzxing.zxing.activity.CaptureActivity
 import kotlinx.android.synthetic.main.activity_biao_qian.*
 import me.weyye.hipermission.HiPermission
 import me.weyye.hipermission.PermissionCallback
 import me.weyye.hipermission.PermissionItem
 import org.jetbrains.anko.toast
+import rx.Observable
+import rx.Subscriber
+import rx.android.schedulers.AndroidSchedulers
+import rx.schedulers.Schedulers
 
 
 class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
@@ -25,12 +33,13 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
         BiaoQianContract.View {
 
     companion object {
-        private val REQUEST_CODE = 100
+        private const val REQUEST_CODE = 100
     }
 
     private var mHomeFragment: HomeFragment? = null
     private var mSettingFragment: SettingFragment? = null
     private var mScanFragment: ScanFragment? = null
+    private var mDbPath: String? = null // 数据库路径
 
     override fun <E> onError(e: E?) {
     }
@@ -160,8 +169,123 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
             if (null != data) {
                 val bundle: Bundle? = data.extras ?: return
                 val result = bundle?.getString("result")
+                analysisResult(result)
                 toast("解析结果:$result")
             }
+        }
+    }
+
+    /**
+     * 解析扫描二维码的结果
+     * result ：JSNJ22TSB/GL1101/2N
+     */
+    private fun analysisResult(result: String?) {
+        if (result == null) {
+            toast("扫描数据为空，请检查二维码是否有效。")
+            return
+        }
+        val resultArray = result.split("/")
+        if (resultArray.size != 3) {
+            toast("二维码数据格式有误")
+            return
+        }
+        var subStationName: String = ""
+        //变电站电压等级编号表JSNJ22TSB 22后面的TSB是变电站的简称，要把它解析出来
+        when {
+            result.indexOf("75") != -1 -> {
+                subStationName = result.substring(result.indexOf("75") + 2)
+            }
+            result.indexOf("50") != -1 -> {
+                subStationName = result.substring(result.indexOf("50") + 2)
+            }
+            result.indexOf("33") != -1 -> {
+                subStationName = result.substring(result.indexOf("33") + 2)
+            }
+            result.indexOf("22") != -1 -> {
+                subStationName = result.substring(result.indexOf("22") + 2)
+            }
+            result.indexOf("11") != -1 -> {
+                subStationName = result.substring(result.indexOf("11") + 2)
+            }
+            result.indexOf("66") != -1 -> {
+                subStationName = result.substring(result.indexOf("66") + 2)
+            }
+            result.indexOf("35") != -1 -> {
+                subStationName = result.substring(result.indexOf("35") + 2)
+            }
+            result.indexOf("10") != -1 -> {
+                subStationName = result.substring(result.indexOf("10") + 2)
+            }
+        }
+        logE("----------变电站缩写subStationName = $subStationName")
+        if (subStationName == "") {
+            toast("二维码解析出变电站缩写为空，请检查二维码是否正确")
+            return
+        }
+
+        //通过变电站缩写，从变电站集合中找出变电站，并获取到该变电站的数据库路径
+        for (it in subStation!!) {
+            if (it.sub_short_name == subStationName) {
+                mDbPath = it.db_path
+                break
+            }
+        }
+
+        if (resultArray[1].startsWith("WL")) {
+            //如果是尾缆
+            searchData("WL")
+        } else if (resultArray[1].startsWith("GL")) {
+            //如果是光缆
+            searchData("GL")
+        }
+
+    }
+
+    private fun searchData(type: String) {
+        if (type == "GL") {
+            Observable.create(Observable.OnSubscribe<String> {
+                val deviceList = DataBaseUtil.getDevice(mDbPath!!)
+                val switchList = DataBaseUtil.getSwitch(mDbPath!!)
+                val panelList = ArrayList<PanelBean>()
+
+                it.onCompleted()
+            }).subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(object : Subscriber<String>() {
+                        override fun onCompleted() {
+//                        toast("成功读取数据库")
+                        }
+
+                        override fun onError(e: Throwable) {
+                            toast("读取数据库失败，请检查数据库是否存在")
+                        }
+
+                        override fun onNext(dataList: String) {
+
+                        }
+                    })
+        } else if (type == "WL") {
+            Observable.create(Observable.OnSubscribe<String> {
+                val deviceList = DataBaseUtil.getDevice(mDbPath!!)
+                val switchList = DataBaseUtil.getSwitch(mDbPath!!)
+                val panelList = ArrayList<PanelBean>()
+
+                it.onCompleted()
+            }).subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(object : Subscriber<String>() {
+                        override fun onCompleted() {
+//                        toast("成功读取数据库")
+                        }
+
+                        override fun onError(e: Throwable) {
+                            toast("读取数据库失败，请检查数据库是否存在")
+                        }
+
+                        override fun onNext(dataList: String) {
+
+                        }
+                    })
         }
     }
 

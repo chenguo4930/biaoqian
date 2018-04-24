@@ -1,12 +1,15 @@
 package com.shenrui.label.biaoqian.extension
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Typeface
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import com.shenrui.label.biaoqian.BuildConfig
 import com.shenrui.label.biaoqian.app.App
 
 /**
@@ -143,6 +146,12 @@ fun View.gone(): Boolean {
         true
     } else {
         false
+    }
+}
+
+fun Activity.logE(msg: String) {
+    if (BuildConfig.DEBUG){
+        Log.e("--------", msg)
     }
 }
 
