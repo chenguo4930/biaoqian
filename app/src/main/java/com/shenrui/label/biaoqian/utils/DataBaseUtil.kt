@@ -75,7 +75,7 @@ class DataBaseUtil {
          */
         fun getPanelByCode(dbPath: String, code: String): ArrayList<Panel> {
             val database = SQLiteDatabase.openOrCreateDatabase(dbPath, null)
-            val cursor = database.query("Panel", null, "panel_code == $code ", null,
+            val cursor = database.query("Panel", null, "panel_code == ? ", arrayOf(code),
                     null, null, null)
             val panleList = ArrayList<Panel>()
             while (cursor.moveToNext()) {
