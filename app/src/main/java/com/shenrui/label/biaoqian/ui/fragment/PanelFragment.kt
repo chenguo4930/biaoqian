@@ -485,13 +485,16 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
         val glAdapter = PanelGLConnectionListItemRecyclerAdapter(activity!!, glConnectionList,
                 object : PanelGLConnectionListItemRecyclerAdapter.GLConnectionClickListener {
                     override fun onGLConnectionItemClick(item: GLConnectionBean) {
-                        val glList = ArrayList<GLConnectionBean>()
-                        mGLConnectionList.forEach {
-                            if (it.odfConnection.optical_cable_number == item.odfConnection.optical_cable_number) {
-                                glList.add(it)
-                            }
+//                        val glList = ArrayList<GLConnectionBean>()
+//                        mGLConnectionList.forEach {
+//                            if (it.odfConnection.optical_cable_number == item.odfConnection.optical_cable_number) {
+//                                glList.add(it)
+//                            }
+//                        }
+                        val glList = mGLConnectionList.filter {
+                            it.odfConnection.optical_cable_number == item.odfConnection.optical_cable_number
                         }
-                        activity?.supportFragmentManager?.beginTransaction()?.add(R.id.content_frame, GLConnectionFragment.newInstance(mPath!!, glList))?.addToBackStack("DeviceFragment")?.commit()
+                        activity?.supportFragmentManager?.beginTransaction()?.add(R.id.content_frame, GLConnectionFragment.newInstance(mPath!!, glList as ArrayList<GLConnectionBean>))?.addToBackStack("DeviceFragment")?.commit()
                     }
                 })
         rv_panel_gl.run {
@@ -511,8 +514,8 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
     override fun onBackPressed() = BackHandlerHelper.handleBackPress(this)
 
     companion object {
-        private val ARG_PARAM1 = "param1"
-        private val ARG_PARAM2 = "param2"
+        private const val ARG_PARAM1 = "param1"
+        private const val ARG_PARAM2 = "param2"
 
         fun newInstance(param1: String, param2: PanelBean): PanelFragment {
             val fragment = PanelFragment()

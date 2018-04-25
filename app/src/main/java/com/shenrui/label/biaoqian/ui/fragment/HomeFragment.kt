@@ -28,8 +28,8 @@ class HomeFragment : BaseFragment() {
 
     companion object {
 
-        private val ARG_PARAM1 = "param1"
-        private val ARG_PARAM2 = "param2"
+        private const val ARG_PARAM1 = "param1"
+        private const val ARG_PARAM2 = "param2"
 
         fun newInstance(param1: String, param2: String): HomeFragment {
             val fragment = HomeFragment()

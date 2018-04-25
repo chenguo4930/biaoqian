@@ -70,8 +70,8 @@ class GLConnectionFragment : BaseFragment(), FragmentBackHandler {
     override fun onBackPressed() = BackHandlerHelper.handleBackPress(this)
 
     companion object {
-        private val ARG_PARAM1 = "param1"
-        private val ARG_PARAM2 = "param2"
+        private const val ARG_PARAM1 = "param1"
+        private const val ARG_PARAM2 = "param2"
 
         fun newInstance(param1: String, param2: ArrayList<GLConnectionBean>): GLConnectionFragment {
             val fragment = GLConnectionFragment()

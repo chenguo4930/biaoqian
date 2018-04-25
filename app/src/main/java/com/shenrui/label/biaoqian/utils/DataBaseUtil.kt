@@ -71,6 +71,26 @@ class DataBaseUtil {
         }
 
         /**
+         * 读取屏柜的数据
+         */
+        fun getPanelByCode(dbPath: String, code: String): ArrayList<Panel> {
+            val database = SQLiteDatabase.openOrCreateDatabase(dbPath, null)
+            val cursor = database.query("Panel", null, "panel_code == $code ", null,
+                    null, null, null)
+            val panleList = ArrayList<Panel>()
+            while (cursor.moveToNext()) {
+                val panel_id = cursor.getInt(cursor.getColumnIndex("panel_id"))
+                val panel_name = cursor.getString(cursor.getColumnIndex("panel_name"))
+                val panel_code = cursor.getString(cursor.getColumnIndex("panel_code"))
+                val region_id = cursor.getInt(cursor.getColumnIndex("region_id"))
+
+                panleList.add(Panel(panel_id, panel_name, panel_code, region_id))
+            }
+            cursor.close()
+            return panleList
+        }
+
+        /**
          * 读取区域设备的数据
          */
         fun getDevice(dbPath: String): ArrayList<Device> {
@@ -176,11 +196,33 @@ class DataBaseUtil {
         }
 
         /**
-         *
+         * 查找odf
          */
         fun getODF(dbPath: String): ArrayList<ODF> {
             val database = SQLiteDatabase.openOrCreateDatabase(dbPath, null)
             val cursor = database.query("ODF", null, null, null,
+                    null, null, null)
+            val oDFList = ArrayList<ODF>()
+            while (cursor.moveToNext()) {
+                val odf_id = cursor.getInt(cursor.getColumnIndex("odf_id"))
+                val panel_id = cursor.getInt(cursor.getColumnIndex("panel_id"))
+                val odf_code = cursor.getString(cursor.getColumnIndex("odf_code"))
+                val odf_layer = cursor.getString(cursor.getColumnIndex("odf_layer"))
+                val odf_port = cursor.getString(cursor.getColumnIndex("odf_port"))
+                val odf_port_type = cursor.getInt(cursor.getColumnIndex("odf_port_type"))
+
+                oDFList.add(ODF(odf_id, panel_id, odf_code, odf_layer, odf_port, odf_port_type))
+            }
+            cursor.close()
+            return oDFList
+        }
+
+        /**
+         * 根据屏柜id查找odf
+         */
+        fun getODFByPanel(dbPath: String, panelId: Int): ArrayList<ODF> {
+            val database = SQLiteDatabase.openOrCreateDatabase(dbPath, null)
+            val cursor = database.query("ODF", null, "panel_id == $panelId", null,
                     null, null, null)
             val oDFList = ArrayList<ODF>()
             while (cursor.moveToNext()) {
