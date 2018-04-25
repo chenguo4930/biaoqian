@@ -7,8 +7,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import com.github.ikidou.fragmentBackHandler.BackHandlerHelper
-import com.luckongo.tthd.mvp.model.bean.ODF
-import com.luckongo.tthd.mvp.model.bean.ODFConnection
+import com.luckongo.tthd.mvp.model.bean.*
 import com.shenrui.label.biaoqian.R
 import com.shenrui.label.biaoqian.constrant.AllSubStation.Companion.subStation
 import com.shenrui.label.biaoqian.extension.logE
@@ -16,11 +15,10 @@ import com.shenrui.label.biaoqian.mvp.base.BaseActivity
 import com.shenrui.label.biaoqian.mvp.contract.BiaoQianContract
 import com.shenrui.label.biaoqian.mvp.model.bean.GLConnectionBean
 import com.shenrui.label.biaoqian.mvp.model.bean.PanelBean
+import com.shenrui.label.biaoqian.mvp.model.bean.TXConnectionBean
+import com.shenrui.label.biaoqian.mvp.model.bean.WLConnectionBean
 import com.shenrui.label.biaoqian.mvp.presenter.BiaoQianPresenter
-import com.shenrui.label.biaoqian.ui.fragment.GLConnectionFragment
-import com.shenrui.label.biaoqian.ui.fragment.HomeFragment
-import com.shenrui.label.biaoqian.ui.fragment.ScanFragment
-import com.shenrui.label.biaoqian.ui.fragment.SettingFragment
+import com.shenrui.label.biaoqian.ui.fragment.*
 import com.shenrui.label.biaoqian.utils.DataBaseUtil
 import com.xys.libzxing.zxing.activity.CaptureActivity
 import kotlinx.android.synthetic.main.activity_biao_qian.*
@@ -198,29 +196,29 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
         var subStationName: String = ""
         //变电站电压等级编号表JSNJ22TSB 22后面的TSB是变电站的简称，要把它解析出来
         when {
-            result.indexOf("75") != -1 -> {
-                subStationName = result.substring(result.indexOf("75") + 2)
+            resultArray[0].indexOf("75") != -1 -> {
+                subStationName = resultArray[0].substring(resultArray[0].indexOf("75") + 2)
             }
-            result.indexOf("50") != -1 -> {
-                subStationName = result.substring(result.indexOf("50") + 2)
+            resultArray[0].indexOf("50") != -1 -> {
+                subStationName = resultArray[0].substring(resultArray[0].indexOf("50") + 2)
             }
-            result.indexOf("33") != -1 -> {
-                subStationName = result.substring(result.indexOf("33") + 2)
+            resultArray[0].indexOf("33") != -1 -> {
+                subStationName = resultArray[0].substring(resultArray[0].indexOf("33") + 2)
             }
-            result.indexOf("22") != -1 -> {
-                subStationName = result.substring(result.indexOf("22") + 2)
+            resultArray[0].indexOf("22") != -1 -> {
+                subStationName = resultArray[0].substring(resultArray[0].indexOf("22") + 2)
             }
-            result.indexOf("11") != -1 -> {
-                subStationName = result.substring(result.indexOf("11") + 2)
+            resultArray[0].indexOf("11") != -1 -> {
+                subStationName = resultArray[0].substring(resultArray[0].indexOf("11") + 2)
             }
-            result.indexOf("66") != -1 -> {
-                subStationName = result.substring(result.indexOf("66") + 2)
+            resultArray[0].indexOf("66") != -1 -> {
+                subStationName = resultArray[0].substring(resultArray[0].indexOf("66") + 2)
             }
-            result.indexOf("35") != -1 -> {
-                subStationName = result.substring(result.indexOf("35") + 2)
+            resultArray[0].indexOf("35") != -1 -> {
+                subStationName = resultArray[0].substring(resultArray[0].indexOf("35") + 2)
             }
-            result.indexOf("10") != -1 -> {
-                subStationName = result.substring(result.indexOf("10") + 2)
+            resultArray[0].indexOf("10") != -1 -> {
+                subStationName = resultArray[0].substring(resultArray[0].indexOf("10") + 2)
             }
         }
         logE("----------变电站缩写subStationName = $subStationName")
@@ -246,185 +244,433 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
         val panelId = panelList[0].panel_id
         if (resultArray[1].startsWith("WL")) {
             //如果是尾缆
-            searchData("WL", resultArray[1], panelId)
+            searchWLData(resultArray[1], panelId)
         } else if (resultArray[1].startsWith("GL")) {
             //如果是光缆
-            searchData("GL", resultArray[1], panelId)
+            searchGLData(resultArray[1], panelId)
         }
     }
 
-    private fun searchData(type: String, connectionName: String, panelId: Int) {
+    /**
+     * 查找尾缆
+     */
+    private fun searchWLData(connectionName: String, panelId: Int) {
         val progressDialog = ProgressDialog.show(this, null, "正在查询数据...", false, false)
         progressDialog.show()
-        if (type == "GL") {
-            Observable.create(Observable.OnSubscribe<ArrayList<GLConnectionBean>> {
 
-                //得到数据库中所有的屏柜
-                val panelDataList = DataBaseUtil.getPanel(mDbPath!!)
-                //获取数据库中所有设备和交换机
-                val deviceDateList = DataBaseUtil.getDevice(mDbPath!!)
-                val switchDateList = DataBaseUtil.getSwitch(mDbPath!!)
+        Observable.create(Observable.OnSubscribe<ArrayList<WLConnectionBean>> {
+            //该屏柜的所有尾缆连接集合
+            val wlConnectionList = ArrayList<WLConnectionBean>()
 
-//                val odfDataList = DataBaseUtil.getODFByPanel(mDbPath!!,panelId)
-//                val odfConnectionDataList = DataBaseUtil.getODFConnection(mDbPath!!)
+            //得到数据库中所有的屏柜
+            val panelDataList = DataBaseUtil.getPanel(mDbPath!!)
+            //获取所有尾缆
+            val tailFiberDataList = DataBaseUtil.getTailFiber(mDbPath!!)
+            //刷选出设备相关的设备连接情况
+            val deviceDateList = DataBaseUtil.getDevice(mDbPath!!)
+            //得到数据库中所有的设备连接
+            val deviceDataConnectionList = DataBaseUtil.getDeviceConnection(mDbPath!!)
+            //交换机
+            val switchDateList = DataBaseUtil.getSwitch(mDbPath!!)
+            val switchDataConnection = DataBaseUtil.getSwitchConnection(mDbPath!!)
 
-                //解析光缆数据-------------------------start-----------------------
-                val odfDataList = DataBaseUtil.getODF(mDbPath!!)
-                val odfConnectionDataList = DataBaseUtil.getODFConnection(mDbPath!!)
-                //筛选出屏柜中的所有odf
-                val odfList = ArrayList<ODF>()
-                odfDataList.forEach {
-                    if (it.panel_id == panelId) {
-                        odfList.add(it)
+            //----------找出屏柜中的所有设备和交换机------------
+            //设备
+            val deviceList = deviceDateList.filter {
+                it.panel_id == panelId
+            }
+            val deviceConnection = ArrayList<DeviceConnection>()
+
+            //交换机
+            val switchList = switchDateList.filter {
+                it.panel_id == panelId
+            }
+            val switchConnection = ArrayList<SwitchConnection>()
+
+            //解析WeiLan数据和跳纤数据------------------start-----------------------
+
+            //筛选出当前屏柜中所有设备的连接情况
+            deviceList.forEach { item ->
+                deviceDataConnectionList.forEach {
+                    if (it.from_id == item.device_id) {
+                        deviceConnection.add(it)
+                        Log.e("-----", "-----DeviceConnection=$it")
                     }
                 }
+            }
+            //根据每条连接线判断是否是WL还是跳纤TX
+            deviceConnection.forEach {
+                //如果是连接的是设备
+                if (it.to_dev_type == "1001") {
+                    //帅选出这条连线的to设备
+                    val toDevice = deviceDateList.filter { item ->
+                        item.device_id == it.to_id
+                    }
+                    val inDevice = deviceList.filter { item ->
+                        it.from_id == item.device_id
+                    }
 
-                val gLConnectionList = ArrayList<GLConnectionBean>()
-                //帅选出所有odf的连接信息
-                odfList.forEach out@{
-                    odfConnectionDataList.forEach { item ->
-                        if (item.odf_id == it.odf_id) {
-                            var inDeviceName = ""
-                            var inDeviceId = ""
-                            var inDeviceCode = ""
-                            var outDeviceName = ""
-                            var outDeviceId = ""
-                            var outDeviceCode = ""
-                            var outPanelName = ""
-                            var outODF: ODF? = null
-                            var outODFConnection: ODFConnection? = null
+                    //如果to设备的panelId等于当前屏柜的id，说明这条deviceConnection是跳纤，如果不是就是尾缆（WL）
+                    if (toDevice[0].panel_id == panelId) {
 
-                            for (bean in odfConnectionDataList) {
-                                if (bean.odf_id == item.external_odf_id) {
-                                    //获取外部连接的odf和odfConnection
-                                    outODFConnection = bean
-                                    for (odf in odfDataList) {
-                                        if (odf.odf_id == item.external_odf_id) {
-                                            outODF = odf
+                        val tailFiberTx = tailFiberDataList.filter { item ->
+                            it.tail_fiber_tx_id == item.tail_fiber_id
+                        }
+                        val tailFiberRx = tailFiberDataList.filter { item ->
+                            it.tail_fiber_rx_id == item.tail_fiber_id
+                        }
+//                        mTXConnectionList.add(TXConnectionBean(inDevice!![0].device_desc, it.from_port + "/Tx",
+//                                tailFiberTx[0].tail_cable_number, it.to_port.toString() + "/Rx",
+//                                toDevice[0].device_desc, tailFiberTx[0].tail_fiber_desc))
+//                        mTXConnectionList.add(TXConnectionBean(inDevice[0].device_desc, it.from_port + "/Rx",
+//                                tailFiberRx[0].tail_cable_number, it.to_port.toString() + "/Tx",
+//                                toDevice[0].device_desc, tailFiberRx[0].tail_fiber_desc))
+
+                    } else {
+                        //找到这条连线连接的外部屏柜panel
+                        val panel = panelDataList.filter {
+                            it.panel_id == toDevice[0].panel_id
+                        }
+                        val tailFiberTxWL = tailFiberDataList.filter { item ->
+                            it.tail_fiber_tx_id == item.tail_fiber_id
+                        }
+                        val tailFiberRxWL = tailFiberDataList.filter { item ->
+                            it.tail_fiber_rx_id == item.tail_fiber_id
+                        }
+                        //找到尾缆
+                        val wlTxBean = WLConnectionBean("Tx", tailFiberTxWL[0], panel[0].panel_name,
+                                inDevice[0], it, null, null, toDevice[0], null)
+                        val wlRxBean = WLConnectionBean("Rx", tailFiberRxWL[0], panel[0].panel_name,
+                                inDevice[0], it, null, null, toDevice[0], null)
+                        wlConnectionList.add(wlTxBean)
+                        wlConnectionList.add(wlRxBean)
+                    }
+                } else if (it.to_dev_type == "1000") {
+                    //帅选出这条连线的to设备
+                    val toSwitch = switchDateList.filter { item ->
+                        item.switch_id == it.to_id
+                    }
+                    val inDevice = deviceList.filter { item ->
+                        it.from_id == item.device_id
+                    }
+
+                    //如果to设备的panelId等于当前屏柜的id，说明这条deviceConnection是跳纤，如果不是就是尾缆（WL）
+                    if (toSwitch[0].panel_id == panelId) {
+                        val tailFiberTx = tailFiberDataList.filter { item ->
+                            it.tail_fiber_tx_id == item.tail_fiber_id
+                        }
+                        val tailFiberRx = tailFiberDataList.filter { item ->
+                            it.tail_fiber_rx_id == item.tail_fiber_id
+                        }
+
+//                        mTXConnectionList.add(TXConnectionBean(inDevice!![0].device_desc, it.from_port + "/Tx",
+//                                tailFiberTx[0].tail_cable_number, it.to_port.toString() + "/Rx",
+//                                toSwitch[0].switch_name, tailFiberTx[0].tail_fiber_desc))
+//                        mTXConnectionList.add(TXConnectionBean(inDevice[0].device_desc, it.from_port + "/Rx",
+//                                tailFiberRx[0].tail_cable_number, it.to_port.toString() + "/Tx",
+//                                toSwitch[0].switch_name, tailFiberRx[0].tail_fiber_desc))
+
+                    } else {
+                        //找到这条连线连接的外部屏柜panel
+                        val panel = panelDataList.filter {
+                            it.panel_id == toSwitch[0].panel_id
+                        }
+                        val tailFiberTxWL = tailFiberDataList.filter { item ->
+                            it.tail_fiber_tx_id == item.tail_fiber_id
+                        }
+                        val tailFiberRxWL = tailFiberDataList.filter { item ->
+                            it.tail_fiber_rx_id == item.tail_fiber_id
+                        }
+
+                        //找到尾缆
+                        val wlTxBean = WLConnectionBean("Tx", tailFiberTxWL[0], panel[0].panel_name,
+                                inDevice[0], it, null, null, null, toSwitch[0])
+                        val wlRxBean = WLConnectionBean("Rx", tailFiberRxWL[0], panel[0].panel_name,
+                                inDevice[0], it, null, null, null, toSwitch[0])
+
+                        wlConnectionList.add(wlTxBean)
+                        wlConnectionList.add(wlRxBean)
+                    }
+                }
+            }
+
+            //帅选出当前屏柜中所有设备的连接情况
+            switchList.forEach { item ->
+                switchDataConnection.forEach {
+                    if (it.from_id == item.switch_id) {
+                        switchConnection.add(it)
+                        Log.e("-----", "-----DeviceConnection=$it")
+                    }
+                }
+            }
+            //根据每条连接线判断是否是WL还是跳纤TX
+            switchConnection.forEach {
+                //如果连接到的设备是交换机
+                if (it.to_dev_type == "1000") {
+                    //帅选出这条连线的to设备
+                    val toSwitch = switchDateList.filter { item ->
+                        item.switch_id == it.to_id
+                    }
+                    val inSwitch = switchList.filter { item ->
+                        it.from_id == item.switch_id
+                    }
+
+                    //如果to设备的panelId等于当前屏柜的id，说明这条deviceConnection是跳纤，如果不是就是尾缆（WL）
+                    if (toSwitch[0].panel_id == panelId) {
+
+                        val tailFiberTx = tailFiberDataList.filter { item ->
+                            it.tail_fiber_tx_id == item.tail_fiber_id
+                        }
+                        val tailFiberRx = tailFiberDataList.filter { item ->
+                            it.tail_fiber_rx_id == item.tail_fiber_id
+                        }
+//                        mTXConnectionList.add(TXConnectionBean(inSwitch!![0].switch_name, it.from_port + "/Tx",
+//                                tailFiberTx[0].tail_cable_number, it.to_port + "/Rx",
+//                                toSwitch[0].switch_name, tailFiberTx[0].tail_fiber_desc))
+//                        mTXConnectionList.add(TXConnectionBean(inSwitch[0].switch_name, it.from_port + "/Rx",
+//                                tailFiberRx[0].tail_cable_number, it.to_port + "/Tx",
+//                                toSwitch[0].switch_name, tailFiberRx[0].tail_fiber_desc))
+
+                    } else {
+                        //找到这条连线连接的外部屏柜panel
+                        val panel = panelDataList.filter {
+                            it.panel_id == toSwitch[0].panel_id
+                        }
+                        val tailFiberTxWL = tailFiberDataList.filter { item ->
+                            it.tail_fiber_tx_id == item.tail_fiber_id
+                        }
+                        val tailFiberRxWL = tailFiberDataList.filter { item ->
+                            it.tail_fiber_rx_id == item.tail_fiber_id
+                        }
+                        //找到尾缆
+                        val wlTxBean = WLConnectionBean("Tx", tailFiberTxWL[0], panel[0].panel_name,
+                                null, null, inSwitch[0], it, null, toSwitch[0])
+                        val wlRxBean = WLConnectionBean("Rx", tailFiberRxWL[0], panel[0].panel_name,
+                                null, null, inSwitch[0], it, null, toSwitch[0])
+                        wlConnectionList.add(wlTxBean)
+                        wlConnectionList.add(wlRxBean)
+                    }
+                } else if (it.to_dev_type == "1001") { //如果连接到的设备是装置
+
+                    //帅选出这条连线的to设备
+                    val toDevice = deviceDateList.filter { item ->
+                        item.device_id == it.to_id
+                    }
+                    val inSwitch = switchList.filter { item ->
+                        it.from_id == item.switch_id
+                    }
+                    //如果to设备的panelId等于当前屏柜的id，说明这条deviceConnection是跳纤，如果不是就是尾缆（WL）
+                    if (toDevice[0].panel_id == panelId) {
+                        val tailFiberTx = tailFiberDataList.filter { item ->
+                            it.tail_fiber_tx_id == item.tail_fiber_id
+                        }
+                        val tailFiberRx = tailFiberDataList.filter { item ->
+                            it.tail_fiber_rx_id == item.tail_fiber_id
+                        }
+//                        mTXConnectionList.add(TXConnectionBean(inSwitch!![0].switch_name, it.from_port + "/Tx",
+//                                tailFiberTx[0].tail_cable_number, it.to_port + "/Rx",
+//                                toDevice[0].device_desc, tailFiberTx[0].tail_fiber_desc))
+//                        mTXConnectionList.add(TXConnectionBean(inSwitch[0].switch_name, it.from_port + "/Rx",
+//                                tailFiberRx[0].tail_cable_number, it.to_port + "/Tx",
+//                                toDevice[0].device_desc, tailFiberRx[0].tail_fiber_desc))
+
+
+                    } else {
+                        //找到这条连线连接的外部屏柜panel
+                        val panel = panelDataList.filter {
+                            it.panel_id == toDevice[0].panel_id
+                        }
+                        val tailFiberTxWL = tailFiberDataList.filter { item ->
+                            it.tail_fiber_tx_id == item.tail_fiber_id
+                        }
+                        val tailFiberRxWL = tailFiberDataList.filter { item ->
+                            it.tail_fiber_rx_id == item.tail_fiber_id
+                        }
+                        //找到尾缆
+                        val wlTxBean = WLConnectionBean("Tx", tailFiberTxWL[0], panel[0].panel_name,
+                                null, null, inSwitch[0], it, toDevice[0], null)
+                        wlConnectionList.add(wlTxBean)
+                        val wlRxBean = WLConnectionBean("Rx", tailFiberRxWL[0], panel[0].panel_name,
+                                null, null, inSwitch[0], it, toDevice[0], null)
+                        wlConnectionList.add(wlRxBean)
+                    }
+                }
+            }
+            //解析WeiLan数据和跳纤数据------------------end-----------------------
+
+            val wlList = wlConnectionList.filter {
+                it.wlTailFiber.tail_cable_number == connectionName
+            }
+            logE("---------尾缆-wlList.size() = ${wlList.size}-")
+            it.onNext(wlList as ArrayList<WLConnectionBean>)
+            it.onCompleted()
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(object : Subscriber<ArrayList<WLConnectionBean>>() {
+                    override fun onCompleted() {
+//                        toast("成功读取数据库")
+                        progressDialog.dismiss()
+                    }
+
+                    override fun onError(e: Throwable) {
+                        toast("读取数据库失败，请检查数据库是否存在")
+                        progressDialog.dismiss()
+                    }
+
+                    override fun onNext(dataList: ArrayList<WLConnectionBean>) {
+                        supportFragmentManager?.beginTransaction()
+                                ?.add(R.id.content_frame, WLConnectionFragment.newInstance(mDbPath!!, dataList))
+                                ?.addToBackStack("WLConnectionFragment")
+                                ?.commit()
+                    }
+                })
+    }
+
+    /**
+     * 查找光缆
+     */
+    private fun searchGLData(connectionName: String, panelId: Int) {
+        val progressDialog = ProgressDialog.show(this, null, "正在查询数据...", false, false)
+        progressDialog.show()
+
+        Observable.create(Observable.OnSubscribe<ArrayList<GLConnectionBean>> {
+
+            //得到数据库中所有的屏柜
+            val panelDataList = DataBaseUtil.getPanel(mDbPath!!)
+            //获取数据库中所有设备和交换机
+            val deviceDateList = DataBaseUtil.getDevice(mDbPath!!)
+            val switchDateList = DataBaseUtil.getSwitch(mDbPath!!)
+
+            //解析光缆数据-------------------------start-----------------------
+            val odfDataList = DataBaseUtil.getODF(mDbPath!!)
+            val odfConnectionDataList = DataBaseUtil.getODFConnection(mDbPath!!)
+            //筛选出屏柜中的所有odf
+            val odfList = odfDataList.filter {
+                it.panel_id == panelId
+            }
+
+            val gLConnectionList = ArrayList<GLConnectionBean>()
+            //帅选出所有odf的连接信息
+            odfList.forEach out@{
+                odfConnectionDataList.forEach { item ->
+                    if (item.odf_id == it.odf_id) {
+                        var inDeviceName = ""
+                        var inDeviceId = ""
+                        var inDeviceCode = ""
+                        var outDeviceName = ""
+                        var outDeviceId = ""
+                        var outDeviceCode = ""
+                        var outPanelName = ""
+                        var outODF: ODF? = null
+                        var outODFConnection: ODFConnection? = null
+
+                        for (bean in odfConnectionDataList) {
+                            if (bean.odf_id == item.external_odf_id) {
+                                //获取外部连接的odf和odfConnection
+                                outODFConnection = bean
+                                for (odf in odfDataList) {
+                                    if (odf.odf_id == item.external_odf_id) {
+                                        outODF = odf
+                                        break
+                                    }
+                                }
+
+                                if (bean.internal_device_type == 1001) {
+                                    //如果外部连接的设备是装置
+                                    for (device in deviceDateList) {
+                                        if (device.device_id == bean.internal_device_id) {
+                                            outDeviceName = device.device_desc
+                                            outDeviceId = device.device_id.toString()
+                                            outDeviceCode = device.device_iedname
+                                            for (panel in panelDataList) {
+                                                if (panel.panel_id == device.panel_id) {
+                                                    outPanelName = panel.panel_name
+                                                    break
+                                                }
+                                            }
                                             break
                                         }
                                     }
-
-                                    if (bean.internal_device_type == 1001) {
-                                        //如果外部连接的设备是装置
-                                        for (device in deviceDateList) {
-                                            if (device.device_id == bean.internal_device_id) {
-                                                outDeviceName = device.device_desc
-                                                outDeviceId = device.device_id.toString()
-                                                outDeviceCode = device.device_iedname
-                                                for (panel in panelDataList) {
-                                                    if (panel.panel_id == device.panel_id) {
-                                                        outPanelName = panel.panel_name
-                                                        break
-                                                    }
+                                } else if (bean.internal_device_type == 1000) {
+                                    //如果外部连接的设备是交换机
+                                    for (switch in switchDateList) {
+                                        if (switch.switch_id == bean.internal_device_id) {
+                                            outDeviceName = switch.switch_name
+                                            outDeviceId = switch.switch_id.toString()
+                                            outDeviceCode = switch.switch_code
+                                            for (panel in panelDataList) {
+                                                if (panel.panel_id == switch.panel_id) {
+                                                    outPanelName = panel.panel_name
+                                                    break
                                                 }
-                                                break
                                             }
+                                            break
                                         }
-                                    } else if (bean.internal_device_type == 1000) {
-                                        //如果外部连接的设备是交换机
-                                        for (switch in switchDateList) {
-                                            if (switch.switch_id == bean.internal_device_id) {
-                                                outDeviceName = switch.switch_name
-                                                outDeviceId = switch.switch_id.toString()
-                                                outDeviceCode = switch.switch_code
-                                                for (panel in panelDataList) {
-                                                    if (panel.panel_id == switch.panel_id) {
-                                                        outPanelName = panel.panel_name
-                                                        break
-                                                    }
-                                                }
-                                                break
-                                            }
-                                        }
-                                    } else {
-                                        return@out
                                     }
+                                } else {
+                                    return@out
+                                }
+                                break
+                            }
+                        }
+
+                        //获取in设备的名称
+                        if (item.internal_device_type == 1001) {
+                            //如果设备是装置
+                            for (device in deviceDateList) {
+                                if (device.device_id == item.internal_device_id) {
+                                    inDeviceName = device.device_desc
+                                    inDeviceId = device.device_id.toString()
+                                    inDeviceCode = device.device_iedname
                                     break
                                 }
                             }
-
-                            //获取in设备的名称
-                            if (item.internal_device_type == 1001) {
-                                //如果设备是装置
-                                for (device in deviceDateList) {
-                                    if (device.device_id == item.internal_device_id) {
-                                        inDeviceName = device.device_desc
-                                        inDeviceId = device.device_id.toString()
-                                        inDeviceCode = device.device_iedname
-                                        break
-                                    }
+                        } else if (item.internal_device_type == 1000) {
+                            //如果设备是交换机
+                            for (switch in switchDateList) {
+                                if (switch.switch_id == item.internal_device_id) {
+                                    inDeviceName = switch.switch_name
+                                    inDeviceId = switch.switch_id.toString()
+                                    inDeviceCode = switch.switch_code
+                                    break
                                 }
-                            } else if (item.internal_device_type == 1000) {
-                                //如果设备是交换机
-                                for (switch in switchDateList) {
-                                    if (switch.switch_id == item.internal_device_id) {
-                                        inDeviceName = switch.switch_name
-                                        inDeviceId = switch.switch_id.toString()
-                                        inDeviceCode = switch.switch_code
-                                        break
-                                    }
-                                }
-                            } else {
-                                return@out
                             }
-
-                            gLConnectionList.add(GLConnectionBean(inDeviceName, inDeviceId, inDeviceCode,
-                                    outDeviceName, outDeviceId, outDeviceCode, outPanelName,
-                                    it, item, outODF!!, outODFConnection!!))
+                        } else {
                             return@out
                         }
+
+                        gLConnectionList.add(GLConnectionBean(inDeviceName, inDeviceId, inDeviceCode,
+                                outDeviceName, outDeviceId, outDeviceCode, outPanelName,
+                                it, item, outODF!!, outODFConnection!!))
+                        return@out
                     }
                 }
-                Log.e("--------", "----------odfDataList.size() = ${gLConnectionList.size}-")
-                val glList = gLConnectionList.filter { it.odfConnection.optical_cable_number == connectionName }
-                it.onNext(glList as ArrayList<GLConnectionBean>)
-                it.onCompleted()
-            }).subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(object : Subscriber<ArrayList<GLConnectionBean>>() {
-                        override fun onCompleted() {
-//                        toast("成功读取数据库")
-                            progressDialog.dismiss()
-                        }
+            }
+            logE("---------光缆-odfDataList.size() = ${gLConnectionList.size}-")
+            val glList = gLConnectionList.filter { it.odfConnection.optical_cable_number == connectionName }
+            logE("---------光缆-glList.size() = ${glList.size}-")
+            it.onNext(glList as ArrayList<GLConnectionBean>)
+            it.onCompleted()
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(object : Subscriber<ArrayList<GLConnectionBean>>() {
+                    override fun onCompleted() {
+                        progressDialog.dismiss()
+                    }
 
-                        override fun onError(e: Throwable) {
-                            toast("读取数据库失败，请检查数据库是否存在")
-                            progressDialog.dismiss()
-                        }
+                    override fun onError(e: Throwable) {
+                        toast("读取数据库失败，请检查数据库是否存在")
+                        progressDialog.dismiss()
+                    }
 
-                        override fun onNext(dataList: ArrayList<GLConnectionBean>) {
-                            supportFragmentManager?.beginTransaction()?.
-                                    add(R.id.content_frame, GLConnectionFragment.newInstance(mDbPath!!, dataList))?.
-                                    addToBackStack("DeviceFragment")?.
-                                    commit()
-                        }
-                    })
-        } else if (type == "WL") {
-            Observable.create(Observable.OnSubscribe<String> {
-                val deviceList = DataBaseUtil.getDevice(mDbPath!!)
-                val switchList = DataBaseUtil.getSwitch(mDbPath!!)
-                val panelList = ArrayList<PanelBean>()
+                    override fun onNext(dataList: ArrayList<GLConnectionBean>) {
+                        supportFragmentManager?.beginTransaction()
+                                ?.add(R.id.content_frame, GLConnectionFragment.newInstance(mDbPath!!, dataList))
+                                ?.addToBackStack("DeviceFragment")
+                                ?.commit()
+                    }
+                })
 
-                it.onCompleted()
-            }).subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(object : Subscriber<String>() {
-                        override fun onCompleted() {
-//                        toast("成功读取数据库")
-                            progressDialog.dismiss()
-                        }
-
-                        override fun onError(e: Throwable) {
-                            toast("读取数据库失败，请检查数据库是否存在")
-                            progressDialog.dismiss()
-                        }
-
-                        override fun onNext(dataList: String) {
-
-                        }
-                    })
-        }
     }
 
     override fun onBackPressed() {

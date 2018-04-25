@@ -457,13 +457,20 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
         val wlAdapter = PanelWLConnectionListItemRecyclerAdapter(activity!!, wlConnectionList,
                 object : PanelWLConnectionListItemRecyclerAdapter.WLConnectionClickListener {
                     override fun onWLConnectionItemClick(item: WLConnectionBean) {
-                        val wlList = ArrayList<WLConnectionBean>()
-                        mWLConnectionList.forEach {
-                            if (it.wlTailFiber.tail_cable_number == item.wlTailFiber.tail_cable_number) {
-                                wlList.add(it)
-                            }
+//                        val wlList = ArrayList<WLConnectionBean>()
+//                        mWLConnectionList.forEach {
+//                            if (it.wlTailFiber.tail_cable_number == item.wlTailFiber.tail_cable_number) {
+//                                wlList.add(it)
+//                            }
+//                        }
+                        val wlList = mWLConnectionList.filter {
+                            it.wlTailFiber.tail_cable_number == item.wlTailFiber.tail_cable_number
                         }
-                        activity?.supportFragmentManager?.beginTransaction()?.add(R.id.content_frame, WLConnectionFragment.newInstance(mPath!!, wlList))?.addToBackStack("WLConnectionFragment")?.commit()
+
+                        activity?.supportFragmentManager?.beginTransaction()
+                                ?.add(R.id.content_frame, WLConnectionFragment.newInstance(mPath!!, wlList as ArrayList<WLConnectionBean>))
+                                ?.addToBackStack("WLConnectionFragment")
+                                ?.commit()
                     }
                 })
         rv_panel_wl.run {
@@ -494,7 +501,10 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
                         val glList = mGLConnectionList.filter {
                             it.odfConnection.optical_cable_number == item.odfConnection.optical_cable_number
                         }
-                        activity?.supportFragmentManager?.beginTransaction()?.add(R.id.content_frame, GLConnectionFragment.newInstance(mPath!!, glList as ArrayList<GLConnectionBean>))?.addToBackStack("DeviceFragment")?.commit()
+                        activity?.supportFragmentManager?.beginTransaction()
+                                ?.add(R.id.content_frame, GLConnectionFragment.newInstance(mPath!!, glList as ArrayList<GLConnectionBean>))
+                                ?.addToBackStack("DeviceFragment")
+                                ?.commit()
                     }
                 })
         rv_panel_gl.run {
