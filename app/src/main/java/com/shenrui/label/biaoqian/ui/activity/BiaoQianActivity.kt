@@ -93,7 +93,7 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
 //                mScanFragment = ScanFragment()
 //            }
 //            supportFragmentManager.beginTransaction().replace(R.id.content_frame,mScanFragment).commit()
-            setScanPressed()
+//            setScanPressed()
             val permissionItems = ArrayList<PermissionItem>()
             permissionItems.add(PermissionItem(Manifest.permission.CAMERA, "开启摄像头", R.drawable.permission_ic_camera))
             HiPermission.create(this@BiaoQianActivity)
