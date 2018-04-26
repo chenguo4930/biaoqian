@@ -181,7 +181,9 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
 
     /**
      * 解析扫描二维码的结果
-     * result ：JSNJ22TSB/GL1101/2N
+     * result ：光缆和尾缆二维码结构 ： JSNJ22TSB/GL1101/2N
+     * result ：尾缆的纤芯二维码结构 ： JSNJ22TSB/WL1101-2/2N/3n/10/BTx
+     * result ：跳纤缆二维码结构 ：     JSNJ22TSB/2N-TX-01/2N/3n/7/ATx
      */
     private fun analysisResult(result: String?) {
         if (result == null) {
@@ -189,65 +191,79 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
             return
         }
         val resultArray = result.split("/")
-        if (resultArray.size != 3) {
-            toast("二维码数据格式有误")
-            return
-        }
-        var subStationName: String = ""
-        //变电站电压等级编号表JSNJ22TSB 22后面的TSB是变电站的简称，要把它解析出来
-        when {
-            resultArray[0].indexOf("75") != -1 -> {
-                subStationName = resultArray[0].substring(resultArray[0].indexOf("75") + 2)
+        if (resultArray.size == 3 || resultArray.size == 6) {
+            var subStationName: String = ""
+            //变电站电压等级编号表JSNJ22TSB 22后面的TSB是变电站的简称，要把它解析出来
+            when {
+                resultArray[0].indexOf("75") != -1 -> {
+                    subStationName = resultArray[0].substring(resultArray[0].indexOf("75") + 2)
+                }
+                resultArray[0].indexOf("50") != -1 -> {
+                    subStationName = resultArray[0].substring(resultArray[0].indexOf("50") + 2)
+                }
+                resultArray[0].indexOf("33") != -1 -> {
+                    subStationName = resultArray[0].substring(resultArray[0].indexOf("33") + 2)
+                }
+                resultArray[0].indexOf("22") != -1 -> {
+                    subStationName = resultArray[0].substring(resultArray[0].indexOf("22") + 2)
+                }
+                resultArray[0].indexOf("11") != -1 -> {
+                    subStationName = resultArray[0].substring(resultArray[0].indexOf("11") + 2)
+                }
+                resultArray[0].indexOf("66") != -1 -> {
+                    subStationName = resultArray[0].substring(resultArray[0].indexOf("66") + 2)
+                }
+                resultArray[0].indexOf("35") != -1 -> {
+                    subStationName = resultArray[0].substring(resultArray[0].indexOf("35") + 2)
+                }
+                resultArray[0].indexOf("10") != -1 -> {
+                    subStationName = resultArray[0].substring(resultArray[0].indexOf("10") + 2)
+                }
             }
-            resultArray[0].indexOf("50") != -1 -> {
-                subStationName = resultArray[0].substring(resultArray[0].indexOf("50") + 2)
+            logE("----------变电站缩写subStationName = $subStationName")
+            if (subStationName == "") {
+                toast("二维码解析出变电站缩写为空，请检查二维码是否正确")
+                return
             }
-            resultArray[0].indexOf("33") != -1 -> {
-                subStationName = resultArray[0].substring(resultArray[0].indexOf("33") + 2)
-            }
-            resultArray[0].indexOf("22") != -1 -> {
-                subStationName = resultArray[0].substring(resultArray[0].indexOf("22") + 2)
-            }
-            resultArray[0].indexOf("11") != -1 -> {
-                subStationName = resultArray[0].substring(resultArray[0].indexOf("11") + 2)
-            }
-            resultArray[0].indexOf("66") != -1 -> {
-                subStationName = resultArray[0].substring(resultArray[0].indexOf("66") + 2)
-            }
-            resultArray[0].indexOf("35") != -1 -> {
-                subStationName = resultArray[0].substring(resultArray[0].indexOf("35") + 2)
-            }
-            resultArray[0].indexOf("10") != -1 -> {
-                subStationName = resultArray[0].substring(resultArray[0].indexOf("10") + 2)
-            }
-        }
-        logE("----------变电站缩写subStationName = $subStationName")
-        if (subStationName == "") {
-            toast("二维码解析出变电站缩写为空，请检查二维码是否正确")
-            return
-        }
 
-        //通过变电站缩写，从变电站集合中找出变电站，并获取到该变电站的数据库路径
-        for (it in subStation!!) {
-            if (it.sub_short_name == subStationName) {
-                mDbPath = it.db_path
-                break
+            //通过变电站缩写，从变电站集合中找出变电站，并获取到该变电站的数据库路径
+            for (it in subStation!!) {
+                if (it.sub_short_name == subStationName) {
+                    mDbPath = it.db_path
+                    break
+                }
             }
-        }
-        //根据panel编号来查找panel
-        val panelList = DataBaseUtil.getPanelByCode(mDbPath!!, resultArray[2])
-        if (panelList.isEmpty()) {
-            toast("数据库中没有找到对应的屏柜,请检查二维码是否正确")
-            return
-        }
-        logE("------------根据panel编号来查找panel=${panelList[0]}-------")
-        val panelId = panelList[0].panel_id
-        if (resultArray[1].startsWith("WL")) {
-            //如果是尾缆
-            searchWLData(resultArray[1], panelId)
-        } else if (resultArray[1].startsWith("GL")) {
-            //如果是光缆
-            searchGLData(resultArray[1], panelId)
+            //根据panel编号来查找panel
+            val panelList = DataBaseUtil.getPanelByCode(mDbPath!!, resultArray[2])
+            if (panelList.isEmpty()) {
+                toast("数据库中没有找到对应的屏柜,请检查二维码是否正确")
+                return
+            }
+            logE("------------根据panel编号来查找panel=${panelList[0]}-------")
+            val panelId = panelList[0].panel_id
+
+            if (resultArray.size == 3) {
+                //解析长度为3说明是光缆和尾缆的二维码   JSNJ22TSB/GL1101/2N
+                if (resultArray[1].startsWith("WL")) {
+                    //如果是尾缆
+                    searchWLData(resultArray[1], panelId)
+                } else if (resultArray[1].startsWith("GL")) {
+                    //如果是光缆
+                    searchGLData(resultArray[1], panelId)
+                }
+            } else if (resultArray.size == 6) {
+                if (resultArray[1].startsWith("WL")) {
+                    //解析长度为6说明是尾缆的纤芯和跳纤二维码  JSNJ22TSB/WL1101-2/2N/3n/10/BTx
+                    // 二维码详情： No:WL1101-2  From: 2N/3n/10/BTx To:3N/4-2n/10/BRx
+
+                } else {
+                    //跳纤缆二维码结构 ：     JSNJ22TSB/2N-TX-01/2N/3n/7/ATx
+                    // 二维码详情： No:2N-Tx-01  From: 3n/7/ATx  To:1n/1/1Rx
+
+                }
+            }
+        } else {
+            toast("二维码数据格式有误")
         }
     }
 
