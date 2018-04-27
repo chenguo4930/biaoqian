@@ -255,7 +255,7 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
                 if (resultArray[1].startsWith("WL")) {
                     //解析长度为6说明是尾缆的纤芯和跳纤二维码  JSNJ22TSB/WL1101-2/2N/3n/10/BTx
                     // 二维码详情： No:WL1101-2  From: 2N/3n/10/BTx To:3N/4-2n/10/BRx
-
+                    searchWLXXData(resultArray[1], panelId)
                 } else {
                     //跳纤缆二维码结构 ：     JSNJ22TSB/2N-TX-01/2N/3n/7/ATx
                     // 二维码详情： No:2N-Tx-01  From: 3n/7/ATx  To:1n/1/1Rx
@@ -265,6 +265,292 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
         } else {
             toast("二维码数据格式有误")
         }
+    }
+
+    /**
+     * 获取尾缆的纤芯二维码对应的数据
+     *  connectioniName : WL1101-2
+     */
+    private fun searchWLXXData(connectionName: String, panelId: Int) {
+        val progressDialog = ProgressDialog.show(this, null, "正在查询数据...", false, false)
+        progressDialog.show()
+
+        Observable.create(Observable.OnSubscribe<WLConnectionBean> {
+            //该屏柜的所有尾缆连接集合
+            val wlConnectionList = ArrayList<WLConnectionBean>()
+
+            //得到数据库中所有的屏柜
+            val panelDataList = DataBaseUtil.getPanel(mDbPath!!)
+            //获取所有尾缆
+            val tailFiberDataList = DataBaseUtil.getTailFiber(mDbPath!!)
+            //刷选出设备相关的设备连接情况
+            val deviceDateList = DataBaseUtil.getDevice(mDbPath!!)
+            //得到数据库中所有的设备连接
+            val deviceDataConnectionList = DataBaseUtil.getDeviceConnection(mDbPath!!)
+            //交换机
+            val switchDateList = DataBaseUtil.getSwitch(mDbPath!!)
+            val switchDataConnection = DataBaseUtil.getSwitchConnection(mDbPath!!)
+
+            //----------找出屏柜中的所有设备和交换机------------
+            //设备
+            val deviceList = deviceDateList.filter {
+                it.panel_id == panelId
+            }
+            val deviceConnection = ArrayList<DeviceConnection>()
+
+            //交换机
+            val switchList = switchDateList.filter {
+                it.panel_id == panelId
+            }
+            val switchConnection = ArrayList<SwitchConnection>()
+
+            //解析WeiLan数据和跳纤数据------------------start-----------------------
+
+            //筛选出当前屏柜中所有设备的连接情况
+            deviceList.forEach { item ->
+                deviceDataConnectionList.forEach {
+                    if (it.from_id == item.device_id) {
+                        deviceConnection.add(it)
+                        Log.e("-----", "-----DeviceConnection=$it")
+                    }
+                }
+            }
+            //根据每条连接线判断是否是WL还是跳纤TX
+            deviceConnection.forEach {
+                //如果是连接的是设备
+                if (it.to_dev_type == "1001") {
+                    //帅选出这条连线的to设备
+                    val toDevice = deviceDateList.filter { item ->
+                        item.device_id == it.to_id
+                    }
+                    val inDevice = deviceList.filter { item ->
+                        it.from_id == item.device_id
+                    }
+
+                    //如果to设备的panelId等于当前屏柜的id，说明这条deviceConnection是跳纤，如果不是就是尾缆（WL）
+                    if (toDevice[0].panel_id == panelId) {
+
+                        val tailFiberTx = tailFiberDataList.filter { item ->
+                            it.tail_fiber_tx_id == item.tail_fiber_id
+                        }
+                        val tailFiberRx = tailFiberDataList.filter { item ->
+                            it.tail_fiber_rx_id == item.tail_fiber_id
+                        }
+//                        mTXConnectionList.add(TXConnectionBean(inDevice!![0].device_desc, it.from_port + "/Tx",
+//                                tailFiberTx[0].tail_cable_number, it.to_port.toString() + "/Rx",
+//                                toDevice[0].device_desc, tailFiberTx[0].tail_fiber_desc))
+//                        mTXConnectionList.add(TXConnectionBean(inDevice[0].device_desc, it.from_port + "/Rx",
+//                                tailFiberRx[0].tail_cable_number, it.to_port.toString() + "/Tx",
+//                                toDevice[0].device_desc, tailFiberRx[0].tail_fiber_desc))
+
+                    } else {
+                        //找到这条连线连接的外部屏柜panel
+                        val panel = panelDataList.filter {
+                            it.panel_id == toDevice[0].panel_id
+                        }
+                        val tailFiberTxWL = tailFiberDataList.filter { item ->
+                            it.tail_fiber_tx_id == item.tail_fiber_id
+                        }
+                        val tailFiberRxWL = tailFiberDataList.filter { item ->
+                            it.tail_fiber_rx_id == item.tail_fiber_id
+                        }
+                        //找到尾缆
+                        val wlTxBean = WLConnectionBean("Tx", tailFiberTxWL[0], panel[0].panel_name,
+                                inDevice[0], it, null, null, toDevice[0], null)
+                        val wlRxBean = WLConnectionBean("Rx", tailFiberRxWL[0], panel[0].panel_name,
+                                inDevice[0], it, null, null, toDevice[0], null)
+                        wlConnectionList.add(wlTxBean)
+                        wlConnectionList.add(wlRxBean)
+                    }
+                } else if (it.to_dev_type == "1000") {
+                    //帅选出这条连线的to设备
+                    val toSwitch = switchDateList.filter { item ->
+                        item.switch_id == it.to_id
+                    }
+                    val inDevice = deviceList.filter { item ->
+                        it.from_id == item.device_id
+                    }
+
+                    //如果to设备的panelId等于当前屏柜的id，说明这条deviceConnection是跳纤，如果不是就是尾缆（WL）
+                    if (toSwitch[0].panel_id == panelId) {
+                        val tailFiberTx = tailFiberDataList.filter { item ->
+                            it.tail_fiber_tx_id == item.tail_fiber_id
+                        }
+                        val tailFiberRx = tailFiberDataList.filter { item ->
+                            it.tail_fiber_rx_id == item.tail_fiber_id
+                        }
+
+//                        mTXConnectionList.add(TXConnectionBean(inDevice!![0].device_desc, it.from_port + "/Tx",
+//                                tailFiberTx[0].tail_cable_number, it.to_port.toString() + "/Rx",
+//                                toSwitch[0].switch_name, tailFiberTx[0].tail_fiber_desc))
+//                        mTXConnectionList.add(TXConnectionBean(inDevice[0].device_desc, it.from_port + "/Rx",
+//                                tailFiberRx[0].tail_cable_number, it.to_port.toString() + "/Tx",
+//                                toSwitch[0].switch_name, tailFiberRx[0].tail_fiber_desc))
+
+                    } else {
+                        //找到这条连线连接的外部屏柜panel
+                        val panel = panelDataList.filter {
+                            it.panel_id == toSwitch[0].panel_id
+                        }
+                        val tailFiberTxWL = tailFiberDataList.filter { item ->
+                            it.tail_fiber_tx_id == item.tail_fiber_id
+                        }
+                        val tailFiberRxWL = tailFiberDataList.filter { item ->
+                            it.tail_fiber_rx_id == item.tail_fiber_id
+                        }
+
+                        //找到尾缆
+                        val wlTxBean = WLConnectionBean("Tx", tailFiberTxWL[0], panel[0].panel_name,
+                                inDevice[0], it, null, null, null, toSwitch[0])
+                        val wlRxBean = WLConnectionBean("Rx", tailFiberRxWL[0], panel[0].panel_name,
+                                inDevice[0], it, null, null, null, toSwitch[0])
+
+                        wlConnectionList.add(wlTxBean)
+                        wlConnectionList.add(wlRxBean)
+                    }
+                }
+            }
+
+            //帅选出当前屏柜中所有设备的连接情况
+            switchList.forEach { item ->
+                switchDataConnection.forEach {
+                    if (it.from_id == item.switch_id) {
+                        switchConnection.add(it)
+                        Log.e("-----", "-----DeviceConnection=$it")
+                    }
+                }
+            }
+            //根据每条连接线判断是否是WL还是跳纤TX
+            switchConnection.forEach {
+                //如果连接到的设备是交换机
+                if (it.to_dev_type == "1000") {
+                    //帅选出这条连线的to设备
+                    val toSwitch = switchDateList.filter { item ->
+                        item.switch_id == it.to_id
+                    }
+                    val inSwitch = switchList.filter { item ->
+                        it.from_id == item.switch_id
+                    }
+
+                    //如果to设备的panelId等于当前屏柜的id，说明这条deviceConnection是跳纤，如果不是就是尾缆（WL）
+                    if (toSwitch[0].panel_id == panelId) {
+
+                        val tailFiberTx = tailFiberDataList.filter { item ->
+                            it.tail_fiber_tx_id == item.tail_fiber_id
+                        }
+                        val tailFiberRx = tailFiberDataList.filter { item ->
+                            it.tail_fiber_rx_id == item.tail_fiber_id
+                        }
+//                        mTXConnectionList.add(TXConnectionBean(inSwitch!![0].switch_name, it.from_port + "/Tx",
+//                                tailFiberTx[0].tail_cable_number, it.to_port + "/Rx",
+//                                toSwitch[0].switch_name, tailFiberTx[0].tail_fiber_desc))
+//                        mTXConnectionList.add(TXConnectionBean(inSwitch[0].switch_name, it.from_port + "/Rx",
+//                                tailFiberRx[0].tail_cable_number, it.to_port + "/Tx",
+//                                toSwitch[0].switch_name, tailFiberRx[0].tail_fiber_desc))
+
+                    } else {
+                        //找到这条连线连接的外部屏柜panel
+                        val panel = panelDataList.filter {
+                            it.panel_id == toSwitch[0].panel_id
+                        }
+                        val tailFiberTxWL = tailFiberDataList.filter { item ->
+                            it.tail_fiber_tx_id == item.tail_fiber_id
+                        }
+                        val tailFiberRxWL = tailFiberDataList.filter { item ->
+                            it.tail_fiber_rx_id == item.tail_fiber_id
+                        }
+                        //找到尾缆
+                        val wlTxBean = WLConnectionBean("Tx", tailFiberTxWL[0], panel[0].panel_name,
+                                null, null, inSwitch[0], it, null, toSwitch[0])
+                        val wlRxBean = WLConnectionBean("Rx", tailFiberRxWL[0], panel[0].panel_name,
+                                null, null, inSwitch[0], it, null, toSwitch[0])
+                        wlConnectionList.add(wlTxBean)
+                        wlConnectionList.add(wlRxBean)
+                    }
+                } else if (it.to_dev_type == "1001") { //如果连接到的设备是装置
+
+                    //帅选出这条连线的to设备
+                    val toDevice = deviceDateList.filter { item ->
+                        item.device_id == it.to_id
+                    }
+                    val inSwitch = switchList.filter { item ->
+                        it.from_id == item.switch_id
+                    }
+                    //如果to设备的panelId等于当前屏柜的id，说明这条deviceConnection是跳纤，如果不是就是尾缆（WL）
+                    if (toDevice[0].panel_id == panelId) {
+                        val tailFiberTx = tailFiberDataList.filter { item ->
+                            it.tail_fiber_tx_id == item.tail_fiber_id
+                        }
+                        val tailFiberRx = tailFiberDataList.filter { item ->
+                            it.tail_fiber_rx_id == item.tail_fiber_id
+                        }
+//                        mTXConnectionList.add(TXConnectionBean(inSwitch!![0].switch_name, it.from_port + "/Tx",
+//                                tailFiberTx[0].tail_cable_number, it.to_port + "/Rx",
+//                                toDevice[0].device_desc, tailFiberTx[0].tail_fiber_desc))
+//                        mTXConnectionList.add(TXConnectionBean(inSwitch[0].switch_name, it.from_port + "/Rx",
+//                                tailFiberRx[0].tail_cable_number, it.to_port + "/Tx",
+//                                toDevice[0].device_desc, tailFiberRx[0].tail_fiber_desc))
+
+
+                    } else {
+                        //找到这条连线连接的外部屏柜panel
+                        val panel = panelDataList.filter {
+                            it.panel_id == toDevice[0].panel_id
+                        }
+                        val tailFiberTxWL = tailFiberDataList.filter { item ->
+                            it.tail_fiber_tx_id == item.tail_fiber_id
+                        }
+                        val tailFiberRxWL = tailFiberDataList.filter { item ->
+                            it.tail_fiber_rx_id == item.tail_fiber_id
+                        }
+                        //找到尾缆
+                        val wlTxBean = WLConnectionBean("Tx", tailFiberTxWL[0], panel[0].panel_name,
+                                null, null, inSwitch[0], it, toDevice[0], null)
+                        wlConnectionList.add(wlTxBean)
+                        val wlRxBean = WLConnectionBean("Rx", tailFiberRxWL[0], panel[0].panel_name,
+                                null, null, inSwitch[0], it, toDevice[0], null)
+                        wlConnectionList.add(wlRxBean)
+                    }
+                }
+            }
+            //解析WeiLan数据和跳纤数据------------------end-----------------------
+
+           val connectionNameArray = connectionName.split("-")
+            connectionNameArray.forEach {
+                logE("-----------------connectionNameArray.is = $it-----")
+            }
+            if (connectionNameArray.size != 2){
+                it.onError(null)
+            }
+
+            val wlList = wlConnectionList.filter {
+                it.wlTailFiber.tail_cable_number == connectionNameArray[0] && it.wlTailFiber.tail_fiber_number.toString() == connectionNameArray[1]
+            }
+            logE("---------尾缆的纤芯数据-wlList[0] = ${wlList[0]}-")
+//            item.wlTailFiber.tail_fiber_number.toString()
+
+            it.onNext(wlList[0])
+            it.onCompleted()
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(object : Subscriber<WLConnectionBean>() {
+                    override fun onCompleted() {
+//                        toast("成功读取数据库")
+                        progressDialog.dismiss()
+                    }
+
+                    override fun onError(e: Throwable) {
+                        toast("读取标签的二维码失败，请检查二维码配置是否正确")
+                        progressDialog.dismiss()
+                    }
+
+                    override fun onNext(wlBean: WLConnectionBean) {
+                        supportFragmentManager?.beginTransaction()
+                                ?.add(R.id.content_frame, ConnectionFragment.newInstance(mDbPath!!, wlBean, null, null))
+                                ?.addToBackStack("ConnectionFragment")
+                                ?.commit()
+                    }
+                })
     }
 
     /**

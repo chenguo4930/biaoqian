@@ -57,9 +57,10 @@ class WLConnectionFragment : BaseFragment(), FragmentBackHandler {
         val txAdapter = WLConnectionListItemRecyclerAdapter(activity!!, mWLConnectionList!!,
                 object : WLConnectionListItemRecyclerAdapter.AddOnClickListener {
                     override fun onItemClick(item: WLConnectionBean) {
-                        activity?.supportFragmentManager?.beginTransaction()?.
-                                add(R.id.content_frame, ConnectionFragment.newInstance(mPath!!, item, null, null))?.
-                                addToBackStack("ConnectionFragment")?.commit()
+                        activity?.supportFragmentManager?.beginTransaction()
+                                ?.add(R.id.content_frame, ConnectionFragment.newInstance(mPath!!, item, null, null))
+                                ?.addToBackStack("ConnectionFragment")
+                                ?.commit()
                     }
                 })
         rv_wl_detail_connection.run {
