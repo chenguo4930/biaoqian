@@ -70,6 +70,7 @@ class DataBaseUtil {
             return panleList
         }
 
+
         /**
          * 读取屏柜的数据
          */
@@ -279,7 +280,7 @@ class DataBaseUtil {
                 val from_id = cursor.getInt(cursor.getColumnIndex("from_id"))
                 val from_port = cursor.getString(cursor.getColumnIndex("from_port"))
                 val to_id = cursor.getInt(cursor.getColumnIndex("to_id"))
-                val to_port = cursor.getInt(cursor.getColumnIndex("to_port"))
+                val to_port = cursor.getString(cursor.getColumnIndex("to_port"))
                 val to_dev_type = cursor.getString(cursor.getColumnIndex("to_dev_type"))
                 val tail_fiber_tx_id = cursor.getInt(cursor.getColumnIndex("tail_fiber_tx_id"))
                 val tail_fiber_rx_id = cursor.getInt(cursor.getColumnIndex("tail_fiber_rx_id"))

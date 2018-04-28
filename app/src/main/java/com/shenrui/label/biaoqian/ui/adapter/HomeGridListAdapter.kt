@@ -61,11 +61,11 @@ class HomeGridListAdapter(private val mItems: List<SubStation>,
     }
 
     companion object {
-        val SPAN_COUNT_ONE = 1
-        val SPAN_COUNT_FOUR = 3
+        const val SPAN_COUNT_ONE = 1
+        const val SPAN_COUNT_FOUR = 3
 
-        private val VIEW_TYPE_SMALL = 1
-        private val VIEW_TYPE_BIG = 2
+        private const val VIEW_TYPE_SMALL = 1
+        private const val VIEW_TYPE_BIG = 2
     }
 
     interface StationClickListener {    //自定义的接口

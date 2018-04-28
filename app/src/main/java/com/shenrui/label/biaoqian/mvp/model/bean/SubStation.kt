@@ -331,13 +331,13 @@ data class TailFiber(val tail_fiber_id: Int, val tail_cable_number: String, val 
  * 接入装置接收口的纤芯ID
  */
 data class DeviceConnection(val from_id: Int, val from_port: String, val to_id: Int,
-                            val to_port: Int, val to_dev_type: String,
+                            val to_port: String, val to_dev_type: String,
                             val tail_fiber_tx_id: Int, val tail_fiber_rx_id: Int) : Parcelable {
     constructor(source: Parcel) : this(
             source.readInt(),
             source.readString(),
             source.readInt(),
-            source.readInt(),
+            source.readString(),
             source.readString(),
             source.readInt(),
             source.readInt()
@@ -349,7 +349,7 @@ data class DeviceConnection(val from_id: Int, val from_port: String, val to_id: 
         writeInt(from_id)
         writeString(from_port)
         writeInt(to_id)
-        writeInt(to_port)
+        writeString(to_port)
         writeString(to_dev_type)
         writeInt(tail_fiber_tx_id)
         writeInt(tail_fiber_rx_id)

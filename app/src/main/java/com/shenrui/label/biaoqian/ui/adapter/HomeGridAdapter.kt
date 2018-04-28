@@ -20,9 +20,9 @@ class HomeGridAdapter(context2: Context, list2: ArrayList<SubStation>) : Recycle
     var inter: MyInter? = null
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder?.name?.text = list[position].sub_name
+        holder.name.text = list[position].sub_name
 
-        holder!!.itemView.setOnClickListener {
+        holder.itemView.setOnClickListener {
             inter?.testStr(list[position].sub_name)
         }
     }

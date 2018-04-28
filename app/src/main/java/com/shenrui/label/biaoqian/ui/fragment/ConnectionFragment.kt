@@ -149,9 +149,9 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
                     mWLBean!!.inSwitchConnection!!.to_port.toString()
                 }
                 //从数据库中获取inModel 到outModel的连接信息
-                val inList = DataBaseUtil.getInputsFilter(mDbPath!!, inModelId, outModelId, inModelPort)
+                val inList = DataBaseUtil.getInputsFilter(mDbPath!!, inModelId, outModelId, outModelPort)
                 //从数据库中获取outModel 到intModel的连接信息
-                val outList = DataBaseUtil.getInputsFilter(mDbPath!!, outModelId, inModelId, outModelPort)
+                val outList = DataBaseUtil.getInputsFilter(mDbPath!!, outModelId, inModelId, inModelPort)
                 Log.e("----", "---------mWLBean:$mWLBean")
                 inList.forEach {
                     Log.e("----", "---------inList each:$it")
@@ -183,9 +183,9 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
                     mGLBean!!.odfConnection.internal_device_port!!
                 }
                 //从数据库中获取inModel 到outModel的连接信息
-                val inList = DataBaseUtil.getInputsFilter(mDbPath!!, mGLBean!!.inDeviceId, mGLBean!!.outDeviceId, inPort)
+                val inList = DataBaseUtil.getInputsFilter(mDbPath!!, mGLBean!!.inDeviceId, mGLBean!!.outDeviceId, outPort)
                 //从数据库中获取outModel 到intModel的连接信息
-                val outList = DataBaseUtil.getInputsFilter(mDbPath!!, mGLBean!!.outDeviceId, mGLBean!!.inDeviceId, outPort)
+                val outList = DataBaseUtil.getInputsFilter(mDbPath!!, mGLBean!!.outDeviceId, mGLBean!!.inDeviceId, inPort)
                 Log.e("----", "---------mGLBean:$mGLBean")
                 inList.forEach {
                     Log.e("----", "---------inList each:$it")
@@ -203,7 +203,6 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
             if (mTXBean != null) {
 
             }
-
 
             it.onCompleted()
         }).subscribeOn(Schedulers.io())

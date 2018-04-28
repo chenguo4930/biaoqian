@@ -25,9 +25,9 @@ class WLConnectionListItemRecyclerAdapter(private val context1: Context,
             holder.deviceConnectTv.text = item.wlTailFiber.tail_fiber_number.toString()
             holder.deviceInPortTv.text = item.inDeviceConnection?.from_port + "/" + item.type
             if (item.type == "Tx") {
-                holder.deviceOutPortTv.text = item.inDeviceConnection?.to_port.toString() + "/Rx"
+                holder.deviceOutPortTv.text = item.inDeviceConnection?.to_port+ "/Rx"
             } else {
-                holder.deviceOutPortTv.text = item.inDeviceConnection?.to_port.toString() + "/Tx"
+                holder.deviceOutPortTv.text = item.inDeviceConnection?.to_port + "/Tx"
             }
             holder.txDescTv.text = item.wlTailFiber.tail_fiber_desc
             if (item.toDevice != null) {
@@ -41,9 +41,9 @@ class WLConnectionListItemRecyclerAdapter(private val context1: Context,
             holder.txDescTv.text = item.wlTailFiber.tail_fiber_desc
             holder.deviceInPortTv.text = item.inDeviceConnection?.from_port + "/" + item.type
             if (item.type == "Tx") {
-                holder.deviceOutPortTv.text = item.inDeviceConnection?.to_port.toString() + "/Rx"
+                holder.deviceOutPortTv.text = item.inDeviceConnection?.to_port + "/Rx"
             } else {
-                holder.deviceOutPortTv.text = item.inDeviceConnection?.to_port.toString() + "/Tx"
+                holder.deviceOutPortTv.text = item.inDeviceConnection?.to_port + "/Tx"
             }
             if (item.toDevice != null) {
                 holder.deviceOutTv.text = item.toDevice?.device_desc

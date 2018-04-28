@@ -269,14 +269,13 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
                         val tailFiberRx = tailFiberDataList.filter { item ->
                             it.tail_fiber_rx_id == item.tail_fiber_id
                         }
+
                         mTXConnectionList.add(TXConnectionBean(inSwitch!![0].switch_name, it.from_port + "/Tx",
                                 tailFiberTx[0].tail_cable_number, it.to_port + "/Rx",
                                 toDevice[0].device_desc, tailFiberTx[0].tail_fiber_desc))
                         mTXConnectionList.add(TXConnectionBean(inSwitch[0].switch_name, it.from_port + "/Rx",
                                 tailFiberRx[0].tail_cable_number, it.to_port + "/Tx",
                                 toDevice[0].device_desc, tailFiberRx[0].tail_fiber_desc))
-
-
                     } else {
                         //找到这条连线连接的外部屏柜panel
                         val panel = panelDataList.filter {
