@@ -26,11 +26,11 @@
 
         <ImageView
             android:id="@+id/img_delete"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_gravity="right"
-            android:layout_marginRight="4dp"
-            android:scaleType="centerInside"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
             android:src="@mipmap/icon_delete" />
 
         <ImageView

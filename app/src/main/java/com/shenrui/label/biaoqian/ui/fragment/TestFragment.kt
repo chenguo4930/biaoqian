@@ -116,7 +116,10 @@ class TestFragment : BaseFragment(), FragmentBackHandler {
 
         mAdapter = RegionListAdapter(activity!!, mRegionBeanList, object : RegionListAdapter.RegionClickListener {
             override fun onRegionItemClick(item: RegionBean) {
-                activity?.supportFragmentManager?.beginTransaction()?.add(R.id.content_frame, DeviceFragment.newInstance(mDbPath!!, item))?.addToBackStack("DeviceFragment")?.commit()
+                activity?.supportFragmentManager?.beginTransaction()
+                        ?.add(R.id.content_frame, DeviceFragment.newInstance(mDbPath!!, item))
+                        ?.addToBackStack("DeviceFragment")
+                        ?.commit()
             }
 
         })

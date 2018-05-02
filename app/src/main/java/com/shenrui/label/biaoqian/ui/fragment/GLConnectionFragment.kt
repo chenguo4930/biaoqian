@@ -60,6 +60,7 @@ class GLConnectionFragment : BaseFragment(), FragmentBackHandler {
                         commit()
             }
         })
+
         rv_gl_connection.run {
             layoutManager = LinearLayoutManager(activity)
             adapter = txAdapter

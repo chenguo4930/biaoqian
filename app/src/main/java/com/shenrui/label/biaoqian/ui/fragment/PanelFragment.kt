@@ -508,7 +508,7 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
 
         //--------------TX链接图------------------
         val txAdapter = PanelTXConnectionListItemRecyclerAdapter(activity!!, mTXConnectionList,
-                object :PanelTXConnectionListItemRecyclerAdapter.TXConnectionClickListener{
+                object : PanelTXConnectionListItemRecyclerAdapter.TXConnectionClickListener {
                     override fun onTXConnectionItemClick(item: TXConnectionBean) {
                         activity?.supportFragmentManager?.beginTransaction()
                                 ?.add(R.id.content_frame, ConnectionFragment.newInstance(mPath!!, null, null, item))

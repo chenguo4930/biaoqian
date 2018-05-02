@@ -32,7 +32,7 @@ class ScanFragment : BaseFragment() {
         }
     }
 
-    override fun getLayoutId()=R.layout.fragment_scan
+    override fun getLayoutId() = R.layout.fragment_scan
 
     override fun initView() {
     }

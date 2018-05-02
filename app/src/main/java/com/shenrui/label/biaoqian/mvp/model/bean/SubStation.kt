@@ -10,6 +10,7 @@ import android.os.Parcelable
  *  province_id : 省索引Id
  *  city_id : 市索引Id
  *  sub_short_name : 变电站名称拼音缩写
+ *  db_path : 数据库中的路径
  */
 data class SubStation(val sub_name: String, val volLevel_id: Int, val province_id: Int,
                       val city_id: Int, val sub_short_name: String, val db_path: String)
