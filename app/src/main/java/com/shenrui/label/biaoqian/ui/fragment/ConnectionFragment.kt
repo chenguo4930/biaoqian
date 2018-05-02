@@ -14,6 +14,7 @@ import com.shenrui.label.biaoqian.mvp.model.bean.TXConnectionBean
 import com.shenrui.label.biaoqian.mvp.model.bean.WLConnectionBean
 import com.shenrui.label.biaoqian.ui.adapter.ConnectionListItemRecyclerAdapter
 import com.shenrui.label.biaoqian.utils.DataBaseUtil
+import com.shenrui.label.biaoqian.utils.Util
 import kotlinx.android.synthetic.main.fragment_gx_connection.*
 import kotlinx.android.synthetic.main.title_layout.*
 import org.jetbrains.anko.support.v4.toast
@@ -269,6 +270,19 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
             layoutManager = LinearLayoutManager(activity)
             adapter = mAdapter
         }
+
+        /**
+         * 当数据长度大于了4条，就动态增加左右两边控件的高度
+         */
+        if (mConnectionList.size > 4) {
+            inDeviceCard.apply {
+                layoutParams.height = Util.dip2px(activity!!, 50 * mConnectionList.size)
+            }
+            outDeviceCard.apply {
+                layoutParams.height = Util.dip2px(activity!!, 50 * mConnectionList.size)
+            }
+        }
+
     }
 
     override fun onBackPressed() = BackHandlerHelper.handleBackPress(this)
