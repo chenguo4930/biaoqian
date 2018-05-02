@@ -287,7 +287,7 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
             val txConnectionList = ArrayList<TXConnectionBean>()
 
             //得到数据库中所有的屏柜
-            val panelDataList = DataBaseUtil.getPanel(mDbPath!!)
+//            val panelDataList = DataBaseUtil.getPanel(mDbPath!!)
             //获取所有尾缆
             val tailFiberDataList = DataBaseUtil.getTailFiber(mDbPath!!)
             //刷选出设备相关的设备连接情况
@@ -344,13 +344,13 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
                             it.tail_fiber_rx_id == item.tail_fiber_id
                         }
                         txConnectionList.add(TXConnectionBean(inDevice[0].device_desc, inDevice[0].device_id,
-                                inDevice[0].device_code, toDevice[0].device_desc, toDevice[0].device_id,
-                                toDevice[0].device_code, "Tx", it.from_port,
+                                inDevice[0].device_iedname, toDevice[0].device_desc, toDevice[0].device_id,
+                                toDevice[0].device_iedname, "Tx", it.from_port,
                                 tailFiberTx[0].tail_cable_number, it.to_port, tailFiberTx[0].tail_fiber_desc))
 
                         txConnectionList.add(TXConnectionBean(inDevice[0].device_desc, inDevice[0].device_id,
-                                inDevice[0].device_code, toDevice[0].device_desc, toDevice[0].device_id,
-                                toDevice[0].device_code, "Rx", it.from_port,
+                                inDevice[0].device_iedname, toDevice[0].device_desc, toDevice[0].device_id,
+                                toDevice[0].device_iedname, "Rx", it.from_port,
                                 tailFiberRx[0].tail_cable_number, it.to_port, tailFiberRx[0].tail_fiber_desc))
                     }
                 } else if (it.to_dev_type == "1000") {
@@ -372,12 +372,12 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
                         }
 
                         txConnectionList.add(TXConnectionBean(inDevice[0].device_desc, inDevice[0].device_id,
-                                inDevice[0].device_code, toSwitch[0].switch_name, toSwitch[0].switch_id,
+                                inDevice[0].device_iedname, toSwitch[0].switch_name, toSwitch[0].switch_id,
                                 toSwitch[0].switch_code, "Tx", it.from_port,
                                 tailFiberTx[0].tail_cable_number, it.to_port, tailFiberTx[0].tail_fiber_desc))
 
                         txConnectionList.add(TXConnectionBean(inDevice[0].device_desc, inDevice[0].device_id,
-                                inDevice[0].device_code, toSwitch[0].switch_name, toSwitch[0].switch_id,
+                                inDevice[0].device_iedname, toSwitch[0].switch_name, toSwitch[0].switch_id,
                                 toSwitch[0].switch_code, "Rx", it.from_port,
                                 tailFiberRx[0].tail_cable_number, it.to_port, tailFiberRx[0].tail_fiber_desc))
                     }
@@ -443,12 +443,12 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
                         }
                         txConnectionList.add(TXConnectionBean(inSwitch[0].switch_name, inSwitch[0].switch_id,
                                 inSwitch[0].switch_code, toDevice[0].device_desc, toDevice[0].device_id,
-                                toDevice[0].device_code, "Tx", it.from_port,
+                                toDevice[0].device_iedname, "Tx", it.from_port,
                                 tailFiberTx[0].tail_cable_number, it.to_port, tailFiberTx[0].tail_fiber_desc))
 
                         txConnectionList.add(TXConnectionBean(inSwitch[0].switch_name, inSwitch[0].switch_id,
                                 inSwitch[0].switch_code, toDevice[0].device_desc, toDevice[0].device_id,
-                                toDevice[0].device_code, "Rx", it.from_port,
+                                toDevice[0].device_iedname, "Rx", it.from_port,
                                 tailFiberRx[0].tail_cable_number, it.to_port, tailFiberRx[0].tail_fiber_desc))
                     }
                 }
