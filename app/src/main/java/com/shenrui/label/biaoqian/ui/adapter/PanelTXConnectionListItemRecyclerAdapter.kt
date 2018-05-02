@@ -1,5 +1,6 @@
 package com.shenrui.label.biaoqian.ui.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -14,16 +15,30 @@ import com.shenrui.label.biaoqian.mvp.model.bean.TXConnectionBean
  * @author Chengguo on 2018/3/5.
  */
 class PanelTXConnectionListItemRecyclerAdapter(private val context1: Context,
-                                               private val list: List<TXConnectionBean>)
+                                               private val list: List<TXConnectionBean>,
+                                               private val listener: TXConnectionClickListener? = null)
     : RecyclerView.Adapter<PanelTXConnectionListItemRecyclerAdapter.MyViewHolder>() {
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.deviceInTv.text = list[position].inDeviceName
-        holder.deviceInPortTv.text = list[position].inPort
-        holder.deviceConnectTv.text = list[position].tailCableNumber
-        holder.deviceOutPortTv.text = list[position].outPort
-        holder.deviceOutTv.text = list[position].outDeviceName
-        holder.txDescTv.text = list[position].desc
+        val item = list[position]
+        holder.deviceInTv.text = item.inDeviceName
+        if (item.inputType == "Tx") {
+            holder.deviceInPortTv.text = item.inPort + "/Tx"
+            holder.deviceOutPortTv.text = item.outPort + "/Rx"
+        } else {
+            holder.deviceInPortTv.text = item.inPort + "/Rx"
+            holder.deviceOutPortTv.text = item.outPort + "/Tx"
+        }
+
+        holder.deviceConnectTv.text = item.tailCableNumber
+
+        holder.deviceOutTv.text = item.outDeviceName
+        holder.txDescTv.text = item.desc
+
+        holder.deviceConnectTv.setOnClickListener {
+            listener?.onTXConnectionItemClick(item)
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
@@ -43,6 +58,10 @@ class PanelTXConnectionListItemRecyclerAdapter(private val context1: Context,
         var deviceOutPortTv: TextView = view.findViewById(R.id.tv_tx_device_out_port)
         var deviceOutTv: TextView = view.findViewById(R.id.tv_tx_device_out)
         var txDescTv: TextView = view.findViewById(R.id.tv_tx_desc)
+    }
+
+    interface TXConnectionClickListener {    //自定义的接口
+        fun onTXConnectionItemClick(item: TXConnectionBean)
     }
 
 }

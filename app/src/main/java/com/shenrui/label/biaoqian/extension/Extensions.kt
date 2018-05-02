@@ -155,6 +155,12 @@ fun Activity.logE(msg: String) {
     }
 }
 
+fun Fragment.logE(msg: String) {
+    if (BuildConfig.DEBUG){
+        Log.e("--------", msg)
+    }
+}
+
 
 
 

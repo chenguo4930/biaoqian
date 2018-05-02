@@ -7,8 +7,10 @@ import com.github.ikidou.fragmentBackHandler.BackHandlerHelper
 import com.github.ikidou.fragmentBackHandler.FragmentBackHandler
 import com.luckongo.tthd.mvp.model.bean.Inputs
 import com.shenrui.label.biaoqian.R
+import com.shenrui.label.biaoqian.extension.logE
 import com.shenrui.label.biaoqian.mvp.base.BaseFragment
 import com.shenrui.label.biaoqian.mvp.model.bean.GLConnectionBean
+import com.shenrui.label.biaoqian.mvp.model.bean.TXConnectionBean
 import com.shenrui.label.biaoqian.mvp.model.bean.WLConnectionBean
 import com.shenrui.label.biaoqian.ui.adapter.ConnectionListItemRecyclerAdapter
 import com.shenrui.label.biaoqian.utils.DataBaseUtil
@@ -31,13 +33,13 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
         private const val GL_BEAN = "param3"
         private const val TX_BEAN = "param4"
 
-        fun newInstance(dbPath: String, wlBean: WLConnectionBean?, glBean: GLConnectionBean?, txBean: String?): ConnectionFragment {
+        fun newInstance(dbPath: String, wlBean: WLConnectionBean?, glBean: GLConnectionBean?, txBean: TXConnectionBean?): ConnectionFragment {
             val fragment = ConnectionFragment()
             val args = Bundle()
             args.putString(DB_PATH, dbPath)
             args.putParcelable(WL_BEAN, wlBean)
             args.putParcelable(GL_BEAN, glBean)
-            args.putString(TX_BEAN, txBean)
+            args.putParcelable(TX_BEAN, txBean)
             fragment.arguments = args
             return fragment
         }
@@ -46,7 +48,7 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
     private var mDbPath: String? = null
     private var mWLBean: WLConnectionBean? = null
     private var mGLBean: GLConnectionBean? = null
-    private var mTXBean: String? = null
+    private var mTXBean: TXConnectionBean? = null
 
     //连线的数据List
     private val mConnectionList = ArrayList<Inputs>()
@@ -59,7 +61,7 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
             mDbPath = arguments!!.getString(DB_PATH)
             mWLBean = arguments!!.getParcelable(WL_BEAN)
             mGLBean = arguments!!.getParcelable(GL_BEAN)
-            mTXBean = arguments!!.getString(TX_BEAN)
+            mTXBean = arguments!!.getParcelable(TX_BEAN)
         }
     }
 
@@ -89,6 +91,7 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
     private fun initText() {
         //----------如果是尾缆连线点击进来------------
         if (mWLBean != null) {
+            logE("-----------ConnectionFragment---mWLBean = $mWLBean-")
             if (mWLBean!!.inDevice != null) {
                 tvInDeviceName.text = mWLBean!!.inDevice!!.device_desc
                 tvInModeTitle.text = mWLBean!!.inDevice!!.device_iedname
@@ -107,6 +110,7 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
 
         //----------如果是光缆连线点击进来------------
         if (mGLBean != null) {
+            logE("-----------ConnectionFragment---mGLBean = $mGLBean-")
             tvInDeviceName.text = mGLBean!!.inDeviceName
             tvInModeTitle.text = mGLBean!!.inDeviceCode
             tvOutDeviceName.text = mGLBean!!.outDeviceName
@@ -115,7 +119,11 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
 
         //----------如果是跳纤连线点击进来------------
         if (mTXBean != null) {
-
+            logE("-----------ConnectionFragment---mTXBean = $mTXBean-")
+            tvInDeviceName.text = mTXBean!!.inDeviceName
+            tvInModeTitle.text = mTXBean!!.inDeviceCode
+            tvOutDeviceName.text = mTXBean!!.outDeviceName
+            tvOutModeTitle.text = mTXBean!!.outDeviceCode
         }
     }
 
@@ -144,9 +152,9 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
                 }
                 //输入端口Rx
                 val outModelPort = if (mWLBean!!.inDeviceConnection != null) {
-                    mWLBean!!.inDeviceConnection!!.to_port.toString()
+                    mWLBean!!.inDeviceConnection!!.to_port
                 } else {
-                    mWLBean!!.inSwitchConnection!!.to_port.toString()
+                    mWLBean!!.inSwitchConnection!!.to_port
                 }
                 //从数据库中获取inModel 到outModel的连接信息
                 val inList = DataBaseUtil.getInputsFilter(mDbPath!!, inModelId, outModelId, outModelPort)
@@ -202,6 +210,31 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
             //--------------------跳纤连线点击进来-----start----------------------
             if (mTXBean != null) {
 
+                val inPort = if (mTXBean!!.inputType == "Tx") {
+                    mTXBean!!.inPort
+                } else {
+                    mTXBean!!.outPort
+                }
+                val toPort = if (mTXBean!!.inputType == "Rx") {
+                    mTXBean!!.inPort
+                } else {
+                    mTXBean!!.outPort
+                }
+
+                //从数据库中获取inModel 到outModel的连接信息
+                val inList = DataBaseUtil.getInputsFilter(mDbPath!!, mTXBean!!.inDeviceId.toString(), mTXBean!!.outDeviceId.toString(), toPort)
+                //从数据库中获取outModel 到intModel的连接信息
+                val outList = DataBaseUtil.getInputsFilter(mDbPath!!, mTXBean!!.outDeviceId.toString(), mTXBean!!.inDeviceId.toString(), inPort)
+                inList.forEach {
+                    Log.e("----", "-----txBean----inList each:$it")
+                    it.isInput = true
+                }
+                outList.forEach {
+                    Log.e("----", "-----txBean----outList each:$it")
+                    it.isInput = false
+                }
+                mConnectionList.addAll(inList)
+                mConnectionList.addAll(outList)
             }
 
             it.onCompleted()

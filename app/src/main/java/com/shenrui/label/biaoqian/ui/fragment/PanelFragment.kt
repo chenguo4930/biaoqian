@@ -121,12 +121,15 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
                         val tailFiberRx = tailFiberDataList.filter { item ->
                             it.tail_fiber_rx_id == item.tail_fiber_id
                         }
-                        mTXConnectionList.add(TXConnectionBean(inDevice!![0].device_desc, it.from_port + "/Tx",
-                                tailFiberTx[0].tail_cable_number, it.to_port.toString() + "/Rx",
-                                toDevice[0].device_desc, tailFiberTx[0].tail_fiber_desc))
-                        mTXConnectionList.add(TXConnectionBean(inDevice[0].device_desc, it.from_port + "/Rx",
-                                tailFiberRx[0].tail_cable_number, it.to_port.toString() + "/Tx",
-                                toDevice[0].device_desc, tailFiberRx[0].tail_fiber_desc))
+                        mTXConnectionList.add(TXConnectionBean(inDevice!![0].device_desc, inDevice[0].device_id,
+                                inDevice[0].device_code, toDevice[0].device_desc, toDevice[0].device_id,
+                                toDevice[0].device_code, "Tx", it.from_port,
+                                tailFiberTx[0].tail_cable_number, it.to_port, tailFiberTx[0].tail_fiber_desc))
+
+                        mTXConnectionList.add(TXConnectionBean(inDevice[0].device_desc, inDevice[0].device_id,
+                                inDevice[0].device_code, toDevice[0].device_desc, toDevice[0].device_id,
+                                toDevice[0].device_code, "Rx", it.from_port,
+                                tailFiberRx[0].tail_cable_number, it.to_port, tailFiberRx[0].tail_fiber_desc))
 
                     } else {
                         //找到这条连线连接的外部屏柜panel
@@ -143,7 +146,7 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
                         val wlTxBean = WLConnectionBean("Tx", tailFiberTxWL[0], panel[0].panel_name,
                                 inDevice!![0], it, null, null, toDevice[0], null)
                         val wlRxBean = WLConnectionBean("Rx", tailFiberRxWL[0], panel[0].panel_name,
-                                inDevice!![0], it, null, null, toDevice[0], null)
+                                inDevice[0], it, null, null, toDevice[0], null)
                         mWLConnectionList.add(wlTxBean)
                         mWLConnectionList.add(wlRxBean)
                     }
@@ -164,13 +167,15 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
                         val tailFiberRx = tailFiberDataList.filter { item ->
                             it.tail_fiber_rx_id == item.tail_fiber_id
                         }
+                        mTXConnectionList.add(TXConnectionBean(inDevice!![0].device_desc, inDevice[0].device_id,
+                                inDevice[0].device_code, toSwitch[0].switch_name, toSwitch[0].switch_id,
+                                toSwitch[0].switch_code, "Tx", it.from_port,
+                                tailFiberTx[0].tail_cable_number, it.to_port, tailFiberTx[0].tail_fiber_desc))
 
-                        mTXConnectionList.add(TXConnectionBean(inDevice!![0].device_desc, it.from_port + "/Tx",
-                                tailFiberTx[0].tail_cable_number, it.to_port.toString() + "/Rx",
-                                toSwitch[0].switch_name, tailFiberTx[0].tail_fiber_desc))
-                        mTXConnectionList.add(TXConnectionBean(inDevice[0].device_desc, it.from_port + "/Rx",
-                                tailFiberRx[0].tail_cable_number, it.to_port.toString() + "/Tx",
-                                toSwitch[0].switch_name, tailFiberRx[0].tail_fiber_desc))
+                        mTXConnectionList.add(TXConnectionBean(inDevice[0].device_desc, inDevice[0].device_id,
+                                inDevice[0].device_code, toSwitch[0].switch_name, toSwitch[0].switch_id,
+                                toSwitch[0].switch_code, "Rx", it.from_port,
+                                tailFiberRx[0].tail_cable_number, it.to_port, tailFiberRx[0].tail_fiber_desc))
 
                     } else {
                         //找到这条连线连接的外部屏柜panel
@@ -226,12 +231,15 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
                         val tailFiberRx = tailFiberDataList.filter { item ->
                             it.tail_fiber_rx_id == item.tail_fiber_id
                         }
-                        mTXConnectionList.add(TXConnectionBean(inSwitch!![0].switch_name, it.from_port + "/Tx",
-                                tailFiberTx[0].tail_cable_number, it.to_port + "/Rx",
-                                toSwitch[0].switch_name, tailFiberTx[0].tail_fiber_desc))
-                        mTXConnectionList.add(TXConnectionBean(inSwitch[0].switch_name, it.from_port + "/Rx",
-                                tailFiberRx[0].tail_cable_number, it.to_port + "/Tx",
-                                toSwitch[0].switch_name, tailFiberRx[0].tail_fiber_desc))
+                        mTXConnectionList.add(TXConnectionBean(inSwitch!![0].switch_name, inSwitch[0].switch_id,
+                                inSwitch[0].switch_code, toSwitch[0].switch_name, toSwitch[0].switch_id,
+                                toSwitch[0].switch_code, "Tx", it.from_port,
+                                tailFiberTx[0].tail_cable_number, it.to_port, tailFiberTx[0].tail_fiber_desc))
+
+                        mTXConnectionList.add(TXConnectionBean(inSwitch[0].switch_name, inSwitch[0].switch_id,
+                                inSwitch[0].switch_code, toSwitch[0].switch_name, toSwitch[0].switch_id,
+                                toSwitch[0].switch_code, "Rx", it.from_port,
+                                tailFiberRx[0].tail_cable_number, it.to_port, tailFiberRx[0].tail_fiber_desc))
 
                     } else {
                         //找到这条连线连接的外部屏柜panel
@@ -269,13 +277,15 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
                         val tailFiberRx = tailFiberDataList.filter { item ->
                             it.tail_fiber_rx_id == item.tail_fiber_id
                         }
+                        mTXConnectionList.add(TXConnectionBean(inSwitch!![0].switch_name, inSwitch[0].switch_id,
+                                inSwitch[0].switch_code, toDevice[0].device_desc, toDevice[0].device_id,
+                                toDevice[0].device_code, "Tx", it.from_port,
+                                tailFiberTx[0].tail_cable_number, it.to_port, tailFiberTx[0].tail_fiber_desc))
 
-                        mTXConnectionList.add(TXConnectionBean(inSwitch!![0].switch_name, it.from_port + "/Tx",
-                                tailFiberTx[0].tail_cable_number, it.to_port + "/Rx",
-                                toDevice[0].device_desc, tailFiberTx[0].tail_fiber_desc))
-                        mTXConnectionList.add(TXConnectionBean(inSwitch[0].switch_name, it.from_port + "/Rx",
-                                tailFiberRx[0].tail_cable_number, it.to_port + "/Tx",
-                                toDevice[0].device_desc, tailFiberRx[0].tail_fiber_desc))
+                        mTXConnectionList.add(TXConnectionBean(inSwitch[0].switch_name, inSwitch[0].switch_id,
+                                inSwitch[0].switch_code, toDevice[0].device_desc, toDevice[0].device_id,
+                                toDevice[0].device_code, "Rx", it.from_port,
+                                tailFiberRx[0].tail_cable_number, it.to_port, tailFiberRx[0].tail_fiber_desc))
                     } else {
                         //找到这条连线连接的外部屏柜panel
                         val panel = panelDataList.filter {
@@ -406,11 +416,10 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
                 }
             }
             Log.e("--------", "----------odfDataList.size() = ${mGLConnectionList.size}-")
-
             //解析光缆数据-------------------------end-----------------------
 
-//            it.onNext(panelList)
             it.onCompleted()
+
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : Subscriber<ArrayList<TXConnectionBean>>() {
@@ -426,9 +435,7 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
                     }
 
                     override fun onNext(dataList: ArrayList<TXConnectionBean>) {
-                        dataList.forEach {
-                            Log.e("-----", "-----PanelBean=$it")
-                        }
+
                     }
                 })
 
@@ -456,12 +463,6 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
         val wlAdapter = PanelWLConnectionListItemRecyclerAdapter(activity!!, wlConnectionList,
                 object : PanelWLConnectionListItemRecyclerAdapter.WLConnectionClickListener {
                     override fun onWLConnectionItemClick(item: WLConnectionBean) {
-//                        val wlList = ArrayList<WLConnectionBean>()
-//                        mWLConnectionList.forEach {
-//                            if (it.wlTailFiber.tail_cable_number == item.wlTailFiber.tail_cable_number) {
-//                                wlList.add(it)
-//                            }
-//                        }
                         val wlList = mWLConnectionList.filter {
                             it.wlTailFiber.tail_cable_number == item.wlTailFiber.tail_cable_number
                         }
@@ -491,12 +492,6 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
         val glAdapter = PanelGLConnectionListItemRecyclerAdapter(activity!!, glConnectionList,
                 object : PanelGLConnectionListItemRecyclerAdapter.GLConnectionClickListener {
                     override fun onGLConnectionItemClick(item: GLConnectionBean) {
-//                        val glList = ArrayList<GLConnectionBean>()
-//                        mGLConnectionList.forEach {
-//                            if (it.odfConnection.optical_cable_number == item.odfConnection.optical_cable_number) {
-//                                glList.add(it)
-//                            }
-//                        }
                         val glList = mGLConnectionList.filter {
                             it.odfConnection.optical_cable_number == item.odfConnection.optical_cable_number
                         }
@@ -512,7 +507,15 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
         }
 
         //--------------TX链接图------------------
-        val txAdapter = PanelTXConnectionListItemRecyclerAdapter(activity!!, mTXConnectionList)
+        val txAdapter = PanelTXConnectionListItemRecyclerAdapter(activity!!, mTXConnectionList,
+                object :PanelTXConnectionListItemRecyclerAdapter.TXConnectionClickListener{
+                    override fun onTXConnectionItemClick(item: TXConnectionBean) {
+                        activity?.supportFragmentManager?.beginTransaction()
+                                ?.add(R.id.content_frame, ConnectionFragment.newInstance(mPath!!, null, null, item))
+                                ?.addToBackStack("ConnectionFragment")
+                                ?.commit()
+                    }
+                })
         rv_tx_connection.run {
             layoutManager = LinearLayoutManager(activity)
             adapter = txAdapter
