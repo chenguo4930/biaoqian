@@ -8,6 +8,7 @@ import com.github.ikidou.fragmentBackHandler.FragmentBackHandler
 import com.luckongo.tthd.mvp.model.bean.Device
 import com.luckongo.tthd.mvp.model.bean.Switch
 import com.shenrui.label.biaoqian.R
+import com.shenrui.label.biaoqian.constrant.AllSubStation
 import com.shenrui.label.biaoqian.mvp.base.BaseFragment
 import com.shenrui.label.biaoqian.mvp.model.bean.PanelBean
 import com.shenrui.label.biaoqian.mvp.model.bean.RegionBean
@@ -37,8 +38,8 @@ class DeviceFragment : BaseFragment(), FragmentBackHandler {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
-            mDbPath = arguments!!.getString(ARG_PARAM1)
-            mRegionBean = arguments!!.getParcelable(ARG_PARAM2)
+            mDbPath = arguments!!.getString(AllSubStation.PARAM_1)
+            mRegionBean = arguments!!.getParcelable(AllSubStation.PARAM_2)
         }
     }
 
@@ -129,14 +130,12 @@ class DeviceFragment : BaseFragment(), FragmentBackHandler {
     override fun onBackPressed() = BackHandlerHelper.handleBackPress(this)
 
     companion object {
-        private const val ARG_PARAM1 = "param1"
-        private const val ARG_PARAM2 = "param2"
 
         fun newInstance(param1: String, param2: RegionBean): DeviceFragment {
             val fragment = DeviceFragment()
             val args = Bundle()
-            args.putString(ARG_PARAM1, param1)
-            args.putParcelable(ARG_PARAM2, param2)
+            args.putString(AllSubStation.PARAM_1, param1)
+            args.putParcelable(AllSubStation.PARAM_2, param2)
             fragment.arguments = args
             return fragment
         }

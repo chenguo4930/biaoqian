@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager
 import com.github.ikidou.fragmentBackHandler.BackHandlerHelper
 import com.github.ikidou.fragmentBackHandler.FragmentBackHandler
 import com.shenrui.label.biaoqian.R
+import com.shenrui.label.biaoqian.constrant.AllSubStation
 import com.shenrui.label.biaoqian.mvp.base.BaseFragment
 import com.shenrui.label.biaoqian.mvp.model.bean.GLConnectionBean
 import com.shenrui.label.biaoqian.ui.adapter.GLConnectionListItemRecyclerAdapter
@@ -21,8 +22,8 @@ class GLConnectionFragment : BaseFragment(), FragmentBackHandler {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
-            mPath = arguments!!.getString(ARG_PARAM1)
-            mGLList = arguments!!.getParcelableArrayList<GLConnectionBean>(ARG_PARAM2)
+            mPath = arguments!!.getString(AllSubStation.PARAM_1)
+            mGLList = arguments!!.getParcelableArrayList<GLConnectionBean>(AllSubStation.PARAM_2)
         }
     }
 
@@ -71,14 +72,12 @@ class GLConnectionFragment : BaseFragment(), FragmentBackHandler {
     override fun onBackPressed() = BackHandlerHelper.handleBackPress(this)
 
     companion object {
-        private const val ARG_PARAM1 = "param1"
-        private const val ARG_PARAM2 = "param2"
 
         fun newInstance(param1: String, param2: ArrayList<GLConnectionBean>): GLConnectionFragment {
             val fragment = GLConnectionFragment()
             val args = Bundle()
-            args.putString(ARG_PARAM1, param1)
-            args.putParcelableArrayList(ARG_PARAM2, param2)
+            args.putString(AllSubStation.PARAM_1, param1)
+            args.putParcelableArrayList(AllSubStation.PARAM_2, param2)
             fragment.arguments = args
             return fragment
         }

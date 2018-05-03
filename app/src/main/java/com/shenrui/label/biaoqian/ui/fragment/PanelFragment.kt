@@ -12,6 +12,7 @@ import com.luckongo.tthd.mvp.model.bean.ODF
 import com.luckongo.tthd.mvp.model.bean.ODFConnection
 import com.luckongo.tthd.mvp.model.bean.SwitchConnection
 import com.shenrui.label.biaoqian.R
+import com.shenrui.label.biaoqian.constrant.AllSubStation
 import com.shenrui.label.biaoqian.mvp.base.BaseFragment
 import com.shenrui.label.biaoqian.mvp.model.bean.GLConnectionBean
 import com.shenrui.label.biaoqian.mvp.model.bean.PanelBean
@@ -48,8 +49,8 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
-            mPath = arguments!!.getString(ARG_PARAM1)
-            mPanelBean = arguments!!.getParcelable(ARG_PARAM2)
+            mPath = arguments!!.getString(AllSubStation.PARAM_1)
+            mPanelBean = arguments!!.getParcelable(AllSubStation.PARAM_2)
         }
     }
 
@@ -123,13 +124,13 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
                         }
                         mTXConnectionList.add(TXConnectionBean(inDevice!![0].device_desc, inDevice[0].device_id,
                                 inDevice[0].device_iedname, toDevice[0].device_desc, toDevice[0].device_id,
-                                toDevice[0].device_iedname, "Tx", it.from_port,
-                                tailFiberTx[0].tail_cable_number, it.to_port, tailFiberTx[0].tail_fiber_desc))
+                                toDevice[0].device_iedname, "Tx", it.from_port, it.to_port,
+                                tailFiberTx[0].tail_cable_number, tailFiberTx[0].tail_fiber_desc))
 
                         mTXConnectionList.add(TXConnectionBean(inDevice[0].device_desc, inDevice[0].device_id,
                                 inDevice[0].device_iedname, toDevice[0].device_desc, toDevice[0].device_id,
-                                toDevice[0].device_iedname, "Rx", it.from_port,
-                                tailFiberRx[0].tail_cable_number, it.to_port, tailFiberRx[0].tail_fiber_desc))
+                                toDevice[0].device_iedname, "Rx", it.from_port, it.to_port,
+                                tailFiberRx[0].tail_cable_number, tailFiberRx[0].tail_fiber_desc))
 
                     } else {
                         //找到这条连线连接的外部屏柜panel
@@ -169,13 +170,13 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
                         }
                         mTXConnectionList.add(TXConnectionBean(inDevice!![0].device_desc, inDevice[0].device_id,
                                 inDevice[0].device_iedname, toSwitch[0].switch_name, toSwitch[0].switch_id,
-                                toSwitch[0].switch_code, "Tx", it.from_port,
-                                tailFiberTx[0].tail_cable_number, it.to_port, tailFiberTx[0].tail_fiber_desc))
+                                toSwitch[0].switch_code, "Tx", it.from_port, it.to_port,
+                                tailFiberTx[0].tail_cable_number, tailFiberTx[0].tail_fiber_desc))
 
                         mTXConnectionList.add(TXConnectionBean(inDevice[0].device_desc, inDevice[0].device_id,
                                 inDevice[0].device_iedname, toSwitch[0].switch_name, toSwitch[0].switch_id,
-                                toSwitch[0].switch_code, "Rx", it.from_port,
-                                tailFiberRx[0].tail_cable_number, it.to_port, tailFiberRx[0].tail_fiber_desc))
+                                toSwitch[0].switch_code, "Rx", it.from_port, it.to_port,
+                                tailFiberRx[0].tail_cable_number, tailFiberRx[0].tail_fiber_desc))
 
                     } else {
                         //找到这条连线连接的外部屏柜panel
@@ -233,13 +234,13 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
                         }
                         mTXConnectionList.add(TXConnectionBean(inSwitch!![0].switch_name, inSwitch[0].switch_id,
                                 inSwitch[0].switch_code, toSwitch[0].switch_name, toSwitch[0].switch_id,
-                                toSwitch[0].switch_code, "Tx", it.from_port,
-                                tailFiberTx[0].tail_cable_number, it.to_port, tailFiberTx[0].tail_fiber_desc))
+                                toSwitch[0].switch_code, "Tx", it.from_port, it.to_port,
+                                tailFiberTx[0].tail_cable_number, tailFiberTx[0].tail_fiber_desc))
 
                         mTXConnectionList.add(TXConnectionBean(inSwitch[0].switch_name, inSwitch[0].switch_id,
                                 inSwitch[0].switch_code, toSwitch[0].switch_name, toSwitch[0].switch_id,
-                                toSwitch[0].switch_code, "Rx", it.from_port,
-                                tailFiberRx[0].tail_cable_number, it.to_port, tailFiberRx[0].tail_fiber_desc))
+                                toSwitch[0].switch_code, "Rx", it.from_port, it.to_port,
+                                tailFiberRx[0].tail_cable_number, tailFiberRx[0].tail_fiber_desc))
 
                     } else {
                         //找到这条连线连接的外部屏柜panel
@@ -256,7 +257,7 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
                         val wlTxBean = WLConnectionBean("Tx", tailFiberTxWL[0], panel[0].panel_name,
                                 null, null, inSwitch!![0], it, null, toSwitch[0])
                         val wlRxBean = WLConnectionBean("Rx", tailFiberRxWL[0], panel[0].panel_name,
-                                null, null, inSwitch!![0], it, null, toSwitch[0])
+                                null, null, inSwitch[0], it, null, toSwitch[0])
                         mWLConnectionList.add(wlTxBean)
                         mWLConnectionList.add(wlRxBean)
                     }
@@ -279,13 +280,13 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
                         }
                         mTXConnectionList.add(TXConnectionBean(inSwitch!![0].switch_name, inSwitch[0].switch_id,
                                 inSwitch[0].switch_code, toDevice[0].device_desc, toDevice[0].device_id,
-                                toDevice[0].device_iedname, "Tx", it.from_port,
-                                tailFiberTx[0].tail_cable_number, it.to_port, tailFiberTx[0].tail_fiber_desc))
+                                toDevice[0].device_iedname, "Tx", it.from_port, it.to_port,
+                                tailFiberTx[0].tail_cable_number, tailFiberTx[0].tail_fiber_desc))
 
                         mTXConnectionList.add(TXConnectionBean(inSwitch[0].switch_name, inSwitch[0].switch_id,
                                 inSwitch[0].switch_code, toDevice[0].device_desc, toDevice[0].device_id,
-                                toDevice[0].device_iedname, "Rx", it.from_port,
-                                tailFiberRx[0].tail_cable_number, it.to_port, tailFiberRx[0].tail_fiber_desc))
+                                toDevice[0].device_iedname, "Rx", it.from_port, it.to_port,
+                                tailFiberRx[0].tail_cable_number, tailFiberRx[0].tail_fiber_desc))
                     } else {
                         //找到这条连线连接的外部屏柜panel
                         val panel = panelDataList.filter {
@@ -526,14 +527,12 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
     override fun onBackPressed() = BackHandlerHelper.handleBackPress(this)
 
     companion object {
-        private const val ARG_PARAM1 = "param1"
-        private const val ARG_PARAM2 = "param2"
 
         fun newInstance(param1: String, param2: PanelBean): PanelFragment {
             val fragment = PanelFragment()
             val args = Bundle()
-            args.putString(ARG_PARAM1, param1)
-            args.putParcelable(ARG_PARAM2, param2)
+            args.putString(AllSubStation.PARAM_1, param1)
+            args.putParcelable(AllSubStation.PARAM_2, param2)
             fragment.arguments = args
             return fragment
         }

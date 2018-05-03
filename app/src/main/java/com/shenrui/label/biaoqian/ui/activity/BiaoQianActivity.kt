@@ -10,6 +10,7 @@ import android.widget.ProgressBar
 import com.github.ikidou.fragmentBackHandler.BackHandlerHelper
 import com.luckongo.tthd.mvp.model.bean.*
 import com.shenrui.label.biaoqian.R
+import com.shenrui.label.biaoqian.constrant.AllSubStation
 import com.shenrui.label.biaoqian.constrant.AllSubStation.Companion.subStation
 import com.shenrui.label.biaoqian.extension.logE
 import com.shenrui.label.biaoqian.mvp.base.BaseActivity
@@ -174,8 +175,8 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
             if (null != data) {
                 val bundle: Bundle? = data.extras ?: return
                 val result = bundle?.getString("result")
-                analysisResult(result)
                 toast("解析结果:$result")
+                analysisResult(result)
             }
         }
     }
@@ -345,13 +346,13 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
                         }
                         txConnectionList.add(TXConnectionBean(inDevice[0].device_desc, inDevice[0].device_id,
                                 inDevice[0].device_iedname, toDevice[0].device_desc, toDevice[0].device_id,
-                                toDevice[0].device_iedname, "Tx", it.from_port,
-                                tailFiberTx[0].tail_cable_number, it.to_port, tailFiberTx[0].tail_fiber_desc))
+                                toDevice[0].device_iedname, "Tx", it.from_port, it.to_port,
+                                tailFiberTx[0].tail_cable_number, tailFiberTx[0].tail_fiber_desc))
 
                         txConnectionList.add(TXConnectionBean(inDevice[0].device_desc, inDevice[0].device_id,
                                 inDevice[0].device_iedname, toDevice[0].device_desc, toDevice[0].device_id,
-                                toDevice[0].device_iedname, "Rx", it.from_port,
-                                tailFiberRx[0].tail_cable_number, it.to_port, tailFiberRx[0].tail_fiber_desc))
+                                toDevice[0].device_iedname, "Rx", it.from_port, it.to_port,
+                                tailFiberRx[0].tail_cable_number, tailFiberRx[0].tail_fiber_desc))
                     }
                 } else if (it.to_dev_type == "1000") {
                     //帅选出这条连线的to设备
@@ -373,13 +374,13 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
 
                         txConnectionList.add(TXConnectionBean(inDevice[0].device_desc, inDevice[0].device_id,
                                 inDevice[0].device_iedname, toSwitch[0].switch_name, toSwitch[0].switch_id,
-                                toSwitch[0].switch_code, "Tx", it.from_port,
-                                tailFiberTx[0].tail_cable_number, it.to_port, tailFiberTx[0].tail_fiber_desc))
+                                toSwitch[0].switch_code, "Tx", it.from_port, it.to_port,
+                                tailFiberTx[0].tail_cable_number, tailFiberTx[0].tail_fiber_desc))
 
                         txConnectionList.add(TXConnectionBean(inDevice[0].device_desc, inDevice[0].device_id,
                                 inDevice[0].device_iedname, toSwitch[0].switch_name, toSwitch[0].switch_id,
-                                toSwitch[0].switch_code, "Rx", it.from_port,
-                                tailFiberRx[0].tail_cable_number, it.to_port, tailFiberRx[0].tail_fiber_desc))
+                                toSwitch[0].switch_code, "Rx", it.from_port, it.to_port,
+                                tailFiberRx[0].tail_cable_number, tailFiberRx[0].tail_fiber_desc))
                     }
                 }
             }
@@ -416,13 +417,13 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
                         }
                         txConnectionList.add(TXConnectionBean(inSwitch[0].switch_name, inSwitch[0].switch_id,
                                 inSwitch[0].switch_code, toSwitch[0].switch_name, toSwitch[0].switch_id,
-                                toSwitch[0].switch_code, "Tx", it.from_port,
-                                tailFiberTx[0].tail_cable_number, it.to_port, tailFiberTx[0].tail_fiber_desc))
+                                toSwitch[0].switch_code, "Tx", it.from_port, it.to_port,
+                                tailFiberTx[0].tail_cable_number, tailFiberTx[0].tail_fiber_desc))
 
                         txConnectionList.add(TXConnectionBean(inSwitch[0].switch_name, inSwitch[0].switch_id,
                                 inSwitch[0].switch_code, toSwitch[0].switch_name, toSwitch[0].switch_id,
-                                toSwitch[0].switch_code, "Rx", it.from_port,
-                                tailFiberRx[0].tail_cable_number, it.to_port, tailFiberRx[0].tail_fiber_desc))
+                                toSwitch[0].switch_code, "Rx", it.from_port, it.to_port,
+                                tailFiberRx[0].tail_cable_number, tailFiberRx[0].tail_fiber_desc))
                     }
                 } else if (it.to_dev_type == "1001") { //如果连接到的设备是装置
 
@@ -443,13 +444,13 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
                         }
                         txConnectionList.add(TXConnectionBean(inSwitch[0].switch_name, inSwitch[0].switch_id,
                                 inSwitch[0].switch_code, toDevice[0].device_desc, toDevice[0].device_id,
-                                toDevice[0].device_iedname, "Tx", it.from_port,
-                                tailFiberTx[0].tail_cable_number, it.to_port, tailFiberTx[0].tail_fiber_desc))
+                                toDevice[0].device_iedname, "Tx", it.from_port, it.to_port,
+                                tailFiberTx[0].tail_cable_number, tailFiberTx[0].tail_fiber_desc))
 
                         txConnectionList.add(TXConnectionBean(inSwitch[0].switch_name, inSwitch[0].switch_id,
                                 inSwitch[0].switch_code, toDevice[0].device_desc, toDevice[0].device_id,
-                                toDevice[0].device_iedname, "Rx", it.from_port,
-                                tailFiberRx[0].tail_cable_number, it.to_port, tailFiberRx[0].tail_fiber_desc))
+                                toDevice[0].device_iedname, "Rx", it.from_port, it.to_port,
+                                tailFiberRx[0].tail_cable_number, tailFiberRx[0].tail_fiber_desc))
                     }
                 }
             }
@@ -771,22 +772,7 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
                     }
 
                     //如果to设备的panelId等于当前屏柜的id，说明这条deviceConnection是跳纤，如果不是就是尾缆（WL）
-                    if (toDevice[0].panel_id == panelId) {
-
-                        val tailFiberTx = tailFiberDataList.filter { item ->
-                            it.tail_fiber_tx_id == item.tail_fiber_id
-                        }
-                        val tailFiberRx = tailFiberDataList.filter { item ->
-                            it.tail_fiber_rx_id == item.tail_fiber_id
-                        }
-//                        mTXConnectionList.add(TXConnectionBean(inDevice!![0].device_desc, it.from_port + "/Tx",
-//                                tailFiberTx[0].tail_cable_number, it.to_port.toString() + "/Rx",
-//                                toDevice[0].device_desc, tailFiberTx[0].tail_fiber_desc))
-//                        mTXConnectionList.add(TXConnectionBean(inDevice[0].device_desc, it.from_port + "/Rx",
-//                                tailFiberRx[0].tail_cable_number, it.to_port.toString() + "/Tx",
-//                                toDevice[0].device_desc, tailFiberRx[0].tail_fiber_desc))
-
-                    } else {
+                    if (toDevice[0].panel_id != panelId) {
                         //找到这条连线连接的外部屏柜panel
                         val panel = panelDataList.filter {
                             it.panel_id == toDevice[0].panel_id
@@ -815,22 +801,7 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
                     }
 
                     //如果to设备的panelId等于当前屏柜的id，说明这条deviceConnection是跳纤，如果不是就是尾缆（WL）
-                    if (toSwitch[0].panel_id == panelId) {
-                        val tailFiberTx = tailFiberDataList.filter { item ->
-                            it.tail_fiber_tx_id == item.tail_fiber_id
-                        }
-                        val tailFiberRx = tailFiberDataList.filter { item ->
-                            it.tail_fiber_rx_id == item.tail_fiber_id
-                        }
-
-//                        mTXConnectionList.add(TXConnectionBean(inDevice!![0].device_desc, it.from_port + "/Tx",
-//                                tailFiberTx[0].tail_cable_number, it.to_port.toString() + "/Rx",
-//                                toSwitch[0].switch_name, tailFiberTx[0].tail_fiber_desc))
-//                        mTXConnectionList.add(TXConnectionBean(inDevice[0].device_desc, it.from_port + "/Rx",
-//                                tailFiberRx[0].tail_cable_number, it.to_port.toString() + "/Tx",
-//                                toSwitch[0].switch_name, tailFiberRx[0].tail_fiber_desc))
-
-                    } else {
+                    if (toSwitch[0].panel_id != panelId) {
                         //找到这条连线连接的外部屏柜panel
                         val panel = panelDataList.filter {
                             it.panel_id == toSwitch[0].panel_id
@@ -876,22 +847,7 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
                     }
 
                     //如果to设备的panelId等于当前屏柜的id，说明这条deviceConnection是跳纤，如果不是就是尾缆（WL）
-                    if (toSwitch[0].panel_id == panelId) {
-
-                        val tailFiberTx = tailFiberDataList.filter { item ->
-                            it.tail_fiber_tx_id == item.tail_fiber_id
-                        }
-                        val tailFiberRx = tailFiberDataList.filter { item ->
-                            it.tail_fiber_rx_id == item.tail_fiber_id
-                        }
-//                        mTXConnectionList.add(TXConnectionBean(inSwitch!![0].switch_name, it.from_port + "/Tx",
-//                                tailFiberTx[0].tail_cable_number, it.to_port + "/Rx",
-//                                toSwitch[0].switch_name, tailFiberTx[0].tail_fiber_desc))
-//                        mTXConnectionList.add(TXConnectionBean(inSwitch[0].switch_name, it.from_port + "/Rx",
-//                                tailFiberRx[0].tail_cable_number, it.to_port + "/Tx",
-//                                toSwitch[0].switch_name, tailFiberRx[0].tail_fiber_desc))
-
-                    } else {
+                    if (toSwitch[0].panel_id != panelId) {
                         //找到这条连线连接的外部屏柜panel
                         val panel = panelDataList.filter {
                             it.panel_id == toSwitch[0].panel_id
@@ -920,22 +876,8 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
                         it.from_id == item.switch_id
                     }
                     //如果to设备的panelId等于当前屏柜的id，说明这条deviceConnection是跳纤，如果不是就是尾缆（WL）
-                    if (toDevice[0].panel_id == panelId) {
-                        val tailFiberTx = tailFiberDataList.filter { item ->
-                            it.tail_fiber_tx_id == item.tail_fiber_id
-                        }
-                        val tailFiberRx = tailFiberDataList.filter { item ->
-                            it.tail_fiber_rx_id == item.tail_fiber_id
-                        }
-//                        mTXConnectionList.add(TXConnectionBean(inSwitch!![0].switch_name, it.from_port + "/Tx",
-//                                tailFiberTx[0].tail_cable_number, it.to_port + "/Rx",
-//                                toDevice[0].device_desc, tailFiberTx[0].tail_fiber_desc))
-//                        mTXConnectionList.add(TXConnectionBean(inSwitch[0].switch_name, it.from_port + "/Rx",
-//                                tailFiberRx[0].tail_cable_number, it.to_port + "/Tx",
-//                                toDevice[0].device_desc, tailFiberRx[0].tail_fiber_desc))
+                    if (toDevice[0].panel_id != panelId) {
 
-
-                    } else {
                         //找到这条连线连接的外部屏柜panel
                         val panel = panelDataList.filter {
                             it.panel_id == toDevice[0].panel_id

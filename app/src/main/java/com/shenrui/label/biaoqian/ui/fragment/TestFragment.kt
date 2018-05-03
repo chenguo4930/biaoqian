@@ -7,6 +7,7 @@ import com.github.ikidou.fragmentBackHandler.BackHandlerHelper
 import com.github.ikidou.fragmentBackHandler.FragmentBackHandler
 import com.luckongo.tthd.mvp.model.bean.Panel
 import com.shenrui.label.biaoqian.R
+import com.shenrui.label.biaoqian.constrant.AllSubStation
 import com.shenrui.label.biaoqian.mvp.base.BaseFragment
 import com.shenrui.label.biaoqian.mvp.model.bean.RegionBean
 import com.shenrui.label.biaoqian.ui.adapter.RegionListAdapter
@@ -23,14 +24,11 @@ import rx.schedulers.Schedulers
 class TestFragment : BaseFragment(), FragmentBackHandler {
 
     companion object {
-        private const val PARAM_1 = "param1"
-        private const val PARAM_2 = "param2"
-
         fun newInstance(param1: String, param2: String): TestFragment {
             val fragment = TestFragment()
             val args = Bundle()
-            args.putString(PARAM_1, param1)
-            args.putString(PARAM_2, param2)
+            args.putString(AllSubStation.PARAM_1, param1)
+            args.putString(AllSubStation.PARAM_2, param2)
             fragment.arguments = args
             return fragment
         }
@@ -45,8 +43,8 @@ class TestFragment : BaseFragment(), FragmentBackHandler {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
-            mDbPath = arguments!!.getString(PARAM_1)
-            mSubStationName = arguments!!.getString(PARAM_2)
+            mDbPath = arguments!!.getString(AllSubStation.PARAM_1)
+            mSubStationName = arguments!!.getString(AllSubStation.PARAM_2)
         }
     }
 

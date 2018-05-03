@@ -7,6 +7,10 @@ import com.github.ikidou.fragmentBackHandler.BackHandlerHelper
 import com.github.ikidou.fragmentBackHandler.FragmentBackHandler
 import com.luckongo.tthd.mvp.model.bean.Inputs
 import com.shenrui.label.biaoqian.R
+import com.shenrui.label.biaoqian.constrant.AllSubStation.Companion.PARAM_1
+import com.shenrui.label.biaoqian.constrant.AllSubStation.Companion.PARAM_2
+import com.shenrui.label.biaoqian.constrant.AllSubStation.Companion.PARAM_3
+import com.shenrui.label.biaoqian.constrant.AllSubStation.Companion.PARAM_4
 import com.shenrui.label.biaoqian.extension.logE
 import com.shenrui.label.biaoqian.mvp.base.BaseFragment
 import com.shenrui.label.biaoqian.mvp.model.bean.GLConnectionBean
@@ -29,18 +33,14 @@ import rx.schedulers.Schedulers
 class ConnectionFragment : BaseFragment(), FragmentBackHandler {
 
     companion object {
-        private const val DB_PATH = "param1"
-        private const val WL_BEAN = "param2"
-        private const val GL_BEAN = "param3"
-        private const val TX_BEAN = "param4"
 
         fun newInstance(dbPath: String, wlBean: WLConnectionBean?, glBean: GLConnectionBean?, txBean: TXConnectionBean?): ConnectionFragment {
             val fragment = ConnectionFragment()
             val args = Bundle()
-            args.putString(DB_PATH, dbPath)
-            args.putParcelable(WL_BEAN, wlBean)
-            args.putParcelable(GL_BEAN, glBean)
-            args.putParcelable(TX_BEAN, txBean)
+            args.putString(PARAM_1, dbPath)
+            args.putParcelable(PARAM_2, wlBean)
+            args.putParcelable(PARAM_3, glBean)
+            args.putParcelable(PARAM_4, txBean)
             fragment.arguments = args
             return fragment
         }
@@ -59,10 +59,10 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
-            mDbPath = arguments!!.getString(DB_PATH)
-            mWLBean = arguments!!.getParcelable(WL_BEAN)
-            mGLBean = arguments!!.getParcelable(GL_BEAN)
-            mTXBean = arguments!!.getParcelable(TX_BEAN)
+            mDbPath = arguments!!.getString(PARAM_1)
+            mWLBean = arguments!!.getParcelable(PARAM_2)
+            mGLBean = arguments!!.getParcelable(PARAM_3)
+            mTXBean = arguments!!.getParcelable(PARAM_4)
         }
     }
 

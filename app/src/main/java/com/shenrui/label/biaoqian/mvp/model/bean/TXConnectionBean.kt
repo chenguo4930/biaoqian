@@ -15,7 +15,8 @@ data class TXConnectionBean(val inDeviceName: String,
                             val outDeviceCode: String,
                             val inputType: String,
                             val inPort: String,
-                            val outPort: String, val tailCableNumber: String,
+                            val outPort: String,
+                            val tailCableNumber: String,
                             val desc: String) : Parcelable {
     constructor(source: Parcel) : this(
             source.readString(),

@@ -8,7 +8,6 @@ import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
 import android.database.Cursor
-import android.database.sqlite.SQLiteDatabase
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -44,7 +43,7 @@ import java.io.IOException
 
 class MainActivity : AppCompatActivity() {
     companion object {
-        val REQUEST_CODE = 1
+        const val REQUEST_CODE = 1
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
