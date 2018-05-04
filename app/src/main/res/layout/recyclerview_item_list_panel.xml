@@ -23,7 +23,7 @@
             android:text="屏柜名称"
             android:textColor="@color/color_station_text" />
 
-        <android.support.v7.widget.RecyclerView
+        <com.shenrui.label.biaoqian.utils.MyInterceptRecyclerView
             android:id="@+id/rv_panel_device"
             android:focusable="false"
             android:layout_width="wrap_content"
@@ -33,7 +33,7 @@
             android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp" />
 
-        <android.support.v7.widget.RecyclerView
+        <com.shenrui.label.biaoqian.utils.MyInterceptRecyclerView
             android:id="@+id/rv_panel_switch"
             android:focusable="false"
             android:layout_width="wrap_content"

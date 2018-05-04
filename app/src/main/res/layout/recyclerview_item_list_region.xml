@@ -25,7 +25,7 @@
             android:text="标题"
             android:textColor="@color/color_station_text" />
 
-        <android.support.v7.widget.RecyclerView
+        <com.shenrui.label.biaoqian.utils.MyInterceptRecyclerView
             android:id="@+id/rv_region_panel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
