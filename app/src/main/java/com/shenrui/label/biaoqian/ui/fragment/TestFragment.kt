@@ -87,7 +87,7 @@ class TestFragment : BaseFragment(), FragmentBackHandler {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : Subscriber<ArrayList<RegionBean>>() {
                     override fun onCompleted() {
-//                        toast("成功读取数据库")
+
                     }
 
                     override fun onError(e: Throwable) {
