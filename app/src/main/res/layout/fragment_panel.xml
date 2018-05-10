@@ -123,7 +123,7 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_weight="1"
+                            android:layout_weight="1.5"
                             android:background="@drawable/shape_rectangle_solid_eff5fd_border_1dp_c0"
                             android:gravity="center"
                             android:text="设备"
@@ -132,7 +132,7 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_weight="1"
+                            android:layout_weight="0.5"
                             android:background="@drawable/shape_rectangle_solid_eff5fd_border_1dp_c0"
                             android:gravity="center"
                             android:text="端口"
@@ -146,7 +146,7 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_weight="1"
+                            android:layout_weight="0.5"
                             android:background="@drawable/shape_rectangle_solid_eff5fd_border_1dp_c0"
                             android:gravity="center"
                             android:text="端口"
@@ -155,7 +155,7 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_weight="1"
+                            android:layout_weight="1.5"
                             android:background="@drawable/shape_rectangle_solid_eff5fd_border_1dp_c0"
                             android:gravity="center"
                             android:text="设备"
