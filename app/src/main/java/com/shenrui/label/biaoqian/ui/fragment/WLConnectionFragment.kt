@@ -12,7 +12,6 @@ import com.shenrui.label.biaoqian.mvp.model.bean.WLConnectionBean
 import com.shenrui.label.biaoqian.ui.adapter.WLConnectionListItemRecyclerAdapter
 import kotlinx.android.synthetic.main.fragment_wl_connection.*
 import kotlinx.android.synthetic.main.title_layout.*
-import kotlin.collections.ArrayList
 
 
 class WLConnectionFragment : BaseFragment(), FragmentBackHandler {
