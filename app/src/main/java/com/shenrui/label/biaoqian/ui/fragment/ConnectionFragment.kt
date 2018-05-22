@@ -90,6 +90,8 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
      * 初始化文本显示内容
      */
     private fun initText() {
+        tv_back_title.text = "虚端子连接情况"
+
         //----------如果是尾缆连线点击进来------------
         if (mWLBean != null) {
             logE("-----------ConnectionFragment---mWLBean = $mWLBean-")
