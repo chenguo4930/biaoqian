@@ -10,6 +10,7 @@ import android.widget.ProgressBar
 import com.github.ikidou.fragmentBackHandler.BackHandlerHelper
 import com.luckongo.tthd.mvp.model.bean.*
 import com.shenrui.label.biaoqian.R
+import com.shenrui.label.biaoqian.R.id.*
 import com.shenrui.label.biaoqian.constrant.AllSubStation
 import com.shenrui.label.biaoqian.constrant.AllSubStation.Companion.subStation
 import com.shenrui.label.biaoqian.extension.logE

@@ -12,7 +12,7 @@ import android.view.MotionEvent
 import android.widget.RelativeLayout
 import android.widget.Scroller
 import com.example.lib.baselib.R
-import com.example.lib.baselib.widget.banner.BannerAdapter
+import com.example.lib.baselib.utils.ViewUtils
 import java.lang.ref.WeakReference
 
 /**

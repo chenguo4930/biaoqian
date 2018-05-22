@@ -62,7 +62,7 @@ class BannerViewPager: ViewPager {
                 childCenterXAbs.add(indexAbs)
                 childIndex.append(indexAbs, i)
             }
-            Collections.sort<Int>(childCenterXAbs)//1,0,2  0,1,2
+            childCenterXAbs.sort()//1,0,2  0,1,2
         }
         //那个item距离中心点远一些，就先draw它。（最近的就是中间放大的item,最后draw）
         return childIndex.get(childCenterXAbs[childCount - 1 - n])

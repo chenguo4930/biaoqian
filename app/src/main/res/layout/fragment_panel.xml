@@ -60,6 +60,7 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
                         android:layout_weight="1"
+                        app:cardBackgroundColor="@color/wl_xx_orange"
                         app:cardCornerRadius="4dp">
 
                         <TextView
