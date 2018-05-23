@@ -345,15 +345,18 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
                         val tailFiberRx = tailFiberDataList.filter { item ->
                             it.tail_fiber_rx_id == item.tail_fiber_id
                         }
-                        txConnectionList.add(TXConnectionBean(inDevice[0].device_desc, inDevice[0].device_id,
-                                inDevice[0].device_iedname, toDevice[0].device_desc, toDevice[0].device_id,
-                                toDevice[0].device_iedname, "Tx", it.from_port, it.to_port,
-                                tailFiberTx[0].tail_cable_number, tailFiberTx[0].tail_fiber_desc))
-
-                        txConnectionList.add(TXConnectionBean(inDevice[0].device_desc, inDevice[0].device_id,
-                                inDevice[0].device_iedname, toDevice[0].device_desc, toDevice[0].device_id,
-                                toDevice[0].device_iedname, "Rx", it.from_port, it.to_port,
-                                tailFiberRx[0].tail_cable_number, tailFiberRx[0].tail_fiber_desc))
+                        if (txConnectionList.none { it.tailCableNumber == tailFiberTx[0].tail_cable_number }) {
+                            txConnectionList.add(TXConnectionBean(inDevice[0].device_desc, inDevice[0].device_id,
+                                    inDevice[0].device_iedname, toDevice[0].device_desc, toDevice[0].device_id,
+                                    toDevice[0].device_iedname, "Tx", it.from_port, it.to_port,
+                                    tailFiberTx[0].tail_cable_number, tailFiberTx[0].tail_fiber_desc))
+                        }
+                        if (txConnectionList.none { it.tailCableNumber == tailFiberRx[0].tail_cable_number }) {
+                            txConnectionList.add(TXConnectionBean(inDevice[0].device_desc, inDevice[0].device_id,
+                                    inDevice[0].device_iedname, toDevice[0].device_desc, toDevice[0].device_id,
+                                    toDevice[0].device_iedname, "Rx", it.from_port, it.to_port,
+                                    tailFiberRx[0].tail_cable_number, tailFiberRx[0].tail_fiber_desc))
+                        }
                     }
                 } else if (it.to_dev_type == "1000") {
                     //帅选出这条连线的to设备
@@ -372,16 +375,18 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
                         val tailFiberRx = tailFiberDataList.filter { item ->
                             it.tail_fiber_rx_id == item.tail_fiber_id
                         }
-
-                        txConnectionList.add(TXConnectionBean(inDevice[0].device_desc, inDevice[0].device_id,
-                                inDevice[0].device_iedname, toSwitch[0].switch_name, toSwitch[0].switch_id,
-                                toSwitch[0].switch_code, "Tx", it.from_port, it.to_port,
-                                tailFiberTx[0].tail_cable_number, tailFiberTx[0].tail_fiber_desc))
-
-                        txConnectionList.add(TXConnectionBean(inDevice[0].device_desc, inDevice[0].device_id,
-                                inDevice[0].device_iedname, toSwitch[0].switch_name, toSwitch[0].switch_id,
-                                toSwitch[0].switch_code, "Rx", it.from_port, it.to_port,
-                                tailFiberRx[0].tail_cable_number, tailFiberRx[0].tail_fiber_desc))
+                        if (txConnectionList.none { it.tailCableNumber == tailFiberTx[0].tail_cable_number }) {
+                            txConnectionList.add(TXConnectionBean(inDevice[0].device_desc, inDevice[0].device_id,
+                                    inDevice[0].device_iedname, toSwitch[0].switch_name, toSwitch[0].switch_id,
+                                    toSwitch[0].switch_code, "Tx", it.from_port, it.to_port,
+                                    tailFiberTx[0].tail_cable_number, tailFiberTx[0].tail_fiber_desc))
+                        }
+                        if (txConnectionList.none { it.tailCableNumber == tailFiberRx[0].tail_cable_number }) {
+                            txConnectionList.add(TXConnectionBean(inDevice[0].device_desc, inDevice[0].device_id,
+                                    inDevice[0].device_iedname, toSwitch[0].switch_name, toSwitch[0].switch_id,
+                                    toSwitch[0].switch_code, "Rx", it.from_port, it.to_port,
+                                    tailFiberRx[0].tail_cable_number, tailFiberRx[0].tail_fiber_desc))
+                        }
                     }
                 }
             }
@@ -416,15 +421,18 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
                         val tailFiberRx = tailFiberDataList.filter { item ->
                             it.tail_fiber_rx_id == item.tail_fiber_id
                         }
-                        txConnectionList.add(TXConnectionBean(inSwitch[0].switch_name, inSwitch[0].switch_id,
-                                inSwitch[0].switch_code, toSwitch[0].switch_name, toSwitch[0].switch_id,
-                                toSwitch[0].switch_code, "Tx", it.from_port, it.to_port,
-                                tailFiberTx[0].tail_cable_number, tailFiberTx[0].tail_fiber_desc))
-
-                        txConnectionList.add(TXConnectionBean(inSwitch[0].switch_name, inSwitch[0].switch_id,
-                                inSwitch[0].switch_code, toSwitch[0].switch_name, toSwitch[0].switch_id,
-                                toSwitch[0].switch_code, "Rx", it.from_port, it.to_port,
-                                tailFiberRx[0].tail_cable_number, tailFiberRx[0].tail_fiber_desc))
+                        if (txConnectionList.none { it.tailCableNumber == tailFiberTx[0].tail_cable_number }) {
+                            txConnectionList.add(TXConnectionBean(inSwitch[0].switch_name, inSwitch[0].switch_id,
+                                    inSwitch[0].switch_code, toSwitch[0].switch_name, toSwitch[0].switch_id,
+                                    toSwitch[0].switch_code, "Tx", it.from_port, it.to_port,
+                                    tailFiberTx[0].tail_cable_number, tailFiberTx[0].tail_fiber_desc))
+                        }
+                        if (txConnectionList.none { it.tailCableNumber == tailFiberRx[0].tail_cable_number }) {
+                            txConnectionList.add(TXConnectionBean(inSwitch[0].switch_name, inSwitch[0].switch_id,
+                                    inSwitch[0].switch_code, toSwitch[0].switch_name, toSwitch[0].switch_id,
+                                    toSwitch[0].switch_code, "Rx", it.from_port, it.to_port,
+                                    tailFiberRx[0].tail_cable_number, tailFiberRx[0].tail_fiber_desc))
+                        }
                     }
                 } else if (it.to_dev_type == "1001") { //如果连接到的设备是装置
 
@@ -443,15 +451,18 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
                         val tailFiberRx = tailFiberDataList.filter { item ->
                             it.tail_fiber_rx_id == item.tail_fiber_id
                         }
-                        txConnectionList.add(TXConnectionBean(inSwitch[0].switch_name, inSwitch[0].switch_id,
-                                inSwitch[0].switch_code, toDevice[0].device_desc, toDevice[0].device_id,
-                                toDevice[0].device_iedname, "Tx", it.from_port, it.to_port,
-                                tailFiberTx[0].tail_cable_number, tailFiberTx[0].tail_fiber_desc))
-
-                        txConnectionList.add(TXConnectionBean(inSwitch[0].switch_name, inSwitch[0].switch_id,
-                                inSwitch[0].switch_code, toDevice[0].device_desc, toDevice[0].device_id,
-                                toDevice[0].device_iedname, "Rx", it.from_port, it.to_port,
-                                tailFiberRx[0].tail_cable_number, tailFiberRx[0].tail_fiber_desc))
+                        if (txConnectionList.none { it.tailCableNumber == tailFiberTx[0].tail_cable_number }) {
+                            txConnectionList.add(TXConnectionBean(inSwitch[0].switch_name, inSwitch[0].switch_id,
+                                    inSwitch[0].switch_code, toDevice[0].device_desc, toDevice[0].device_id,
+                                    toDevice[0].device_iedname, "Tx", it.from_port, it.to_port,
+                                    tailFiberTx[0].tail_cable_number, tailFiberTx[0].tail_fiber_desc))
+                        }
+                        if (txConnectionList.none { it.tailCableNumber == tailFiberRx[0].tail_cable_number }) {
+                            txConnectionList.add(TXConnectionBean(inSwitch[0].switch_name, inSwitch[0].switch_id,
+                                    inSwitch[0].switch_code, toDevice[0].device_desc, toDevice[0].device_id,
+                                    toDevice[0].device_iedname, "Rx", it.from_port, it.to_port,
+                                    tailFiberRx[0].tail_cable_number, tailFiberRx[0].tail_fiber_desc))
+                        }
                     }
                 }
             }

@@ -169,23 +169,23 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
                         Log.e("----", "---------inList each:$it")
                         it.isInput = true
                     }
-                    outList.forEach {
-                        Log.e("----", "---------outList each:$it")
-                        it.isInput = false
-                    }
+//                    outList.forEach {
+//                        Log.e("----", "---------outList each:$it")
+//                        it.isInput = false
+//                    }
                     mConnectionList.addAll(inList)
-                    mConnectionList.addAll(outList)
+//                    mConnectionList.addAll(outList)
                 } else {
-                    inList.forEach {
-                        Log.e("----", "---------inList each:$it")
-                        it.isInput = false
-                    }
+//                    inList.forEach {
+//                        Log.e("----", "---------inList each:$it")
+//                        it.isInput = false
+//                    }
                     outList.forEach {
                         Log.e("----", "---------outList each:$it")
-                        it.isInput = true
+                        it.isInput = false
                     }
                     mConnectionList.addAll(outList)
-                    mConnectionList.addAll(inList)
+//                    mConnectionList.addAll(inList)
                 }
             }
 
