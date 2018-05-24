@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_bg">
+
+    <include layout="@layout/title_layout" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="60dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal"
+            android:weightSum="13">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:background="@drawable/shape_rectangle_solid_eff5fd_border_1dp_c0"
+                android:gravity="center"
+                android:text="设备"
+                android:textColor="@color/color_station_text" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/shape_rectangle_solid_eff5fd_border_1dp_c0"
+                android:gravity="center"
+                android:text="端口"
+                android:textColor="@color/color_station_text" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/shape_rectangle_solid_eff5fd_border_1dp_c0"
+                android:gravity="center"
+                android:text="TX"
+                android:textColor="@color/color_station_text" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/shape_rectangle_solid_eff5fd_border_1dp_c0"
+                android:gravity="center"
+                android:text="ODF"
+                android:textColor="@color/color_station_text" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/shape_rectangle_solid_eff5fd_border_1dp_c0"
+                android:gravity="center"
+                android:text="ODF"
+                android:textColor="@color/color_station_text" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/shape_rectangle_solid_eff5fd_border_1dp_c0"
+                android:gravity="center"
+                android:text="TX"
+                android:textColor="@color/color_station_text" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/shape_rectangle_solid_eff5fd_border_1dp_c0"
+                android:gravity="center"
+                android:text="端口"
+                android:textColor="@color/color_station_text" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:background="@drawable/shape_rectangle_solid_eff5fd_border_1dp_c0"
+                android:gravity="center"
+                android:text="设备"
+                android:textColor="@color/color_station_text" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/shape_rectangle_solid_eff5fd_border_1dp_c0"
+                android:gravity="center"
+                android:text="用途"
+                android:textColor="@color/color_station_text" />
+        </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_gl_connection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</RelativeLayout>
