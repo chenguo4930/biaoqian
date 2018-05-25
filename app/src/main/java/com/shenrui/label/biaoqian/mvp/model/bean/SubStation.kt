@@ -448,6 +448,38 @@ data class Inputs(val model_id_from: Int, val from_index: Int, val model_id_to: 
                   val desc_to: String, val out_addr: String, val desc_from: String,
                   val input_desc: String, val port_to: String, var isInput: Boolean = false)
 
+/**
+ *  装置端子表 TerminalPhysconn
+ *  模型ID
+ *  端子编号
+ *  板卡id
+ *  收发类型（0：Rx，1：Tx）
+ *  开入开出功能描述
+ */
+data class TerminalPhysconn(val model_id: Int, val port: String, val plate_id: Int,
+                  val rt_type: Int, val descinfo: String)
+
+/**
+ * 屏柜端子排连接表
+ * 端子排端子ID
+ * 所属屏柜ID
+ * 端子排编号
+ * 端子编号
+ * 电缆编号
+ * 电缆缆芯编号
+ * 电缆长度
+ * 内连装置ID
+ * 内连装置端口
+ * 内连装置端子类型
+0：Rx（开入）
+1：Tx（开出）
+内连装置端子信号描述
+对侧端子排端子ID
+ */
+data class TerminalPort(val id:Int,val panel_id: Int,val board_no:String,val port_to:Int,val cable_no:String,
+                        val cable_core_no:Int,val cable_length:Int,val internal_device_id: Int,val internal_device_port: String,
+                        val internal_device_type: Int,val internal_signal_description:String,val external_terminal_port_id:Int)
+
 
 
 

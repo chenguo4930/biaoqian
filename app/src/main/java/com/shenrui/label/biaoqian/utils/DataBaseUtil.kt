@@ -420,5 +420,59 @@ class DataBaseUtil {
             cursor.close()
             return inputsList
         }
+
+        /**
+         * 查找TerminalPhysconn
+         * val model_id: Int, val port: String, val plate_id: Int,
+        val rt_type: Int, val descinfo: String
+         */
+        fun getTerminalPhysconn(dbPath: String): ArrayList<TerminalPhysconn> {
+            val database = SQLiteDatabase.openOrCreateDatabase(dbPath, null)
+            val cursor = database.query("TerminalPhysconn", null, null, null,
+                    null, null, null)
+            val terminalPhysconnList = ArrayList<TerminalPhysconn>()
+            while (cursor.moveToNext()) {
+                val model_id = cursor.getInt(cursor.getColumnIndex("model_id"))
+                val port = cursor.getString(cursor.getColumnIndex("port"))
+                val plate_id = cursor.getInt(cursor.getColumnIndex("plate_id"))
+                val rt_type = cursor.getInt(cursor.getColumnIndex("rt_type"))
+                val descinfo = cursor.getString(cursor.getColumnIndex("descinfo"))
+                terminalPhysconnList.add(TerminalPhysconn(model_id, port, plate_id, rt_type, descinfo))
+            }
+            cursor.close()
+            return terminalPhysconnList
+        }
+
+        /**
+         * 查找TerminalPort
+         * (val id:Int,val panel_id: Int,val board_no:String,val port_to:Int,val cable_no:String,
+        val cable_core_no:Int,val cable_length:Int,val internal_device_id: Int,val internal_device_port: String,
+        val internal_device_type: Int,val internal_signal_description:String,val external_terminal_port_id:Int)
+         */
+        fun getTerminalPort(dbPath: String): ArrayList<TerminalPort> {
+            val database = SQLiteDatabase.openOrCreateDatabase(dbPath, null)
+            val cursor = database.query("TerminalPort", null, null, null,
+                    null, null, null)
+            val terminalPortList = ArrayList<TerminalPort>()
+            while (cursor.moveToNext()) {
+                val id = cursor.getInt(cursor.getColumnIndex("id"))
+                val panel_id = cursor.getInt(cursor.getColumnIndex("panel_id"))
+                val board_no = cursor.getString(cursor.getColumnIndex("board_no"))
+                val port_to = cursor.getInt(cursor.getColumnIndex("port_to"))
+                val cable_no = cursor.getString(cursor.getColumnIndex("cable_no"))
+                val cable_core_no = cursor.getInt(cursor.getColumnIndex("cable_core_no"))
+                val cable_length = cursor.getInt(cursor.getColumnIndex("cable_length"))
+                val internal_device_id = cursor.getInt(cursor.getColumnIndex("internal_device_id"))
+                val internal_device_port = cursor.getString(cursor.getColumnIndex("internal_device_port"))
+                val internal_device_type = cursor.getInt(cursor.getColumnIndex("internal_device_type"))
+                val internal_signal_description = cursor.getString(cursor.getColumnIndex("internal_signal_description"))
+                val external_terminal_port_id = cursor.getInt(cursor.getColumnIndex("external_terminal_port_id"))
+                terminalPortList.add(TerminalPort(id, panel_id, board_no, port_to, cable_no,
+                        cable_core_no, cable_length, internal_device_id, internal_device_port,
+                        internal_device_type, internal_signal_description, external_terminal_port_id))
+            }
+            cursor.close()
+            return terminalPortList
+        }
     }
 }

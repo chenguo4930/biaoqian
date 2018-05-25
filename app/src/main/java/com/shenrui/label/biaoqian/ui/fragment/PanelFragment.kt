@@ -5,6 +5,7 @@ import android.app.ProgressDialog
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
+import android.view.View
 import com.github.ikidou.fragmentBackHandler.BackHandlerHelper
 import com.github.ikidou.fragmentBackHandler.FragmentBackHandler
 import com.luckongo.tthd.mvp.model.bean.DeviceConnection
@@ -24,6 +25,7 @@ import com.shenrui.label.biaoqian.ui.adapter.PanelWLConnectionListItemRecyclerAd
 import com.shenrui.label.biaoqian.utils.DataBaseUtil
 import kotlinx.android.synthetic.main.fragment_panel.*
 import kotlinx.android.synthetic.main.title_layout.*
+import org.jetbrains.anko.sdk25.coroutines.onClick
 import org.jetbrains.anko.support.v4.toast
 import rx.Observable
 import rx.Subscriber
@@ -46,6 +48,10 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
         ArrayList<TXConnectionBean>()
     }
 
+    private val mDLConnectionList: ArrayList<TXConnectionBean> by lazy {
+        ArrayList<TXConnectionBean>()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
@@ -62,9 +68,43 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
 
         tv_panel_name.text = mPanelBean?.panel_name + "(" + mPanelBean?.panel_code + ")"
 
+        tv_right.run {
+            text = "切换到电缆链接图"
+            visibility = View.VISIBLE
+            onClick {
+                if (text == "切换到电缆链接图") {
+                    text = "切换到尾缆和光缆链接图"
+                    hintWLLayout()
+                } else {
+                    text = "切换到电缆链接图"
+                    hintDLLayout()
+                }
+            }
+        }
+
         img_back.setOnClickListener {
             activity?.supportFragmentManager?.popBackStack()
         }
+    }
+
+    /**
+     * 显示尾缆 光缆的连接图
+     */
+    private fun hintWLLayout() {
+        cv_tx_connect_layout.visibility = View.GONE
+        rv_panel_wl.visibility = View.GONE
+        rv_panel_gl.visibility = View.GONE
+        rv_panel_dl.visibility = View.VISIBLE
+    }
+
+    /**
+     * 显示电缆的连接图
+     */
+    private fun hintDLLayout() {
+        cv_tx_connect_layout.visibility = View.VISIBLE
+        rv_panel_wl.visibility = View.VISIBLE
+        rv_panel_gl.visibility = View.VISIBLE
+        rv_panel_dl.visibility = View.GONE
     }
 
     override fun lazyLoad() {
@@ -428,6 +468,21 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
             Log.e("--------", "----------odfDataList.size() = ${mGLConnectionList.size}-")
             //解析光缆数据-------------------------end-----------------------
 
+            //解析电缆数据-------------------------start-----------------------
+//            val terminalPortDataList = DataBaseUtil.getTerminalPort(mPath!!)
+//            val odfConnectionDataList = DataBaseUtil.getODFConnection(mPath!!)
+//            //筛选出屏柜中的所有odf
+//            val odfList = ArrayList<ODF>()
+//            odfDataList.forEach {
+//                if (it.panel_id == mPanelBean?.panel_id) {
+//                    odfList.add(it)
+//                }
+//            }
+
+            val terminalPhysconnList = DataBaseUtil.getTerminalPhysconn(mPath!!)
+            val terminalPortDataList = DataBaseUtil.getTerminalPort(mPath!!)
+
+            //解析电缆数据-------------------------end-----------------------
             it.onCompleted()
 
         }).subscribeOn(Schedulers.io())
