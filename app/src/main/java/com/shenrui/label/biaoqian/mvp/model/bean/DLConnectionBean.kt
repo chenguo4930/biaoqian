@@ -4,55 +4,19 @@ import android.os.Parcel
 import android.os.Parcelable
 
 /**
- * 电缆连接图
+ * 电缆连接图Bean
  * Created by cheng on 2018/5/25.
+ * 设备	信号	端子	端子排
+ *
  */
-data class DLConnectionBean(val inDeviceName: String,
-                            val inDeviceId: Int,
-                            val inDeviceCode: String,
-                            val outDeviceName: String,
-                            val outDeviceId: Int,
-                            val outDeviceCode: String,
-                            val inputType: String,
-                            val inPort: String,
-                            val outPort: String,
-                            val tailCableNumber: String,
-                            val desc: String) : Parcelable {
-    constructor(source: Parcel) : this(
-            source.readString(),
-            source.readInt(),
-            source.readString(),
-            source.readString(),
-            source.readInt(),
-            source.readString(),
-            source.readString(),
-            source.readString(),
-            source.readString(),
-            source.readString(),
-            source.readString()
-    )
-
-    override fun describeContents() = 0
-
-    override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
-        writeString(inDeviceName)
-        writeInt(inDeviceId)
-        writeString(inDeviceCode)
-        writeString(outDeviceName)
-        writeInt(outDeviceId)
-        writeString(outDeviceCode)
-        writeString(inputType)
-        writeString(inPort)
-        writeString(outPort)
-        writeString(tailCableNumber)
-        writeString(desc)
-    }
-
-    companion object {
-        @JvmField
-        val CREATOR: Parcelable.Creator<DLConnectionBean> = object : Parcelable.Creator<DLConnectionBean> {
-            override fun createFromParcel(source: Parcel): DLConnectionBean = DLConnectionBean(source)
-            override fun newArray(size: Int): Array<DLConnectionBean?> = arrayOfNulls(size)
-        }
-    }
-}
+data class DLConnectionBean(val fromPanelName: String,
+                            val fromDeviceName: String,
+                            val fromSignal: String,
+                            val fromPortNo: String,
+                            val fromBoardNo: String,
+                            val toPanelName: String,
+                            val toDeviceName: String,
+                            val toSignal: String,
+                            val toPortNo: String,
+                            val toBoardNo: String,
+                            val cableCoreNo: Int)

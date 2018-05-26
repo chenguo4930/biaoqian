@@ -114,6 +114,28 @@ class DataBaseUtil {
         }
 
         /**
+         * 根据屏柜和设备Id读取区域设备的数据
+         */
+        fun getDeviceByPanelByDeviceId(dbPath: String, panelId: Int, deviceId: Int): ArrayList<Device> {
+            val database = SQLiteDatabase.openOrCreateDatabase(dbPath, null)
+            val cursor = database.query("Device", null, "panel_code == ? and device_id == ?", arrayOf(panelId.toString(), deviceId.toString()), null,
+                    null, null, null)
+            val deviceList = ArrayList<Device>()
+            while (cursor.moveToNext()) {
+                val device_id = cursor.getInt(cursor.getColumnIndex("device_id"))
+                val device_desc = cursor.getString(cursor.getColumnIndex("device_desc"))
+                val device_iedname = cursor.getString(cursor.getColumnIndex("device_iedname"))
+                val device_code = cursor.getString(cursor.getColumnIndex("device_code"))
+                val panel_id = cursor.getInt(cursor.getColumnIndex("panel_id"))
+                val model_id = cursor.getInt(cursor.getColumnIndex("model_id"))
+
+                deviceList.add(Device(device_id, device_desc, device_iedname, device_code, panel_id, model_id))
+            }
+            cursor.close()
+            return deviceList
+        }
+
+        /**
          * 读取区域交换机的数据
          */
         fun getSwitch(dbPath: String): ArrayList<Switch> {
@@ -458,13 +480,13 @@ class DataBaseUtil {
                 val id = cursor.getInt(cursor.getColumnIndex("id"))
                 val panel_id = cursor.getInt(cursor.getColumnIndex("panel_id"))
                 val board_no = cursor.getString(cursor.getColumnIndex("board_no"))
-                val port_to = cursor.getInt(cursor.getColumnIndex("port_to"))
+                val port_to = cursor.getInt(cursor.getColumnIndex("port_no"))
                 val cable_no = cursor.getString(cursor.getColumnIndex("cable_no"))
                 val cable_core_no = cursor.getInt(cursor.getColumnIndex("cable_core_no"))
                 val cable_length = cursor.getInt(cursor.getColumnIndex("cable_length"))
                 val internal_device_id = cursor.getInt(cursor.getColumnIndex("internal_device_id"))
                 val internal_device_port = cursor.getString(cursor.getColumnIndex("internal_device_port"))
-                val internal_device_type = cursor.getInt(cursor.getColumnIndex("internal_device_type"))
+                val internal_device_type = cursor.getInt(cursor.getColumnIndex("internal_port_type"))
                 val internal_signal_description = cursor.getString(cursor.getColumnIndex("internal_signal_description"))
                 val external_terminal_port_id = cursor.getInt(cursor.getColumnIndex("external_terminal_port_id"))
                 terminalPortList.add(TerminalPort(id, panel_id, board_no, port_to, cable_no,

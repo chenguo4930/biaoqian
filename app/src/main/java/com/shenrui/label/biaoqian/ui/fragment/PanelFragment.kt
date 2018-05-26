@@ -15,10 +15,7 @@ import com.luckongo.tthd.mvp.model.bean.SwitchConnection
 import com.shenrui.label.biaoqian.R
 import com.shenrui.label.biaoqian.constrant.AllSubStation
 import com.shenrui.label.biaoqian.mvp.base.BaseFragment
-import com.shenrui.label.biaoqian.mvp.model.bean.GLConnectionBean
-import com.shenrui.label.biaoqian.mvp.model.bean.PanelBean
-import com.shenrui.label.biaoqian.mvp.model.bean.TXConnectionBean
-import com.shenrui.label.biaoqian.mvp.model.bean.WLConnectionBean
+import com.shenrui.label.biaoqian.mvp.model.bean.*
 import com.shenrui.label.biaoqian.ui.adapter.PanelGLConnectionListItemRecyclerAdapter
 import com.shenrui.label.biaoqian.ui.adapter.PanelTXConnectionListItemRecyclerAdapter
 import com.shenrui.label.biaoqian.ui.adapter.PanelWLConnectionListItemRecyclerAdapter
@@ -48,8 +45,8 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
         ArrayList<TXConnectionBean>()
     }
 
-    private val mDLConnectionList: ArrayList<TXConnectionBean> by lazy {
-        ArrayList<TXConnectionBean>()
+    private val mDLConnectionList: ArrayList<DLConnectionBean> by lazy {
+        ArrayList<DLConnectionBean>()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -92,7 +89,7 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
      */
     private fun hintWLLayout() {
         cv_tx_connect_layout.visibility = View.GONE
-        rv_panel_wl.visibility = View.GONE
+        rv_panel_wl.visibility = View.INVISIBLE
         rv_panel_gl.visibility = View.GONE
         rv_panel_dl.visibility = View.VISIBLE
     }
@@ -469,18 +466,30 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
             //解析光缆数据-------------------------end-----------------------
 
             //解析电缆数据-------------------------start-----------------------
-//            val terminalPortDataList = DataBaseUtil.getTerminalPort(mPath!!)
-//            val odfConnectionDataList = DataBaseUtil.getODFConnection(mPath!!)
-//            //筛选出屏柜中的所有odf
-//            val odfList = ArrayList<ODF>()
-//            odfDataList.forEach {
-//                if (it.panel_id == mPanelBean?.panel_id) {
-//                    odfList.add(it)
-//                }
-//            }
-
-            val terminalPhysconnList = DataBaseUtil.getTerminalPhysconn(mPath!!)
             val terminalPortDataList = DataBaseUtil.getTerminalPort(mPath!!)
+            val terminalPortList = terminalPortDataList.filter { it.panel_id == mPanelBean!!.panel_id }
+            terminalPortList.forEach { item ->
+                val terminalToBean = terminalPortDataList.filter { it.id == item.external_terminal_port_id }
+                val fromPanel = panelDataList.filter { it.panel_id == item.panel_id }
+                val toPanel = panelDataList.filter { it.panel_id == terminalToBean[0].panel_id }
+                val fromDevice = DataBaseUtil.getDeviceByPanelByDeviceId(mPath!!, fromPanel[0].panel_id, item.internal_device_id)
+                val toDevice = DataBaseUtil.getDeviceByPanelByDeviceId(mPath!!, toPanel[0].panel_id, terminalToBean[0].internal_device_id)
+                val fromPortType = if (item.internal_port_type == 0) "Rx" else "Tx"
+                val toPortType = if (terminalToBean[0].internal_port_type == 0) "Rx" else "Tx"
+
+                mDLConnectionList.add(DLConnectionBean(
+                        fromPanel[0].panel_name,
+                        fromDevice[0].device_desc,
+                        item.internal_signal_description,
+                        item.internal_device_port+"/"+fromPortType,
+                        item.port_no.toString()+"-"+item.cable_no,
+                        toPanel[0].panel_name,
+                        toDevice[0].device_desc,
+                        terminalToBean[0].internal_signal_description,
+                        terminalToBean[0].internal_device_port+"/"+toPortType,
+                        terminalToBean[0].port_no.toString()+"-"+terminalToBean[0].cable_no,
+                        item.cable_core_no))
+            }
 
             //解析电缆数据-------------------------end-----------------------
             it.onCompleted()
@@ -585,6 +594,10 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
             layoutManager = LinearLayoutManager(activity)
             adapter = txAdapter
         }
+
+        //--------------DL链接图------------------
+
+
 
     }
 

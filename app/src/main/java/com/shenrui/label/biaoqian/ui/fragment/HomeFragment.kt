@@ -29,6 +29,11 @@ class HomeFragment : BaseFragment() {
     override fun getLayoutId() = R.layout.fragment_home
 
     override fun initView() {
+
+    }
+
+    override fun onResume() {
+        super.onResume()
         img_menu.setOnClickListener {
             if (AllSubStation.subStation == null || AllSubStation.subStation!!.isEmpty()) {
                 toast("当前没有数据")
@@ -36,6 +41,11 @@ class HomeFragment : BaseFragment() {
                 showMenu()
             }
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        img_menu.setOnClickListener(null)
     }
 
     override fun lazyLoad() {
