@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="45dp"
     android:orientation="horizontal"
     android:weightSum="3">
 
@@ -27,26 +27,42 @@
             android:background="@color/color_dl" />
     </LinearLayout>
 
-    <android.support.v7.widget.CardView
+    <!--<android.support.v7.widget.CardView-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_margin="4dp"-->
+    <!--android:layout_weight="2">-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/tv_dl_panel_name"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:background="@color/color_recycler_item_title"-->
+    <!--android:drawableLeft="@mipmap/icon_panel"-->
+    <!--android:gravity="center"-->
+    <!--android:maxLength="30"-->
+    <!--android:padding="5dp"-->
+    <!--android:paddingLeft="10dp"-->
+    <!--android:paddingRight="30dp"-->
+    <!--android:text="标题"-->
+    <!--android:textColor="@color/color_station_text" />-->
+
+    <!--</android.support.v7.widget.CardView>-->
+
+    <TextView
+        android:id="@+id/tv_dl_panel_name"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_margin="4dp"
-        android:layout_weight="2">
-
-        <TextView
-            android:id="@+id/tv_dl_panel_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/color_recycler_item_title"
-            android:drawableLeft="@mipmap/icon_panel"
-            android:gravity="center"
-            android:maxLength="30"
-            android:padding="5dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="30dp"
-            android:text="标题"
-            android:textColor="@color/color_station_text" />
-
-    </android.support.v7.widget.CardView>
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginTop="3dp"
+        android:layout_weight="2"
+        android:background="@drawable/shape_rectangle_solid_ffffff_border_1dp_c3"
+        android:drawableLeft="@mipmap/icon_panel"
+        android:drawablePadding="10dp"
+        android:gravity="center_vertical"
+        android:maxLength="30"
+        android:padding="5dp"
+        android:text="屏柜名称"
+        android:textColor="@color/color_station_text" />
 </LinearLayout>
 

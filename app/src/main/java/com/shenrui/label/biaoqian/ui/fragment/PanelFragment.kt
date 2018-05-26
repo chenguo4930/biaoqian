@@ -71,7 +71,7 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
             visibility = View.VISIBLE
             onClick {
                 if (text == "切换到电缆链接图") {
-                    text = "切换到尾缆和光缆链接图"
+                    text = "切换到尾缆、光缆、跳纤链接图"
                     hintWLLayout()
                 } else {
                     text = "切换到电缆链接图"
@@ -467,10 +467,13 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
             //解析光缆数据-------------------------end-----------------------
 
             //解析电缆数据-------------------------start-----------------------
-            val terminalPortDataList = DataBaseUtil.getTerminalPort(mPath!!)
+            val terminalPortDataList = DataBaseUtil.getTerminalPort(mPath!!).filter { it.cable_no != "" }
             val terminalPortList = terminalPortDataList.filter { it.panel_id == mPanelBean!!.panel_id }
             terminalPortList.forEach { item ->
                 val terminalToBean = terminalPortDataList.filter { it.id == item.external_terminal_port_id }
+                if (terminalToBean.isEmpty()) {
+                    return@forEach
+                }
                 val fromPanel = panelDataList.filter { it.panel_id == item.panel_id }
                 val toPanel = panelDataList.filter { it.panel_id == terminalToBean[0].panel_id }
                 val fromDevice = DataBaseUtil.getDeviceByPanelByDeviceId(mPath!!, fromPanel[0].panel_id, item.internal_device_id)

@@ -29,7 +29,7 @@ class PanelDLConnectionListItemRecyclerAdapter(private val context1: Context,
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
             MyViewHolder(LayoutInflater.from(context1).inflate(
-                    R.layout.recyclerview_item_list_panel_connection_gl,
+                    R.layout.recyclerview_item_list_panel_connection_dl,
                     parent,
                     false))
 

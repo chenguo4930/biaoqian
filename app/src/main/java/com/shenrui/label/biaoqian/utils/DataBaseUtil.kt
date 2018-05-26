@@ -118,7 +118,7 @@ class DataBaseUtil {
          */
         fun getDeviceByPanelByDeviceId(dbPath: String, panelId: Int, deviceId: Int): ArrayList<Device> {
             val database = SQLiteDatabase.openOrCreateDatabase(dbPath, null)
-            val cursor = database.query("Device", null, "panel_code == ? and device_id == ?", arrayOf(panelId.toString(), deviceId.toString()), null,
+            val cursor = database.query("Device", null, "panel_id == ? and device_id == ?", arrayOf(panelId.toString(), deviceId.toString()), null,
                     null, null, null)
             val deviceList = ArrayList<Device>()
             while (cursor.moveToNext()) {
