@@ -188,14 +188,15 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
 //                    mConnectionList.addAll(inList)
                 }
             }
+            //--------------------尾缆连线点击进来-----end----------------------
 
             //--------------------光缆连线点击进来-----start----------------------
             if (mGLBean != null) {
-//                val inTxTypeStr = if (mGLBean!!.odfConnection.internal_rt_type == 0) {
-//                    "Rx"
-//                } else {
-//                    "Tx"
-//                }
+                val inTxTypeStr = if (mGLBean!!.odfConnection.internal_rt_type == 0) {
+                    "Rx"
+                } else {
+                    "Tx"
+                }
                 val inPort = if (mGLBean!!.odfConnection.internal_rt_type == 0) {
                     mGLBean!!.odfConnection.internal_device_port!!
                 } else {
@@ -211,17 +212,21 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
                 //从数据库中获取outModel 到intModel的连接信息
                 val outList = DataBaseUtil.getInputsFilter(mDbPath!!, mGLBean!!.outDeviceId, mGLBean!!.inDeviceId, inPort)
                 Log.e("----", "---------mGLBean:$mGLBean")
-                inList.forEach {
-                    Log.e("----", "---------inList each:$it")
-                    it.isInput = true
+                if (inTxTypeStr == "Tx") {
+                    inList.forEach {
+                        Log.e("----", "---------inList each:$it")
+                        it.isInput = true
+                    }
+                    mConnectionList.addAll(inList)
+                } else {
+                    outList.forEach {
+                        Log.e("----", "---------outList each:$it")
+                        it.isInput = false
+                    }
+                    mConnectionList.addAll(outList)
                 }
-                outList.forEach {
-                    Log.e("----", "---------outList each:$it")
-                    it.isInput = false
-                }
-                mConnectionList.addAll(inList)
-                mConnectionList.addAll(outList)
             }
+            //--------------------光缆连线点击进来-----end----------------------
 
             //--------------------跳纤连线点击进来-----start----------------------
             if (mTXBean != null) {
@@ -241,17 +246,21 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
                 val inList = DataBaseUtil.getInputsFilter(mDbPath!!, mTXBean!!.inDeviceId.toString(), mTXBean!!.outDeviceId.toString(), toPort)
                 //从数据库中获取outModel 到intModel的连接信息
                 val outList = DataBaseUtil.getInputsFilter(mDbPath!!, mTXBean!!.outDeviceId.toString(), mTXBean!!.inDeviceId.toString(), inPort)
-                inList.forEach {
-                    Log.e("----", "-----txBean----inList each:$it")
-                    it.isInput = true
+                if (mTXBean!!.inputType == "Tx") {
+                    inList.forEach {
+                        Log.e("----", "-----txBean----inList each:$it")
+                        it.isInput = true
+                    }
+                    mConnectionList.addAll(inList)
+                } else {
+                    outList.forEach {
+                        Log.e("----", "-----txBean----outList each:$it")
+                        it.isInput = false
+                    }
+                    mConnectionList.addAll(outList)
                 }
-                outList.forEach {
-                    Log.e("----", "-----txBean----outList each:$it")
-                    it.isInput = false
-                }
-                mConnectionList.addAll(inList)
-                mConnectionList.addAll(outList)
             }
+            //--------------------跳纤连线点击进来-----end----------------------
 
             it.onCompleted()
         }).subscribeOn(Schedulers.io())
