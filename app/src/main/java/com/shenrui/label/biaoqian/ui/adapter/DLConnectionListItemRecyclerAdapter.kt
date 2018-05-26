@@ -7,43 +7,30 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.shenrui.label.biaoqian.R
-import com.shenrui.label.biaoqian.mvp.model.bean.GLConnectionBean
+import com.shenrui.label.biaoqian.mvp.model.bean.DLConnectionBean
 
 /**
- * 区域region Adapter
- * @author Chengguo on 2018/3/5.
+ * 电缆纤芯链接的 Adapter
+ * @author Chengguo on 2018/5/26.
  */
 class DLConnectionListItemRecyclerAdapter(private val context1: Context,
-                                          private val list: ArrayList<GLConnectionBean>,
-                                          private val listener: AddOnClickListener? = null)
+                                          private val list: ArrayList<DLConnectionBean>)
     : RecyclerView.Adapter<DLConnectionListItemRecyclerAdapter.MyViewHolder>() {
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val item = list[position]
-        holder.deviceInTv.text = item.inDeviceName
-        val inTxTypeStr = if (item.odfConnection.internal_rt_type == 0) {
-            "Rx"
-        } else {
-            "Tx"
-        }
-        holder.deviceInPortTv.text = item.odfConnection.internal_device_port + "/" + inTxTypeStr
-        holder.deviceInSignalTv.text = item.odfConnection.internal_optical_fiber_number
-        holder.deviceInSignalPaiTv.text = item.odf.odf_layer + item.odf.odf_port
-        holder.deviceConnectTv.text = item.odfConnection.optical_fiber_number.toString()
-
-        holder.deviceOutSignalPaiTv.text = item.odfOut.odf_layer + item.odfOut.odf_port
-        val outTxTypeStr = if (item.odfOutConnection.internal_rt_type == 0) {
-            "Rx"
-        } else {
-            "Tx"
-        }
-        holder.deviceOutSignalTv.text = item.odfOutConnection.internal_optical_fiber_number
-        holder.deviceOutPortTv.text = item.odfOutConnection.internal_device_port + "/" + outTxTypeStr
-        holder.deviceOutTv.text = item.outDeviceName
-
-        holder.deviceConnectTv.setOnClickListener {
-            listener?.onItemClick(item)
-        }
+        //发送端
+        holder.deviceInTv.text = item.fromDeviceName
+        holder.deviceInSignalTv.text = item.fromSignal
+        holder.deviceInPortTv.text = item.fromPortNo
+        holder.deviceInSignalPaiTv.text = item.fromBoardNo
+        //连线
+        holder.deviceConnectTv.text = item.cableCoreNo.toString()
+        //接收端
+        holder.deviceOutSignalPaiTv.text = item.toBoardNo
+        holder.deviceOutPortTv.text = item.toPortNo
+        holder.deviceOutSignalTv.text = item.toSignal
+        holder.deviceOutTv.text = item.toDeviceName
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
@@ -57,19 +44,16 @@ class DLConnectionListItemRecyclerAdapter(private val context1: Context,
     }
 
     class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var deviceInTv: TextView = view.findViewById(R.id.tv_tx_device_in)
-        var deviceInPortTv: TextView = view.findViewById(R.id.tv_tx_device_in_port)
-        var deviceInSignalTv: TextView = view.findViewById(R.id.tv_tx_device_in_signal)
-        var deviceInSignalPaiTv: TextView = view.findViewById(R.id.tv_tx_device_in_signal_pai)
-        var deviceConnectTv: TextView = view.findViewById(R.id.tv_tx_device_connect)
-        var deviceOutPortTv: TextView = view.findViewById(R.id.tv_tx_device_out_port)
-        var deviceOutSignalPaiTv: TextView = view.findViewById(R.id.tv_tx_device_out_signal_pai)
-        var deviceOutSignalTv: TextView = view.findViewById(R.id.tv_tx_device_out_signal)
-        var deviceOutTv: TextView = view.findViewById(R.id.tv_tx_device_out)
+        var deviceInTv: TextView = view.findViewById(R.id.tv_dl_device_in)
+        var deviceInSignalTv: TextView = view.findViewById(R.id.tv_dl_device_in_signal)
+        var deviceInPortTv: TextView = view.findViewById(R.id.tv_dl_device_in_port)
+        var deviceInSignalPaiTv: TextView = view.findViewById(R.id.tv_dl_device_in_signal_pai)
+        var deviceConnectTv: TextView = view.findViewById(R.id.tv_dl_device_connect)
+        var deviceOutSignalPaiTv: TextView = view.findViewById(R.id.tv_dl_device_out_signal_pai)
+        var deviceOutPortTv: TextView = view.findViewById(R.id.tv_dl_device_out_port)
+        var deviceOutSignalTv: TextView = view.findViewById(R.id.tv_dl_device_out_signal)
+        var deviceOutTv: TextView = view.findViewById(R.id.tv_dl_device_out)
     }
 
-    interface AddOnClickListener {
-        fun onItemClick(item: GLConnectionBean)
-    }
 
 }

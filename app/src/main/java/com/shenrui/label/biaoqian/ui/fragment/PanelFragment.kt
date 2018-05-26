@@ -16,6 +16,7 @@ import com.shenrui.label.biaoqian.R
 import com.shenrui.label.biaoqian.constrant.AllSubStation
 import com.shenrui.label.biaoqian.mvp.base.BaseFragment
 import com.shenrui.label.biaoqian.mvp.model.bean.*
+import com.shenrui.label.biaoqian.ui.adapter.PanelDLConnectionListItemRecyclerAdapter
 import com.shenrui.label.biaoqian.ui.adapter.PanelGLConnectionListItemRecyclerAdapter
 import com.shenrui.label.biaoqian.ui.adapter.PanelTXConnectionListItemRecyclerAdapter
 import com.shenrui.label.biaoqian.ui.adapter.PanelWLConnectionListItemRecyclerAdapter
@@ -481,13 +482,14 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
                         fromPanel[0].panel_name,
                         fromDevice[0].device_desc,
                         item.internal_signal_description,
-                        item.internal_device_port+"/"+fromPortType,
-                        item.port_no.toString()+"-"+item.cable_no,
+                        item.internal_device_port + "/" + fromPortType,
+                        item.port_no.toString() + "-" + item.cable_no,
                         toPanel[0].panel_name,
                         toDevice[0].device_desc,
                         terminalToBean[0].internal_signal_description,
-                        terminalToBean[0].internal_device_port+"/"+toPortType,
-                        terminalToBean[0].port_no.toString()+"-"+terminalToBean[0].cable_no,
+                        terminalToBean[0].internal_device_port + "/" + toPortType,
+                        terminalToBean[0].port_no.toString() + "-" + terminalToBean[0].cable_no,
+                        item.cable_no,
                         item.cable_core_no))
             }
 
@@ -596,9 +598,32 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
         }
 
         //--------------DL链接图------------------
+        //去除电缆重复的
+        val dlConnectionList = ArrayList<DLConnectionBean>()
+        mDLConnectionList.forEach {
+            for (bean in dlConnectionList) {
+                if (bean.cableNo == it.cableNo) {
+                    return@forEach
+                }
+            }
+            dlConnectionList.add(it)
+        }
 
+        val dlAdapter = PanelDLConnectionListItemRecyclerAdapter(activity!!, dlConnectionList,
+                object : PanelDLConnectionListItemRecyclerAdapter.DLConnectionClickListener {
+                    override fun onDLConnectionItemClick(item: DLConnectionBean) {
+                        val dlList = mDLConnectionList.filter { item.cableNo == it.cableNo }
 
-
+                        activity?.supportFragmentManager?.beginTransaction()
+                                ?.add(R.id.content_frame, DLConnectionFragment.newInstance(mPath!!, dlList as ArrayList<DLConnectionBean>))
+                                ?.addToBackStack("ConnectionFragment")
+                                ?.commit()
+                    }
+                })
+        rv_panel_dl.run {
+            layoutManager = LinearLayoutManager(activity)
+            adapter = dlAdapter
+        }
     }
 
     override fun onBackPressed() = BackHandlerHelper.handleBackPress(this)

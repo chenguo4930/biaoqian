@@ -6,7 +6,7 @@
     android:weightSum="12">
 
     <TextView
-        android:id="@+id/tv_tx_device_in"
+        android:id="@+id/tv_dl_device_in"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="2"
@@ -17,7 +17,7 @@
         android:textSize="12sp" />
 
     <TextView
-        android:id="@+id/tv_tx_device_in_signal"
+        android:id="@+id/tv_dl_device_in_signal"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
@@ -28,7 +28,7 @@
         android:textSize="12sp" />
 
     <TextView
-        android:id="@+id/tv_tx_device_in_port"
+        android:id="@+id/tv_dl_device_in_port"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
@@ -40,7 +40,7 @@
 
 
     <TextView
-        android:id="@+id/tv_tx_device_in_signal_pai"
+        android:id="@+id/tv_dl_device_in_signal_pai"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
@@ -52,7 +52,7 @@
 
 
     <TextView
-        android:id="@+id/tv_tx_device_connect"
+        android:id="@+id/tv_dl_device_connect"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="2"
@@ -60,12 +60,12 @@
         android:gravity="center"
         android:paddingBottom="3dp"
         android:paddingTop="3dp"
-        android:text="连线Tx"
+        android:text="连线dl"
         android:textColor="@color/color_station_text"
         android:textSize="12sp" />
 
     <TextView
-        android:id="@+id/tv_tx_device_out_signal_pai"
+        android:id="@+id/tv_dl_device_out_signal_pai"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
@@ -76,7 +76,7 @@
         android:textSize="12sp" />
 
     <TextView
-        android:id="@+id/tv_tx_device_out_port"
+        android:id="@+id/tv_dl_device_out_port"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
@@ -87,7 +87,7 @@
         android:textSize="12sp" />
 
     <TextView
-        android:id="@+id/tv_tx_device_out_signal"
+        android:id="@+id/tv_dl_device_out_signal"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
@@ -98,7 +98,7 @@
         android:textSize="12sp" />
 
     <TextView
-        android:id="@+id/tv_tx_device_out"
+        android:id="@+id/tv_dl_device_out"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="2"

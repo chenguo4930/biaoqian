@@ -8,22 +8,26 @@ import com.github.ikidou.fragmentBackHandler.FragmentBackHandler
 import com.shenrui.label.biaoqian.R
 import com.shenrui.label.biaoqian.constrant.AllSubStation
 import com.shenrui.label.biaoqian.mvp.base.BaseFragment
+import com.shenrui.label.biaoqian.mvp.model.bean.DLConnectionBean
 import com.shenrui.label.biaoqian.mvp.model.bean.GLConnectionBean
+import com.shenrui.label.biaoqian.ui.adapter.DLConnectionListItemRecyclerAdapter
 import com.shenrui.label.biaoqian.ui.adapter.GLConnectionListItemRecyclerAdapter
 import kotlinx.android.synthetic.main.fragment_gl_connection.*
 import kotlinx.android.synthetic.main.title_layout.*
 
-
+/**
+ * 电缆纤芯链接图
+ */
 class DLConnectionFragment : BaseFragment(), FragmentBackHandler {
 
     private var mPath: String? = null
-    private var mGLList: ArrayList<GLConnectionBean>? = null
+    private var mDLList: ArrayList<DLConnectionBean>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
             mPath = arguments!!.getString(AllSubStation.PARAM_1)
-            mGLList = arguments!!.getParcelableArrayList<GLConnectionBean>(AllSubStation.PARAM_2)
+            mDLList = arguments!!.getParcelableArrayList<DLConnectionBean>(AllSubStation.PARAM_2)
         }
     }
 
@@ -31,9 +35,9 @@ class DLConnectionFragment : BaseFragment(), FragmentBackHandler {
 
     @SuppressLint("SetTextI18n")
     override fun initView() {
-        tv_back_title.text = mGLList!![0].odfConnection.optical_cable_number
+        tv_back_title.text = mDLList!![0].cableNo
 
-        tv_title.text = "纤芯信息"
+        tv_title.text = "电缆纤芯信息"
 
         img_back.setOnClickListener {
             activity?.supportFragmentManager?.popBackStack()
@@ -52,15 +56,8 @@ class DLConnectionFragment : BaseFragment(), FragmentBackHandler {
             return
         }
 
-        //GL链接图
-        val txAdapter = GLConnectionListItemRecyclerAdapter(activity!!, mGLList!!, object : GLConnectionListItemRecyclerAdapter.AddOnClickListener {
-            override fun onItemClick(item: GLConnectionBean) {
-                activity?.supportFragmentManager?.beginTransaction()?.
-                        add(R.id.content_frame, ConnectionFragment.newInstance(mPath!!, null, item, null))?.
-                        addToBackStack("ConnectionFragment")?.
-                        commit()
-            }
-        })
+        //DL链接图
+        val txAdapter = DLConnectionListItemRecyclerAdapter(activity!!, mDLList!!)
 
         rv_gl_connection.run {
             layoutManager = LinearLayoutManager(activity)
@@ -73,7 +70,7 @@ class DLConnectionFragment : BaseFragment(), FragmentBackHandler {
 
     companion object {
 
-        fun newInstance(param1: String, param2: ArrayList<GLConnectionBean>): DLConnectionFragment {
+        fun newInstance(param1: String, param2: ArrayList<DLConnectionBean>): DLConnectionFragment {
             val fragment = DLConnectionFragment()
             val args = Bundle()
             args.putString(AllSubStation.PARAM_1, param1)

@@ -33,7 +33,7 @@ class WLConnectionFragment : BaseFragment(), FragmentBackHandler {
     override fun initView() {
         tv_back_title.text = mWLConnectionList!![0].wlTailFiber.tail_cable_number
 
-        tv_title.text = "纤芯信息"
+        tv_title.text = "尾缆纤芯信息"
 
         img_back.setOnClickListener {
             activity?.supportFragmentManager?.popBackStack()

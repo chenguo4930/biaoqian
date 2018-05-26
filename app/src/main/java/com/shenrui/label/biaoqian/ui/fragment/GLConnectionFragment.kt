@@ -33,7 +33,7 @@ class GLConnectionFragment : BaseFragment(), FragmentBackHandler {
     override fun initView() {
         tv_back_title.text = mGLList!![0].odfConnection.optical_cable_number
 
-        tv_title.text = "纤芯信息"
+        tv_title.text = "光缆纤芯信息"
 
         img_back.setOnClickListener {
             activity?.supportFragmentManager?.popBackStack()

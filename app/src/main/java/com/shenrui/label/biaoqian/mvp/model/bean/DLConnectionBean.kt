@@ -19,4 +19,45 @@ data class DLConnectionBean(val fromPanelName: String,
                             val toSignal: String,
                             val toPortNo: String,
                             val toBoardNo: String,
-                            val cableCoreNo: Int)
+                            val cableNo: String,
+                            val cableCoreNo: Int) : Parcelable {
+    constructor(source: Parcel) : this(
+            source.readString(),
+            source.readString(),
+            source.readString(),
+            source.readString(),
+            source.readString(),
+            source.readString(),
+            source.readString(),
+            source.readString(),
+            source.readString(),
+            source.readString(),
+            source.readString(),
+            source.readInt()
+    )
+
+    override fun describeContents() = 0
+
+    override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
+        writeString(fromPanelName)
+        writeString(fromDeviceName)
+        writeString(fromSignal)
+        writeString(fromPortNo)
+        writeString(fromBoardNo)
+        writeString(toPanelName)
+        writeString(toDeviceName)
+        writeString(toSignal)
+        writeString(toPortNo)
+        writeString(toBoardNo)
+        writeString(cableNo)
+        writeInt(cableCoreNo)
+    }
+
+    companion object {
+        @JvmField
+        val CREATOR: Parcelable.Creator<DLConnectionBean> = object : Parcelable.Creator<DLConnectionBean> {
+            override fun createFromParcel(source: Parcel): DLConnectionBean = DLConnectionBean(source)
+            override fun newArray(size: Int): Array<DLConnectionBean?> = arrayOfNulls(size)
+        }
+    }
+}

@@ -473,7 +473,7 @@ class DataBaseUtil {
          */
         fun getTerminalPort(dbPath: String): ArrayList<TerminalPort> {
             val database = SQLiteDatabase.openOrCreateDatabase(dbPath, null)
-            val cursor = database.query("TerminalPort", null, null, null,
+            val cursor = database.query("terminalPort", null, null, null,
                     null, null, null)
             val terminalPortList = ArrayList<TerminalPort>()
             while (cursor.moveToNext()) {
