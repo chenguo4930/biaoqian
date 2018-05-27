@@ -16,6 +16,7 @@ import com.shenrui.label.biaoqian.constrant.AllSubStation.Companion.subStation
 import com.shenrui.label.biaoqian.extension.logE
 import com.shenrui.label.biaoqian.mvp.base.BaseActivity
 import com.shenrui.label.biaoqian.mvp.contract.BiaoQianContract
+import com.shenrui.label.biaoqian.mvp.model.bean.DLConnectionBean
 import com.shenrui.label.biaoqian.mvp.model.bean.GLConnectionBean
 import com.shenrui.label.biaoqian.mvp.model.bean.TXConnectionBean
 import com.shenrui.label.biaoqian.mvp.model.bean.WLConnectionBean
@@ -33,6 +34,7 @@ import kotlinx.android.synthetic.main.activity_biao_qian.*
 import me.weyye.hipermission.HiPermission
 import me.weyye.hipermission.PermissionCallback
 import me.weyye.hipermission.PermissionItem
+import org.jetbrains.anko.support.v4.toast
 import org.jetbrains.anko.toast
 
 
@@ -271,6 +273,10 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
                     val txName = txValue[1] + "-" + txValue[2]
                     searchTXXXData(txName, panelId)
                 }
+            } else {
+                //如果是电缆
+                val dlName = ""
+                searchDLData(dlName, panelId)
             }
         } else {
             toast("二维码数据格式有误")
@@ -708,7 +714,7 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
             it.onComplete()
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : Observer<WLConnectionBean>{
+                .subscribe(object : Observer<WLConnectionBean> {
                     override fun onSubscribe(d: Disposable) {
                     }
 
@@ -1098,6 +1104,80 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
                     }
                 })
 
+    }
+
+    /**
+     * 获取电缆链接数据
+     */
+    private fun searchDLData(dlName: String, panelId: Int) {
+        val progressDialog = ProgressDialog.show(this, null, "正在查询数据...", false, false)
+        progressDialog.show()
+
+        Observable.create(ObservableOnSubscribe<ArrayList<DLConnectionBean>> {
+            //得到数据库中所有的屏柜
+            val panelDataList = DataBaseUtil.getPanel(mDbPath!!)
+            val dLConnectionList = ArrayList<DLConnectionBean>()
+
+            //解析电缆数据-------------------------start-----------------------
+            val terminalPortDataList = DataBaseUtil.getTerminalPort(mDbPath!!).filter { it.cable_no != "" }
+            val terminalPortList = terminalPortDataList.filter { it.panel_id == panelId }
+            terminalPortList.forEach { item ->
+                val terminalToBean = terminalPortDataList.filter { it.id == item.external_terminal_port_id }
+                if (terminalToBean.isEmpty()) {
+                    return@forEach
+                }
+                val fromPanel = panelDataList.filter { it.panel_id == item.panel_id }
+                val toPanel = panelDataList.filter { it.panel_id == terminalToBean[0].panel_id }
+                val fromDevice = DataBaseUtil.getDeviceByPanelByDeviceId(mDbPath!!, fromPanel[0].panel_id, item.internal_device_id)
+                val toDevice = DataBaseUtil.getDeviceByPanelByDeviceId(mDbPath!!, toPanel[0].panel_id, terminalToBean[0].internal_device_id)
+                val fromPortType = if (item.internal_port_type == 0) "Rx" else "Tx"
+                val toPortType = if (terminalToBean[0].internal_port_type == 0) "Rx" else "Tx"
+
+                dLConnectionList.add(DLConnectionBean(
+                        fromPanel[0].panel_name,
+                        fromDevice[0].device_desc,
+                        item.internal_signal_description,
+                        item.internal_device_port + "/" + fromPortType,
+                        item.port_no.toString() + "-" + item.cable_no,
+                        toPanel[0].panel_name,
+                        toDevice[0].device_desc,
+                        terminalToBean[0].internal_signal_description,
+                        terminalToBean[0].internal_device_port + "/" + toPortType,
+                        terminalToBean[0].port_no.toString() + "-" + terminalToBean[0].cable_no,
+                        item.cable_no,
+                        item.cable_core_no))
+            }
+
+            //解析电缆数据-------------------------end-----------------------
+            logE("---------电缆-odfDataList.size() = ${dLConnectionList.size}-")
+            val dlList = dLConnectionList.filter { it.cableNo == dlName } as ArrayList<DLConnectionBean>
+            logE("---------电缆-odfDataList.size() = ${dLConnectionList.size}-")
+            it.onNext(dlList)
+            it.onComplete()
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(object : Observer<ArrayList<DLConnectionBean>> {
+
+                    override fun onSubscribe(d: Disposable) {
+                    }
+
+                    override fun onComplete() {
+                        progressDialog.dismiss()
+
+                    }
+
+                    override fun onError(e: Throwable) {
+                        toast("读取数据库失败，请检查数据库是否存在")
+                        progressDialog.dismiss()
+                    }
+
+                    override fun onNext(dataList: ArrayList<DLConnectionBean>) {
+                        supportFragmentManager?.beginTransaction()
+                                ?.add(R.id.content_frame, DLConnectionFragment.newInstance(mDbPath!!, dataList))
+                                ?.addToBackStack("DLConnectionFragment")
+                                ?.commit()
+                    }
+                })
     }
 
     override fun onBackPressed() {
