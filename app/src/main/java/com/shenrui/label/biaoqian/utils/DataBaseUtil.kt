@@ -497,5 +497,41 @@ class DataBaseUtil {
             cursor.close()
             return terminalPortList
         }
+
+        /**
+         * 判断是否存在在电缆表中
+         */
+        fun searchTerminalPort(dbPath: String, dlName: String): Boolean {
+            val database = SQLiteDatabase.openOrCreateDatabase(dbPath, null)
+            val cursor = database.query("terminalport", null, "cable_no == ?", arrayOf(dlName),
+                    null, null, null)
+            val isExist = cursor.count != 0
+            cursor.close()
+            return isExist
+        }
+
+        /**
+         *判断是否存在在尾缆表中
+         */
+        fun searchTailFiber(dbPath: String, wlName: String): Boolean {
+            val database = SQLiteDatabase.openOrCreateDatabase(dbPath, null)
+            val cursor = database.query("TailFiber", null, "tail_cable_number == ?", arrayOf(wlName),
+                    null, null, null)
+            val isExist = cursor.count != 0
+            cursor.close()
+            return isExist
+        }
+
+        /**
+         * 判断是否存在在光缆表中
+         */
+        fun searchODFConnection(dbPath: String, glName: String): Boolean {
+            val database = SQLiteDatabase.openOrCreateDatabase(dbPath, null)
+            val cursor = database.query("ODFConnection", null, "optical_cable_number == ?", arrayOf(glName),
+                    null, null, null)
+            val isExist = cursor.count != 0
+            cursor.close()
+            return isExist
+        }
     }
 }

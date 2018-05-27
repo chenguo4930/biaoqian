@@ -187,7 +187,7 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
 
     /**
      * 解析扫描二维码的结果
-     * result ：光缆和尾缆二维码结构 ： JSNJ22TSB/GL1101/2N
+     * result ：光缆和尾缆,电缆二维码结构 ： JSNJ22TSB/GL1101/2N
      * result ：尾缆的纤芯二维码结构 ： JSNJ22TSB/WL1101-2/2N/3n/10/BTx
      * result ：跳纤缆二维码结构 ：     JSNJ22TSB/2N-TX-01/2N/3n/7/ATx
      */
@@ -249,18 +249,25 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
             val panelId = panelList[0].panel_id
 
             if (resultArray.size == 3) {
-                //解析长度为3说明是光缆和尾缆的二维码   JSNJ22TSB/GL1101/2N
+                //解析长度为3说明是光缆和尾缆,电缆的二维码   JSNJ22TSB/GL1101/2N
                 when {
-                    resultArray[1].startsWith("WL") -> //如果是尾缆
+//                    resultArray[1].startsWith("WL") -> //如果是尾缆
+//                        searchWLData(resultArray[1], panelId)
+//                    resultArray[1].startsWith("GL") -> //如果是光缆
+//                        searchGLData(resultArray[1], panelId)
+//                    resultArray[1].startsWith("DL") -> { //如果是电缆
+//                        searchDLData(resultArray[1], panelId)
+//                    }
+                    DataBaseUtil.searchTailFiber(mDbPath!!, resultArray[1]) -> //如果是尾缆
                         searchWLData(resultArray[1], panelId)
-                    resultArray[1].startsWith("GL") -> //如果是光缆
+                    DataBaseUtil.searchODFConnection(mDbPath!!, resultArray[1]) -> //如果是光缆
                         searchGLData(resultArray[1], panelId)
-                    resultArray[1].startsWith("DL") -> { //如果是电缆
+                    DataBaseUtil.searchTerminalPort(mDbPath!!, resultArray[1]) -> { //如果是电缆
                         searchDLData(resultArray[1], panelId)
                     }
                 }
             } else if (resultArray.size == 6) {
-                if (resultArray[1].startsWith("WL")) {
+                if (resultArray[1].contains("-Tx-").not()) {
                     //解析长度为6说明是尾缆的纤芯和跳纤二维码  JSNJ22TSB/WL1101-2/2N/3n/10/BTx
                     // 二维码详情： No:WL1101-2  From: 2N/3n/10/BTx To:3N/4-2n/10/BRx
                     searchWLXXData(resultArray[1], panelId)
