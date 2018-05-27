@@ -27,9 +27,9 @@
             android:background="@drawable/icon_home_input_nor" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/tv_file_path"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/white" />
+    <!--<TextView-->
+        <!--android:id="@+id/tv_file_path"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:textColor="@color/white" />-->
 </LinearLayout>

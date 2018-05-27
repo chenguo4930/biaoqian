@@ -131,7 +131,7 @@ class MainActivity : AppCompatActivity() {
             var path: String? = null
             if ("file".equals(uri.scheme, ignoreCase = true)) {//使用第三方应用打开
                 path = uri.path
-                tv_file_path.text = path
+//                tv_file_path.text = path
                 Toast.makeText(this, path + "11111", Toast.LENGTH_SHORT).show()
                 return
             }
@@ -140,7 +140,7 @@ class MainActivity : AppCompatActivity() {
             } else {//4.4以下下系统调用方法
                 getRealPathFromURI(uri)
             }
-            tv_file_path.text = path
+//            tv_file_path.text = path
             if (path == null) {
                 toast("没有找到文件路劲")
                 return

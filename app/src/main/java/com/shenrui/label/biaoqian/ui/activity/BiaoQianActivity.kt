@@ -250,12 +250,14 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
 
             if (resultArray.size == 3) {
                 //解析长度为3说明是光缆和尾缆的二维码   JSNJ22TSB/GL1101/2N
-                if (resultArray[1].startsWith("WL")) {
-                    //如果是尾缆
-                    searchWLData(resultArray[1], panelId)
-                } else if (resultArray[1].startsWith("GL")) {
-                    //如果是光缆
-                    searchGLData(resultArray[1], panelId)
+                when {
+                    resultArray[1].startsWith("WL") -> //如果是尾缆
+                        searchWLData(resultArray[1], panelId)
+                    resultArray[1].startsWith("GL") -> //如果是光缆
+                        searchGLData(resultArray[1], panelId)
+                    resultArray[1].startsWith("DL") -> { //如果是电缆
+                        searchDLData(resultArray[1], panelId)
+                    }
                 }
             } else if (resultArray.size == 6) {
                 if (resultArray[1].startsWith("WL")) {
@@ -273,10 +275,6 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
                     val txName = txValue[1] + "-" + txValue[2]
                     searchTXXXData(txName, panelId)
                 }
-            } else {
-                //如果是电缆
-                val dlName = ""
-                searchDLData(dlName, panelId)
             }
         } else {
             toast("二维码数据格式有误")
@@ -1149,9 +1147,9 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
             }
 
             //解析电缆数据-------------------------end-----------------------
-            logE("---------电缆-odfDataList.size() = ${dLConnectionList.size}-")
+            logE("---------电缆-dLConnectionList.size() = ${dLConnectionList.size}-")
             val dlList = dLConnectionList.filter { it.cableNo == dlName } as ArrayList<DLConnectionBean>
-            logE("---------电缆-odfDataList.size() = ${dLConnectionList.size}-")
+            logE("---------电缆-dlList.size() = ${dlList.size}-")
             it.onNext(dlList)
             it.onComplete()
         }).subscribeOn(Schedulers.io())
