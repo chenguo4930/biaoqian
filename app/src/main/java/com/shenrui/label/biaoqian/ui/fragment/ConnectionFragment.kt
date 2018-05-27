@@ -19,13 +19,15 @@ import com.shenrui.label.biaoqian.mvp.model.bean.WLConnectionBean
 import com.shenrui.label.biaoqian.ui.adapter.ConnectionListItemRecyclerAdapter
 import com.shenrui.label.biaoqian.utils.DataBaseUtil
 import com.shenrui.label.biaoqian.utils.Util
+import io.reactivex.Observable
+import io.reactivex.ObservableOnSubscribe
+import io.reactivex.Observer
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_gx_connection.*
 import kotlinx.android.synthetic.main.title_layout.*
 import org.jetbrains.anko.support.v4.toast
-import rx.Observable
-import rx.Subscriber
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 
 /**
  * 纤芯点击后，显示设备间具体的连接信息
@@ -131,7 +133,7 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
     }
 
     private fun initData() {
-        Observable.create(Observable.OnSubscribe<String> {
+        Observable.create(ObservableOnSubscribe<String> {
 
             mConnectionList.clear()
             //--------------------尾缆连线点击进来-----start----------------------
@@ -262,11 +264,15 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
             }
             //--------------------跳纤连线点击进来-----end----------------------
 
-            it.onCompleted()
-        }).subscribeOn(Schedulers.io())
+            it.onComplete()
+        })
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : Subscriber<String>() {
-                    override fun onCompleted() {
+                .subscribe(object : Observer<String> {
+                    override fun onSubscribe(d: Disposable) {
+                    }
+
+                    override fun onComplete() {
 //                        toast("成功读取数据库")
                         initRecycler()
                     }

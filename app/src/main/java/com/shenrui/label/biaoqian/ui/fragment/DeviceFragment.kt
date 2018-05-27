@@ -14,13 +14,15 @@ import com.shenrui.label.biaoqian.mvp.model.bean.PanelBean
 import com.shenrui.label.biaoqian.mvp.model.bean.RegionBean
 import com.shenrui.label.biaoqian.ui.adapter.PanelGridAdapter
 import com.shenrui.label.biaoqian.utils.DataBaseUtil
+import io.reactivex.*
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.annotations.NonNull
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_device.*
 import kotlinx.android.synthetic.main.title_layout.*
 import org.jetbrains.anko.support.v4.toast
-import rx.Observable
-import rx.Subscriber
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
+import org.reactivestreams.Subscriber
 
 /**
  * 设备的fragment
@@ -63,7 +65,8 @@ class DeviceFragment : BaseFragment(), FragmentBackHandler {
     }
 
     private fun initData() {
-        Observable.create(Observable.OnSubscribe<ArrayList<PanelBean>> {
+
+        Observable.create(ObservableOnSubscribe<ArrayList<PanelBean>> {
             val deviceList = DataBaseUtil.getDevice(mDbPath!!)
             val switchList = DataBaseUtil.getSwitch(mDbPath!!)
             val panelList = ArrayList<PanelBean>()
@@ -86,11 +89,15 @@ class DeviceFragment : BaseFragment(), FragmentBackHandler {
                                 item.region_id, deviceBeanList, switchBeanList))
             }
             it.onNext(panelList)
-            it.onCompleted()
-        }).subscribeOn(Schedulers.io())
+            it.onComplete()
+        })
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : Subscriber<ArrayList<PanelBean>>() {
-                    override fun onCompleted() {
+                .subscribe(object : Observer<ArrayList<PanelBean>> {
+                    override fun onSubscribe(d: Disposable) {
+                    }
+
+                    override fun onComplete() {
 //                        toast("成功读取数据库")
                     }
 

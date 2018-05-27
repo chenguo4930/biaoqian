@@ -12,13 +12,15 @@ import com.shenrui.label.biaoqian.mvp.base.BaseFragment
 import com.shenrui.label.biaoqian.mvp.model.bean.RegionBean
 import com.shenrui.label.biaoqian.ui.adapter.RegionListAdapter
 import com.shenrui.label.biaoqian.utils.DataBaseUtil
+import io.reactivex.Observable
+import io.reactivex.ObservableOnSubscribe
+import io.reactivex.Observer
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_test.*
 import kotlinx.android.synthetic.main.title_layout.*
 import org.jetbrains.anko.support.v4.toast
-import rx.Observable
-import rx.Subscriber
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 
 
 class TestFragment : BaseFragment(), FragmentBackHandler {
@@ -68,7 +70,7 @@ class TestFragment : BaseFragment(), FragmentBackHandler {
     }
 
     private fun initData() {
-        Observable.create(Observable.OnSubscribe<ArrayList<RegionBean>> {
+        Observable.create(ObservableOnSubscribe<ArrayList<RegionBean>> {
             val regionList = DataBaseUtil.getRegioin(mDbPath!!)
             val panelList = DataBaseUtil.getPanel(mDbPath!!)
             val regionBeanList = ArrayList<RegionBean>()
@@ -82,12 +84,15 @@ class TestFragment : BaseFragment(), FragmentBackHandler {
                 regionBeanList.add(RegionBean(item.region_id, item.region_name, item.region_code, panelBeanList))
             }
             it.onNext(regionBeanList)
-            it.onCompleted()
-        }).subscribeOn(Schedulers.io())
+            it.onComplete()
+        })
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : Subscriber<ArrayList<RegionBean>>() {
-                    override fun onCompleted() {
+                .subscribe(object : Observer<ArrayList<RegionBean>> {
+                    override fun onComplete() {
+                    }
 
+                    override fun onSubscribe(d: Disposable) {
                     }
 
                     override fun onError(e: Throwable) {

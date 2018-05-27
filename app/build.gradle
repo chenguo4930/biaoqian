@@ -58,19 +58,19 @@ dependencies {
     implementation 'com.android.support:recyclerview-v7:27.1.1'
     implementation 'com.google.code.gson:gson:2.8.2'
     //rxJava+rxAndroid+网络
-    implementation 'io.reactivex.rxjava2:rxjava:2.1.7'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.14'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
     implementation 'com.squareup.retrofit2:retrofit:2.3.0'
     //glide
     implementation 'com.github.bumptech.glide:glide:4.6.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.6.1'
     //rxBus
     implementation 'com.hwangjr.rxbus:rxbus:1.0.6'
-    //权限
-    implementation 'me.weyye.hipermission:library:1.0.7'
     //ZXing扫描二维码 lib
     implementation project(':libzxing')
     //fragment返回监听
     implementation 'com.github.ikidou:FragmentBackHandler:2.1'
     implementation project(':baselib')
+    //权限
+    implementation project(':library')
 }

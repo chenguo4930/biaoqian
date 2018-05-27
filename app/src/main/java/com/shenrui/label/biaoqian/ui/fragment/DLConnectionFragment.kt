@@ -9,9 +9,7 @@ import com.shenrui.label.biaoqian.R
 import com.shenrui.label.biaoqian.constrant.AllSubStation
 import com.shenrui.label.biaoqian.mvp.base.BaseFragment
 import com.shenrui.label.biaoqian.mvp.model.bean.DLConnectionBean
-import com.shenrui.label.biaoqian.mvp.model.bean.GLConnectionBean
 import com.shenrui.label.biaoqian.ui.adapter.DLConnectionListItemRecyclerAdapter
-import com.shenrui.label.biaoqian.ui.adapter.GLConnectionListItemRecyclerAdapter
 import kotlinx.android.synthetic.main.fragment_gl_connection.*
 import kotlinx.android.synthetic.main.title_layout.*
 

@@ -21,20 +21,27 @@ import com.shenrui.label.biaoqian.ui.adapter.PanelGLConnectionListItemRecyclerAd
 import com.shenrui.label.biaoqian.ui.adapter.PanelTXConnectionListItemRecyclerAdapter
 import com.shenrui.label.biaoqian.ui.adapter.PanelWLConnectionListItemRecyclerAdapter
 import com.shenrui.label.biaoqian.utils.DataBaseUtil
+import com.shenrui.label.biaoqian.utils.Util
+import io.reactivex.Observable
+import io.reactivex.ObservableOnSubscribe
+import io.reactivex.Observer
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_panel.*
 import kotlinx.android.synthetic.main.title_layout.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
 import org.jetbrains.anko.support.v4.toast
-import rx.Observable
-import rx.Subscriber
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
+import kotlin.math.max
 
 
 class PanelFragment : BaseFragment(), FragmentBackHandler {
 
     private var mPath: String? = null
     private var mPanelBean: PanelBean? = null
+    private var mWLAdapterSize = 0
+    private var mGLAdapterSize = 0
+    private var mDLAdapterSize = 0
 
     private val mWLConnectionList: ArrayList<WLConnectionBean> by lazy {
         ArrayList<WLConnectionBean>()
@@ -86,30 +93,32 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
     }
 
     /**
-     * 显示尾缆 光缆的连接图
+     * 显示电缆的连接图
      */
     private fun hintWLLayout() {
         cv_tx_connect_layout.visibility = View.GONE
         rv_panel_wl.visibility = View.INVISIBLE
         rv_panel_gl.visibility = View.GONE
         rv_panel_dl.visibility = View.VISIBLE
+        setDLPanelHeight()
     }
 
     /**
-     * 显示电缆的连接图
+     * 显示尾缆 光缆的连接图
      */
     private fun hintDLLayout() {
         cv_tx_connect_layout.visibility = View.VISIBLE
         rv_panel_wl.visibility = View.VISIBLE
         rv_panel_gl.visibility = View.VISIBLE
         rv_panel_dl.visibility = View.GONE
+        setWLGLPanelHeight()
     }
 
     override fun lazyLoad() {
         val progressDialog = ProgressDialog.show(activity, null, "正在查询数据...", false, false)
         progressDialog.show()
 
-        Observable.create(Observable.OnSubscribe<ArrayList<TXConnectionBean>> {
+        Observable.create(ObservableOnSubscribe<String> {
             //得到数据库中所有的屏柜
             val panelDataList = DataBaseUtil.getPanel(mPath!!)
             //获取所有尾缆
@@ -497,12 +506,17 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
             }
 
             //解析电缆数据-------------------------end-----------------------
-            it.onCompleted()
+            it.onComplete()
 
-        }).subscribeOn(Schedulers.io())
+        })
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : Subscriber<ArrayList<TXConnectionBean>>() {
-                    override fun onCompleted() {
+                .subscribe(object : Observer<String> {
+
+                    override fun onSubscribe(d: Disposable) {
+                    }
+
+                    override fun onComplete() {
 //                        toast("成功读取数据库")
                         progressDialog.dismiss()
                         initRecycleView()
@@ -513,7 +527,7 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
                         progressDialog.dismiss()
                     }
 
-                    override fun onNext(dataList: ArrayList<TXConnectionBean>) {
+                    override fun onNext(dataList:String) {
 
                     }
                 })
@@ -539,6 +553,7 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
             }
             wlConnectionList.add(it)
         }
+        mWLAdapterSize = wlConnectionList.size
         val wlAdapter = PanelWLConnectionListItemRecyclerAdapter(activity!!, wlConnectionList,
                 object : PanelWLConnectionListItemRecyclerAdapter.WLConnectionClickListener {
                     override fun onWLConnectionItemClick(item: WLConnectionBean) {
@@ -568,6 +583,7 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
             }
             glConnectionList.add(it)
         }
+        mGLAdapterSize = glConnectionList.size
         val glAdapter = PanelGLConnectionListItemRecyclerAdapter(activity!!, glConnectionList,
                 object : PanelGLConnectionListItemRecyclerAdapter.GLConnectionClickListener {
                     override fun onGLConnectionItemClick(item: GLConnectionBean) {
@@ -611,7 +627,7 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
             }
             dlConnectionList.add(it)
         }
-
+        mDLAdapterSize = dlConnectionList.size
         val dlAdapter = PanelDLConnectionListItemRecyclerAdapter(activity!!, dlConnectionList,
                 object : PanelDLConnectionListItemRecyclerAdapter.DLConnectionClickListener {
                     override fun onDLConnectionItemClick(item: DLConnectionBean) {
@@ -626,6 +642,39 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
         rv_panel_dl.run {
             layoutManager = LinearLayoutManager(activity)
             adapter = dlAdapter
+        }
+
+        setWLGLPanelHeight()
+    }
+
+    /**
+     * 当光缆和尾缆其中某个数据长度大于了4条，就动态增加中间屏屏柜的高度
+     */
+    private fun setWLGLPanelHeight() {
+        val maxSizeWLGL = max(mWLAdapterSize, mGLAdapterSize)
+        if (maxSizeWLGL > 4) {
+            cv_panel_name.apply {
+                layoutParams.height = Util.dip2px(activity!!, 50 * maxSizeWLGL)
+            }
+        } else {
+            cv_panel_name.apply {
+                layoutParams.height = Util.dip2px(activity!!, 200)
+            }
+        }
+    }
+
+    /**
+     * 当电缆其中某个数据长度大于了4条，就动态增加中间屏屏柜的高度
+     */
+    private fun setDLPanelHeight() {
+        if (mDLAdapterSize > 4) {
+            cv_panel_name.apply {
+                layoutParams.height = Util.dip2px(activity!!, 50 * mDLAdapterSize)
+            }
+        } else {
+            cv_panel_name.apply {
+                layoutParams.height = Util.dip2px(activity!!, 200)
+            }
         }
     }
 

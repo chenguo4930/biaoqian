@@ -6,33 +6,34 @@ import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.ProgressBar
 import com.github.ikidou.fragmentBackHandler.BackHandlerHelper
-import com.luckongo.tthd.mvp.model.bean.*
+import com.luckongo.tthd.mvp.model.bean.DeviceConnection
+import com.luckongo.tthd.mvp.model.bean.ODF
+import com.luckongo.tthd.mvp.model.bean.ODFConnection
+import com.luckongo.tthd.mvp.model.bean.SwitchConnection
 import com.shenrui.label.biaoqian.R
-import com.shenrui.label.biaoqian.R.id.*
-import com.shenrui.label.biaoqian.constrant.AllSubStation
 import com.shenrui.label.biaoqian.constrant.AllSubStation.Companion.subStation
 import com.shenrui.label.biaoqian.extension.logE
 import com.shenrui.label.biaoqian.mvp.base.BaseActivity
 import com.shenrui.label.biaoqian.mvp.contract.BiaoQianContract
 import com.shenrui.label.biaoqian.mvp.model.bean.GLConnectionBean
-import com.shenrui.label.biaoqian.mvp.model.bean.PanelBean
 import com.shenrui.label.biaoqian.mvp.model.bean.TXConnectionBean
 import com.shenrui.label.biaoqian.mvp.model.bean.WLConnectionBean
 import com.shenrui.label.biaoqian.mvp.presenter.BiaoQianPresenter
 import com.shenrui.label.biaoqian.ui.fragment.*
 import com.shenrui.label.biaoqian.utils.DataBaseUtil
 import com.xys.libzxing.zxing.activity.CaptureActivity
+import io.reactivex.Observable
+import io.reactivex.ObservableOnSubscribe
+import io.reactivex.Observer
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_biao_qian.*
 import me.weyye.hipermission.HiPermission
 import me.weyye.hipermission.PermissionCallback
 import me.weyye.hipermission.PermissionItem
 import org.jetbrains.anko.toast
-import rx.Observable
-import rx.Subscriber
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 
 
 class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
@@ -284,7 +285,7 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
         val progressDialog = ProgressDialog.show(this, null, "正在查询数据...", false, false)
         progressDialog.show()
 
-        Observable.create(Observable.OnSubscribe<TXConnectionBean> {
+        Observable.create(ObservableOnSubscribe<TXConnectionBean> {
             //该屏柜的所有跳纤连接集合
             val txConnectionList = ArrayList<TXConnectionBean>()
 
@@ -475,11 +476,14 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
 //            item.wlTailFiber.tail_fiber_number.toString()
 
             it.onNext(txList[0])
-            it.onCompleted()
+            it.onComplete()
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : Subscriber<TXConnectionBean>() {
-                    override fun onCompleted() {
+                .subscribe(object : Observer<TXConnectionBean> {
+                    override fun onSubscribe(d: Disposable) {
+                    }
+
+                    override fun onComplete() {
 //                        toast("成功读取数据库")
                         progressDialog.dismiss()
                     }
@@ -507,7 +511,7 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
         val progressDialog = ProgressDialog.show(this, null, "正在查询数据...", false, false)
         progressDialog.show()
 
-        Observable.create(Observable.OnSubscribe<WLConnectionBean> {
+        Observable.create(ObservableOnSubscribe<WLConnectionBean> {
             //该屏柜的所有尾缆连接集合
             val wlConnectionList = ArrayList<WLConnectionBean>()
 
@@ -693,7 +697,7 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
                 logE("-----------------connectionNameArray.is = $it-----")
             }
             if (connectionNameArray.size != 2) {
-                it.onError(null)
+                it.onError(Exception())
             }
 
             val wlList = wlConnectionList.filter {
@@ -701,11 +705,14 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
             }
             logE("---------尾缆的纤芯数据-wlList[0] = ${wlList[0]}-")
             it.onNext(wlList[0])
-            it.onCompleted()
+            it.onComplete()
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : Subscriber<WLConnectionBean>() {
-                    override fun onCompleted() {
+                .subscribe(object : Observer<WLConnectionBean>{
+                    override fun onSubscribe(d: Disposable) {
+                    }
+
+                    override fun onComplete() {
 //                        toast("成功读取数据库")
                         progressDialog.dismiss()
                     }
@@ -731,7 +738,7 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
         val progressDialog = ProgressDialog.show(this, null, "正在查询数据...", false, false)
         progressDialog.show()
 
-        Observable.create(Observable.OnSubscribe<ArrayList<WLConnectionBean>> {
+        Observable.create(ObservableOnSubscribe<ArrayList<WLConnectionBean>> {
             //该屏柜的所有尾缆连接集合
             val wlConnectionList = ArrayList<WLConnectionBean>()
 
@@ -917,11 +924,14 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
             }
             logE("---------尾缆-wlList.size() = ${wlList.size}-")
             it.onNext(wlList as ArrayList<WLConnectionBean>)
-            it.onCompleted()
+            it.onComplete()
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : Subscriber<ArrayList<WLConnectionBean>>() {
-                    override fun onCompleted() {
+                .subscribe(object : Observer<ArrayList<WLConnectionBean>> {
+                    override fun onSubscribe(d: Disposable) {
+                    }
+
+                    override fun onComplete() {
 //                        toast("成功读取数据库")
                         progressDialog.dismiss()
                     }
@@ -947,7 +957,7 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
         val progressDialog = ProgressDialog.show(this, null, "正在查询数据...", false, false)
         progressDialog.show()
 
-        Observable.create(Observable.OnSubscribe<ArrayList<GLConnectionBean>> {
+        Observable.create(ObservableOnSubscribe<ArrayList<GLConnectionBean>> {
 
             //得到数据库中所有的屏柜
             val panelDataList = DataBaseUtil.getPanel(mDbPath!!)
@@ -1064,11 +1074,14 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
             val glList = gLConnectionList.filter { it.odfConnection.optical_cable_number == connectionName }
             logE("---------光缆-glList.size() = ${glList.size}-")
             it.onNext(glList as ArrayList<GLConnectionBean>)
-            it.onCompleted()
+            it.onComplete()
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : Subscriber<ArrayList<GLConnectionBean>>() {
-                    override fun onCompleted() {
+                .subscribe(object : Observer<ArrayList<GLConnectionBean>> {
+                    override fun onSubscribe(d: Disposable) {
+                    }
+
+                    override fun onComplete() {
                         progressDialog.dismiss()
                     }
 

@@ -24,6 +24,12 @@ import com.shenrui.label.biaoqian.database.BookSqliteOpenHelper
 import com.shenrui.label.biaoqian.database.SubStationDatabase
 import com.shenrui.label.biaoqian.database.SubStationTable
 import com.shenrui.label.biaoqian.utils.DataBaseUtil
+import io.reactivex.Observable
+import io.reactivex.ObservableOnSubscribe
+import io.reactivex.Observer
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import me.weyye.hipermission.HiPermission
 import me.weyye.hipermission.PermissionCallback
@@ -32,10 +38,6 @@ import org.jetbrains.anko.db.insert
 import org.jetbrains.anko.db.rowParser
 import org.jetbrains.anko.db.select
 import org.jetbrains.anko.toast
-import rx.Observable
-import rx.Subscriber
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -166,14 +168,17 @@ class MainActivity : AppCompatActivity() {
         val dbName = filePath.split("/").last()
         val helper = BookSqliteOpenHelper(this, filePath, dbName)
 
-        Observable.create(Observable.OnSubscribe<String> {
+        Observable.create(ObservableOnSubscribe<String> {
             val dbPath = helper.createDataBase()
             it.onNext(dbPath)
-            it.onCompleted()
+            it.onComplete()
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : Subscriber<String>() {
-                    override fun onCompleted() {
+                .subscribe(object : Observer<String> {
+                    override fun onSubscribe(d: Disposable) {
+                    }
+
+                    override fun onComplete() {
                         progressBar.dismiss()
                         toast("成功读取数据库")
                     }
