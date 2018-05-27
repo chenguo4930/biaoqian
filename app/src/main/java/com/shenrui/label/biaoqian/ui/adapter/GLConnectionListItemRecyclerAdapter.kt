@@ -40,7 +40,7 @@ class GLConnectionListItemRecyclerAdapter(private val context1: Context,
         holder.deviceOutTxTv.text = item.odfOutConnection.internal_optical_fiber_number
         holder.deviceOutPortTv.text = item.odfOutConnection.internal_device_port + "/" + outTxTypeStr
         holder.deviceOutTv.text = item.outDeviceName
-        holder.txDescTv.text = "暂无"
+        holder.txDescTv.text = if (item.odfConnection.description.isEmpty()) "暂无" else item.odfConnection.description
 
         holder.deviceConnectTv.setOnClickListener {
             listener?.onItemClick(item)

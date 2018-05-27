@@ -244,7 +244,7 @@ data class ODFConnection(val odf_id: Int, val optical_cable_number: String?, val
                          val optical_fiber_color: Int, val internal_device_type: Int,
                          val internal_device_id: Int, val internal_device_port: String?,
                          val internal_rt_type: Int, val internal_optical_fiber_number: String?,
-                         val external_odf_id: Int) : Parcelable {
+                         val external_odf_id: Int, val description: String) : Parcelable {
     constructor(source: Parcel) : this(
             source.readInt(),
             source.readString(),
@@ -255,7 +255,8 @@ data class ODFConnection(val odf_id: Int, val optical_cable_number: String?, val
             source.readString(),
             source.readInt(),
             source.readString(),
-            source.readInt()
+            source.readInt(),
+            source.readString()
     )
 
     override fun describeContents() = 0
@@ -271,6 +272,7 @@ data class ODFConnection(val odf_id: Int, val optical_cable_number: String?, val
         writeInt(internal_rt_type)
         writeString(internal_optical_fiber_number)
         writeInt(external_odf_id)
+        writeString(description)
     }
 
     companion object {
