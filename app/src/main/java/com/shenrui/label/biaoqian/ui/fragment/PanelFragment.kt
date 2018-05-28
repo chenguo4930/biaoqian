@@ -74,14 +74,14 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
         tv_panel_name.text = mPanelBean?.panel_name + "(" + mPanelBean?.panel_code + ")"
 
         tv_right.run {
-            text = "切换到电缆链接图"
+            text = "切换到电缆连接图"
             visibility = View.VISIBLE
             onClick {
-                if (text == "切换到电缆链接图") {
-                    text = "切换到尾缆、光缆、跳纤链接图"
+                if (text == "切换到电缆连接图") {
+                    text = "切换到尾缆、光缆、跳纤连接图"
                     hintWLLayout()
                 } else {
-                    text = "切换到电缆链接图"
+                    text = "切换到电缆连接图"
                     hintDLLayout()
                 }
             }

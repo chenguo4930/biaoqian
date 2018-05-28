@@ -190,6 +190,12 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
      * result ：光缆和尾缆,电缆二维码结构 ： JSNJ22TSB/GL1101/2N
      * result ：尾缆的纤芯二维码结构 ： JSNJ22TSB/WL1101-2/2N/3n/10/BTx
      * result ：跳纤缆二维码结构 ：     JSNJ22TSB/2N-TX-01/2N/3n/7/ATx
+     *
+     *  ---------- 下面为最新格式，上面的格式废弃了 ----------
+     *
+     * 光缆编号、尾缆编号、电缆编号：JSNT50RDB/GL2201/1A
+     * 尾缆纤芯编号：JSNT50RDB/WL2201-1/1A/1n/10/FTx
+     * 跳纤编号：JSNT50RDB/1A-TX-01/1n/10/ETx
      */
     private fun analysisResult(result: String?) {
         if (result == null) {
@@ -267,21 +273,20 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
                     }
                 }
             } else if (resultArray.size == 6) {
-                if (resultArray[1].contains("-Tx-").not()) {
-                    //解析长度为6说明是尾缆的纤芯和跳纤二维码  JSNJ22TSB/WL1101-2/2N/3n/10/BTx
-                    // 二维码详情： No:WL1101-2  From: 2N/3n/10/BTx To:3N/4-2n/10/BRx
-                    searchWLXXData(resultArray[1], panelId)
-                } else {
-                    //跳纤缆二维码结构 ：     JSNJ22TSB/2N-TX-01/2N/3n/7/ATx     TX-01
-                    // 二维码详情： No:2N-Tx-01  From: 3n/7/ATx  To:1n/1/1Rx
-                    val txValue = resultArray[1].split("-")
-                    if (txValue.size != 3) {
-                        toast("跳纤二维码的跳纤格式不正确，应为：2N-TX-01 这种格式")
-                        return
-                    }
-                    val txName = txValue[1] + "-" + txValue[2]
-                    searchTXXXData(txName, panelId)
+//                if (resultArray[1].contains("-TX-").not()) {
+                // 解析长度为6说明是尾缆的纤芯和跳纤二维码  JSNJ22TSB/WL1101-2/2N/3n/10/BTx
+                // 二维码详情： No:WL1101-2  From: 2N/3n/10/BTx To:3N/4-2n/10/BRx
+                searchWLXXData(resultArray[1], panelId)
+            } else if (resultArray.size == 5) {
+                // 跳纤缆二维码结构 ：     JSNT50RDB/1A-TX-01/1n/10/ETx     TX-01
+                // 二维码详情： No:2N-Tx-01  From: 3n/7/ATx  To:1n/1/1Rx
+                val txValue = resultArray[1].split("-")
+                if (txValue.size != 3) {
+                    toast("跳纤二维码的跳纤格式不正确，应为：2N-TX-01 这种格式")
+                    return
                 }
+                val txName = txValue[1] + "-" + txValue[2]
+                searchTXXXData(txName, panelId)
             }
         } else {
             toast("二维码数据格式有误")

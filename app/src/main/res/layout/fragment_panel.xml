@@ -37,7 +37,7 @@
                     android:gravity="center"
                     android:maxLength="30"
                     android:padding="5dp"
-                    android:text="拼柜连接图"
+                    android:text="屏柜连接图"
                     android:textColor="@color/color_station_text" />
 
                 <LinearLayout
