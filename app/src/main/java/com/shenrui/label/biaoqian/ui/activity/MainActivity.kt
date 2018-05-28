@@ -125,8 +125,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     @SuppressLint("ObsoleteSdkInt")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE) {
+            if (data == null){
+                return
+            }
             val uri = data.data
             var path: String? = null
             if ("file".equals(uri.scheme, ignoreCase = true)) {//使用第三方应用打开
