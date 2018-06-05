@@ -34,7 +34,6 @@ import kotlinx.android.synthetic.main.activity_biao_qian.*
 import me.weyye.hipermission.HiPermission
 import me.weyye.hipermission.PermissionCallback
 import me.weyye.hipermission.PermissionItem
-import org.jetbrains.anko.support.v4.toast
 import org.jetbrains.anko.toast
 
 
@@ -95,11 +94,6 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
         }
 
         scan_img.setOnClickListener {
-            //            if (mScanFragment == null){
-//                mScanFragment = ScanFragment()
-//            }
-//            supportFragmentManager.beginTransaction().replace(R.id.content_frame,mScanFragment).commit()
-//            setScanPressed()
             val permissionItems = ArrayList<PermissionItem>()
             permissionItems.add(PermissionItem(Manifest.permission.CAMERA, "开启摄像头", R.drawable.permission_ic_camera))
             HiPermission.create(this@BiaoQianActivity)
@@ -130,18 +124,18 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
      * 首页被点击
      */
     private fun setHomePressed() {
-        home_img.setImageDrawable(resources.getDrawable(R.mipmap.icon_homepage_pressed))
-        setting_img.setImageDrawable(resources.getDrawable(R.mipmap.icon_set_nor))
-        scan_img.setImageDrawable(resources.getDrawable(R.mipmap.icon_scan_nor))
+        home_img.setImageDrawable(resources.getDrawable(R.mipmap.icon_homepage_pressed, null))
+        setting_img.setImageDrawable(resources.getDrawable(R.mipmap.icon_set_nor, null))
+        scan_img.setImageDrawable(resources.getDrawable(R.mipmap.icon_scan_nor, null))
     }
 
     /**
      * 首页被点击
      */
     private fun setSettingPressed() {
-        home_img.setImageDrawable(resources.getDrawable(R.mipmap.icon_homepage_nor))
-        setting_img.setImageDrawable(resources.getDrawable(R.mipmap.icon_set_pressed))
-        scan_img.setImageDrawable(resources.getDrawable(R.mipmap.icon_scan_nor))
+        home_img.setImageDrawable(resources.getDrawable(R.mipmap.icon_homepage_nor, null))
+        setting_img.setImageDrawable(resources.getDrawable(R.mipmap.icon_set_pressed, null))
+        scan_img.setImageDrawable(resources.getDrawable(R.mipmap.icon_scan_nor, null))
         //关掉当前Activity，回到主页
         finish()
     }
@@ -150,9 +144,9 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
      * 首页被点击
      */
     private fun setScanPressed() {
-        home_img.setImageDrawable(resources.getDrawable(R.mipmap.icon_homepage_nor))
-        setting_img.setImageDrawable(resources.getDrawable(R.mipmap.icon_set_nor))
-        scan_img.setImageDrawable(resources.getDrawable(R.mipmap.icon_scan_pressed))
+        home_img.setImageDrawable(resources.getDrawable(R.mipmap.icon_homepage_nor, null))
+        setting_img.setImageDrawable(resources.getDrawable(R.mipmap.icon_set_nor, null))
+        scan_img.setImageDrawable(resources.getDrawable(R.mipmap.icon_scan_pressed, null))
     }
 
     /**
@@ -204,7 +198,7 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
         }
         val resultArray = result.split("/")
         if (resultArray.size == 3 || resultArray.size == 6) {
-            var subStationName: String = ""
+            var subStationName = ""
             //变电站电压等级编号表JSNJ22TSB 22后面的TSB是变电站的简称，要把它解析出来
             when {
                 resultArray[0].indexOf("75") != -1 -> {
@@ -254,39 +248,32 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
             logE("------------根据panel编号来查找panel=${panelList[0]}-------")
             val panelId = panelList[0].panel_id
 
-            if (resultArray.size == 3) {
-                //解析长度为3说明是光缆和尾缆,电缆的二维码   JSNJ22TSB/GL1101/2N
-                when {
-//                    resultArray[1].startsWith("WL") -> //如果是尾缆
-//                        searchWLData(resultArray[1], panelId)
-//                    resultArray[1].startsWith("GL") -> //如果是光缆
-//                        searchGLData(resultArray[1], panelId)
-//                    resultArray[1].startsWith("DL") -> { //如果是电缆
-//                        searchDLData(resultArray[1], panelId)
-//                    }
-                    DataBaseUtil.searchTailFiber(mDbPath!!, resultArray[1]) -> //如果是尾缆
-                        searchWLData(resultArray[1], panelId)
-                    DataBaseUtil.searchODFConnection(mDbPath!!, resultArray[1]) -> //如果是光缆
-                        searchGLData(resultArray[1], panelId)
-                    DataBaseUtil.searchTerminalPort(mDbPath!!, resultArray[1]) -> { //如果是电缆
-                        searchDLData(resultArray[1], panelId)
+            when (resultArray.size) {
+                3 -> //解析长度为3说明是光缆和尾缆,电缆的二维码   JSNJ22TSB/GL1101/2N
+                    when {
+                        DataBaseUtil.searchTailFiber(mDbPath!!, resultArray[1]) -> //如果是尾缆
+                            searchWLData(resultArray[1], panelId)
+                        DataBaseUtil.searchODFConnection(mDbPath!!, resultArray[1]) -> //如果是光缆
+                            searchGLData(resultArray[1], panelId)
+                        DataBaseUtil.searchTerminalPort(mDbPath!!, resultArray[1]) -> { //如果是电缆
+                            searchDLData(resultArray[1], panelId)
+                        }
                     }
+                6 -> //                if (resultArray[1].contains("-TX-").not()) {
+                    // 解析长度为6说明是尾缆的纤芯和跳纤二维码  JSNJ22TSB/WL1101-2/2N/3n/10/BTx
+                    // 二维码详情： No:WL1101-2  From: 2N/3n/10/BTx To:3N/4-2n/10/BRx
+                    searchWLXXData(resultArray[1], panelId)
+                5 -> {
+                    // 跳纤缆二维码结构 ：     JSNT50RDB/1A-TX-01/1n/10/ETx     TX-01
+                    // 二维码详情： No:2N-Tx-01  From: 3n/7/ATx  To:1n/1/1Rx
+                    val txValue = resultArray[1].split("-")
+                    if (txValue.size != 3) {
+                        toast("跳纤二维码的跳纤格式不正确，应为：2N-TX-01 这种格式")
+                        return
+                    }
+                    val txName = txValue[1] + "-" + txValue[2]
+                    searchTXXXData(txName, panelId)
                 }
-            } else if (resultArray.size == 6) {
-//                if (resultArray[1].contains("-TX-").not()) {
-                // 解析长度为6说明是尾缆的纤芯和跳纤二维码  JSNJ22TSB/WL1101-2/2N/3n/10/BTx
-                // 二维码详情： No:WL1101-2  From: 2N/3n/10/BTx To:3N/4-2n/10/BRx
-                searchWLXXData(resultArray[1], panelId)
-            } else if (resultArray.size == 5) {
-                // 跳纤缆二维码结构 ：     JSNT50RDB/1A-TX-01/1n/10/ETx     TX-01
-                // 二维码详情： No:2N-Tx-01  From: 3n/7/ATx  To:1n/1/1Rx
-                val txValue = resultArray[1].split("-")
-                if (txValue.size != 3) {
-                    toast("跳纤二维码的跳纤格式不正确，应为：2N-TX-01 这种格式")
-                    return
-                }
-                val txName = txValue[1] + "-" + txValue[2]
-                searchTXXXData(txName, panelId)
             }
         } else {
             toast("二维码数据格式有误")

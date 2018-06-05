@@ -1,5 +1,6 @@
 package com.shenrui.label.biaoqian.ui.fragment
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
 import android.util.Log
@@ -51,6 +52,7 @@ class DeviceFragment : BaseFragment(), FragmentBackHandler {
 
     }
 
+    @SuppressLint("SetTextI18n")
     override fun lazyLoad() {
         img_back.setOnClickListener {
             activity?.supportFragmentManager?.popBackStack()
