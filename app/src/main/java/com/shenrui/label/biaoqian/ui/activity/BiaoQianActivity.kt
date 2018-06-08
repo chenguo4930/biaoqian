@@ -709,14 +709,14 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
             } else {
                 tailFiberNumber = connectionNameArray[size - 1]
 
-                for (i in 0 until size) {
+                for (i in 0 until size - 1) {
                     tailCableNumber += connectionNameArray[i]
                     tailCableNumber += "-"
                 }
-                tailCableNumber.subSequence(0, tailCableNumber.length - 1)
+                tailCableNumber = tailCableNumber.substring(0, tailCableNumber.length - 1)
             }
 
-            logE("---------------tailCableNumber=$tailCableNumber--")
+            logE("---------------tailCableNumber=$tailCableNumber")
 
             val wlList = wlConnectionList.filter {
                 it.wlTailFiber.tail_cable_number == tailCableNumber
