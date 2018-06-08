@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import com.shenrui.label.biaoqian.R
 import com.shenrui.label.biaoqian.mvp.model.bean.DLConnectionBean
@@ -20,8 +21,6 @@ class DLConnectionListItemRecyclerAdapter(private val context1: Context,
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val item = list[position]
         //发送端
-        holder.deviceInTv.text = item.fromDeviceName
-        holder.deviceInSignalTv.text = item.fromSignal
         holder.deviceInPortTv.text = item.fromPortNo
         holder.deviceInSignalPaiTv.text = item.fromBoardNo
         //连线
@@ -29,8 +28,11 @@ class DLConnectionListItemRecyclerAdapter(private val context1: Context,
         //接收端
         holder.deviceOutSignalPaiTv.text = item.toBoardNo
         holder.deviceOutPortTv.text = item.toPortNo
-        holder.deviceOutSignalTv.text = item.toSignal
-        holder.deviceOutTv.text = item.toDeviceName
+        if (item.internal_port_type == 1) {
+            holder.deviceOutDirection.setImageResource(R.drawable.ic_connection_right)
+        } else {
+            holder.deviceOutDirection.setImageResource(R.drawable.ic_connection_left)
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
@@ -44,15 +46,12 @@ class DLConnectionListItemRecyclerAdapter(private val context1: Context,
     }
 
     class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var deviceInTv: TextView = view.findViewById(R.id.tv_dl_device_in)
-        var deviceInSignalTv: TextView = view.findViewById(R.id.tv_dl_device_in_signal)
         var deviceInPortTv: TextView = view.findViewById(R.id.tv_dl_device_in_port)
         var deviceInSignalPaiTv: TextView = view.findViewById(R.id.tv_dl_device_in_signal_pai)
         var deviceConnectTv: TextView = view.findViewById(R.id.tv_dl_device_connect)
         var deviceOutSignalPaiTv: TextView = view.findViewById(R.id.tv_dl_device_out_signal_pai)
         var deviceOutPortTv: TextView = view.findViewById(R.id.tv_dl_device_out_port)
-        var deviceOutSignalTv: TextView = view.findViewById(R.id.tv_dl_device_out_signal)
-        var deviceOutTv: TextView = view.findViewById(R.id.tv_dl_device_out)
+        var deviceOutDirection: ImageView = view.findViewById(R.id.im_direction)
     }
 
 

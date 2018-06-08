@@ -1,31 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="40dp"
+    android:layout_height="60dp"
     android:orientation="horizontal"
-    android:weightSum="12">
-
-    <TextView
-        android:id="@+id/tv_dl_device_in"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="2"
-        android:background="@drawable/shape_rectangle_solid_ffffff_border_1dp_c0"
-        android:gravity="center"
-        android:text="设备"
-        android:textColor="@color/color_station_text"
-        android:textSize="12sp" />
-
-    <TextView
-        android:id="@+id/tv_dl_device_in_signal"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:background="@drawable/shape_rectangle_solid_ffffff_border_1dp_c0"
-        android:gravity="center"
-        android:text="信号"
-        android:textColor="@color/color_station_text"
-        android:textSize="12sp" />
+    android:weightSum="7">
 
     <TextView
         android:id="@+id/tv_dl_device_in_port"
@@ -36,44 +14,56 @@
         android:gravity="center"
         android:text="端口"
         android:textColor="@color/color_station_text"
-        android:textSize="12sp" />
-
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/tv_dl_device_in_signal_pai"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1.25"
+        android:layout_weight="1"
         android:background="@drawable/shape_rectangle_solid_ffffff_border_1dp_c0"
         android:gravity="center"
         android:text="端子排"
         android:textColor="@color/color_station_text"
-        android:textSize="12sp" />
+        android:textSize="14sp" />
 
-
-    <TextView
-        android:id="@+id/tv_dl_device_connect"
+    <RelativeLayout
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1.5"
-        android:background="@drawable/icon_connection"
-        android:gravity="center"
-        android:paddingBottom="3dp"
-        android:paddingTop="3dp"
-        android:text="连线dl"
-        android:textColor="@color/color_station_text"
-        android:textSize="12sp" />
+        android:layout_height="match_parent"
+        android:layout_weight="3">
+
+        <TextView
+            android:id="@+id/tv_dl_device_connect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="连线dl"
+            android:textColor="@color/color_station_text"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:id="@+id/im_direction"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="5dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_connection_right" />
+    </RelativeLayout>
+
 
     <TextView
         android:id="@+id/tv_dl_device_out_signal_pai"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1.25"
+        android:layout_weight="1"
         android:background="@drawable/shape_rectangle_solid_ffffff_border_1dp_c0"
         android:gravity="center"
         android:text="端子排"
         android:textColor="@color/color_station_text"
-        android:textSize="12sp" />
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/tv_dl_device_out_port"
@@ -84,29 +74,7 @@
         android:gravity="center"
         android:text="端口"
         android:textColor="@color/color_station_text"
-        android:textSize="12sp" />
-
-    <TextView
-        android:id="@+id/tv_dl_device_out_signal"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:background="@drawable/shape_rectangle_solid_ffffff_border_1dp_c0"
-        android:gravity="center"
-        android:text="信号"
-        android:textColor="@color/color_station_text"
-        android:textSize="12sp" />
-
-    <TextView
-        android:id="@+id/tv_dl_device_out"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="2"
-        android:background="@drawable/shape_rectangle_solid_ffffff_border_1dp_c0"
-        android:gravity="center"
-        android:text="设备"
-        android:textColor="@color/color_station_text"
-        android:textSize="12sp" />
+        android:textSize="14sp" />
 
 </LinearLayout>
 

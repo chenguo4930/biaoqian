@@ -20,7 +20,8 @@ data class DLConnectionBean(val fromPanelName: String,
                             val toPortNo: String,
                             val toBoardNo: String,
                             val cableNo: String,
-                            val cableCoreNo: Int) : Parcelable {
+                            val cableCoreNo: Int,
+                            val internal_port_type: Int) : Parcelable {
     constructor(source: Parcel) : this(
             source.readString(),
             source.readString(),
@@ -33,6 +34,7 @@ data class DLConnectionBean(val fromPanelName: String,
             source.readString(),
             source.readString(),
             source.readString(),
+            source.readInt(),
             source.readInt()
     )
 
@@ -51,6 +53,7 @@ data class DLConnectionBean(val fromPanelName: String,
         writeString(toBoardNo)
         writeString(cableNo)
         writeInt(cableCoreNo)
+        writeInt(internal_port_type)
     }
 
     companion object {

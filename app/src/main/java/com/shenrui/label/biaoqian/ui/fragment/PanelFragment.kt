@@ -359,7 +359,7 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
                                 null, null, inSwitch!![0], it, toDevice[0], null)
                         mWLConnectionList.add(wlTxBean)
                         val wlRxBean = WLConnectionBean("Rx", tailFiberRxWL[0], panel[0].panel_name,
-                                null, null, inSwitch!![0], it, toDevice[0], null)
+                                null, null, inSwitch[0], it, toDevice[0], null)
                         mWLConnectionList.add(wlRxBean)
                     }
                 }
@@ -502,7 +502,8 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
                         terminalToBean[0].internal_device_port + "/" + toPortType,
                         terminalToBean[0].port_no.toString() + "-" + terminalToBean[0].cable_no,
                         item.cable_no,
-                        item.cable_core_no))
+                        item.cable_core_no,
+                        item.internal_port_type))
             }
 
             //解析电缆数据-------------------------end-----------------------
@@ -527,7 +528,7 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
                         progressDialog.dismiss()
                     }
 
-                    override fun onNext(dataList:String) {
+                    override fun onNext(dataList: String) {
 
                     }
                 })

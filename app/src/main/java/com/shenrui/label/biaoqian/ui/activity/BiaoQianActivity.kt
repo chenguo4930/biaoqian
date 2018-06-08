@@ -174,6 +174,7 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
                 val bundle: Bundle? = data.extras ?: return
                 val result = bundle?.getString("result")
                 toast("解析结果:$result")
+                logE("---------解析结果:$result---")
                 analysisResult(result)
             }
         }
@@ -261,7 +262,7 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
                     }
                 6 -> //                if (resultArray[1].contains("-TX-").not()) {
                     // 解析长度为6说明是尾缆的纤芯和跳纤二维码  JSNJ22TSB/WL1101-2/2N/3n/10/BTx
-                    // 二维码详情： No:WL1101-2  From: 2N/3n/10/BTx To:3N/4-2n/10/BRx
+                    // 二维码详情： No:WL1101-2  From: 2N/3n/10/BTx To:3N/4-2n/10/BRx JSNT50FHB/4E-WL-4132A-1/34E1/1-40n/1/BTx
                     searchWLXXData(resultArray[1], panelId)
                 5 -> {
                     // 跳纤缆二维码结构 ：     JSNT50RDB/1A-TX-01/1n/10/ETx     TX-01
@@ -699,12 +700,27 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
             connectionNameArray.forEach {
                 logE("-----------------connectionNameArray.is = $it-----")
             }
-            if (connectionNameArray.size != 2) {
-                it.onError(Exception())
+            val size = connectionNameArray.size
+            var tailCableNumber = ""
+            var tailFiberNumber = ""
+            if (size == 2) {
+                tailCableNumber = connectionNameArray[0]
+                tailFiberNumber = connectionNameArray[1]
+            } else {
+                tailFiberNumber = connectionNameArray[size - 1]
+
+                for (i in 0 until size) {
+                    tailCableNumber += connectionNameArray[i]
+                    tailCableNumber += "-"
+                }
+                tailCableNumber.subSequence(0, tailCableNumber.length - 1)
             }
 
+            logE("---------------tailCableNumber=$tailCableNumber--")
+
             val wlList = wlConnectionList.filter {
-                it.wlTailFiber.tail_cable_number == connectionNameArray[0] && it.wlTailFiber.tail_fiber_number.toString() == connectionNameArray[1]
+                it.wlTailFiber.tail_cable_number == tailCableNumber
+                        && it.wlTailFiber.tail_fiber_number.toString() == tailFiberNumber
             }
             logE("---------尾缆的纤芯数据-wlList[0] = ${wlList[0]}-")
             it.onNext(wlList[0])
@@ -1142,7 +1158,8 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
                         terminalToBean[0].internal_device_port + "/" + toPortType,
                         terminalToBean[0].port_no.toString() + "-" + terminalToBean[0].cable_no,
                         item.cable_no,
-                        item.cable_core_no))
+                        item.cable_core_no,
+                        item.internal_port_type))
             }
 
             //解析电缆数据-------------------------end-----------------------
