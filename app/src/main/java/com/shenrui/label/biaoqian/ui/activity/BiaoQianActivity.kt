@@ -198,7 +198,7 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
             return
         }
         val resultArray = result.split("/")
-        if (resultArray.size == 3 || resultArray.size == 6) {
+        if (resultArray.size == 3 || resultArray.size == 6 || resultArray.size == 5) {
             var subStationName = ""
             //变电站电压等级编号表JSNJ22TSB 22后面的TSB是变电站的简称，要把它解析出来
             when {
@@ -265,6 +265,7 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
                     // 二维码详情： No:WL1101-2  From: 2N/3n/10/BTx To:3N/4-2n/10/BRx JSNT50FHB/4E-WL-4132A-1/34E1/1-40n/1/BTx
                     searchWLXXData(resultArray[1], panelId)
                 5 -> {
+                    //                         JSNT50FHB/34E1-TX-05/ODF1/A/01
                     // 跳纤缆二维码结构 ：     JSNT50RDB/1A-TX-01/1n/10/ETx     TX-01
                     // 二维码详情： No:2N-Tx-01  From: 3n/7/ATx  To:1n/1/1Rx
                     val txValue = resultArray[1].split("-")
@@ -477,7 +478,6 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
                 it.tailCableNumber == txName
             }
             logE("---------跳纤的纤芯数据-txList[0] = ${txList[0]}-")
-//            item.wlTailFiber.tail_fiber_number.toString()
 
             it.onNext(txList[0])
             it.onComplete()
@@ -488,7 +488,6 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
                     }
 
                     override fun onComplete() {
-//                        toast("成功读取数据库")
                         progressDialog.dismiss()
                     }
 
