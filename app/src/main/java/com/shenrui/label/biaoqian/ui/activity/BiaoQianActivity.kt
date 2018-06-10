@@ -241,7 +241,12 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
                 }
             }
             //根据panel编号来查找panel
-            val panelList = DataBaseUtil.getPanelByCode(mDbPath!!, resultArray[2])
+            val panelList = if (resultArray.size == 5) {
+                DataBaseUtil.getPanelByCode(mDbPath!!, resultArray[1].split("-")[0])
+            } else {
+                DataBaseUtil.getPanelByCode(mDbPath!!, resultArray[2])
+            }
+
             if (panelList.isEmpty()) {
                 toast("数据库中没有找到对应的屏柜,请检查二维码是否正确")
                 return
@@ -265,9 +270,7 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
                     // 二维码详情： No:WL1101-2  From: 2N/3n/10/BTx To:3N/4-2n/10/BRx JSNT50FHB/4E-WL-4132A-1/34E1/1-40n/1/BTx
                     searchWLXXData(resultArray[1], panelId)
                 5 -> {
-                    //                         JSNT50FHB/IL2201-TX-01/ODF/A/01
-                    //                         JSNT50FHB/34E1-TX-05/ODF1/A/01
-                    // 跳纤缆二维码结构 ：     JSNT50RDB/1A-TX-01/1n/10/ETx     TX-01
+                    // 跳纤缆二维码结构 ：     JSNT50RDB/1A-TX-01/1n/10/ETx   1A：屏柜Code  TX-01:跳纤
                     // 二维码详情： No:2N-Tx-01  From: 3n/7/ATx  To:1n/1/1Rx
                     val txValue = resultArray[1].split("-")
                     if (txValue.size != 3) {
