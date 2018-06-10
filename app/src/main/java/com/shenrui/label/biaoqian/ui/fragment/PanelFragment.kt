@@ -385,15 +385,8 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
             //解析光缆数据-------------------------start-----------------------
             val odfDataList = DataBaseUtil.getODF(mPath!!)
             val odfConnectionDataList = DataBaseUtil.getODFConnection(mPath!!)
-            //筛选出屏柜中的所有odf
-            val odfList = ArrayList<ODF>()
-            odfDataList.forEach {
-                if (it.panel_id == mPanelBean?.panel_id) {
-                    odfList.add(it)
-                }
-            }
-            //帅选出所有odf的连接信息
-            odfList.forEach out@{
+            //筛选出屏柜中的所有odf  //帅选出所有odf的连接信息
+            odfDataList.filter { it.panel_id == mPanelBean?.panel_id }.forEach out@{
                 odfConnectionDataList.forEach { item ->
                     if (item.odf_id == it.odf_id) {
                         var inDeviceName = ""

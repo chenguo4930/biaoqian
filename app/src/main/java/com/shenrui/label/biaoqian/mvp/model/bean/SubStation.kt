@@ -236,7 +236,7 @@ data class ODF(val odf_id: Int, val panel_id: Int, val odf_code: String,
  *  内连装置类型（1000:交换机   1001:装置）
  *  内连装置ID
  *  内连端口名称
- *  内连端口收发类型
+ *  内连端口收发类型 0:Rx  1:Tx
  *  内连跳纤编号
  *  对侧光配ID
  */
