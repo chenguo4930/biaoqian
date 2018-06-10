@@ -7,14 +7,10 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
-import com.luckongo.tthd.mvp.model.bean.Inputs
 import com.shenrui.label.biaoqian.R
 import com.shenrui.label.biaoqian.mvp.model.bean.ConnectionBean
-import com.shenrui.label.biaoqian.mvp.model.bean.PanelBean
 import com.shenrui.label.biaoqian.utils.Util
-import kotlinx.android.synthetic.main.fragment_gx_connection.*
 
 /**
  * 设备间信息连接的 Adapter 最后一个图
