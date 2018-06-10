@@ -674,23 +674,23 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
             return
         }
 
-        if (mWLBean != null && !(mWLBean!!.inDevice != null && mWLBean!!.toDevice != null
-                        || mWLBean!!.inSwitch != null && mWLBean!!.toSwitch != null)) {
+        if (mWLBean != null && (mWLBean!!.inDevice != null && mWLBean!!.toSwitch != null
+                        || mWLBean!!.inSwitch != null && mWLBean!!.toDevice != null)) {
             //如果是尾缆，并且是装置与交换机，
             mAdapter2 = ConnectionListItem2RecyclerAdapter(activity!!, mConnectionList2)
             connectionTXRV.run {
                 layoutManager = LinearLayoutManager(activity)
                 adapter = mAdapter
             }
-        } else if (mTXBean != null && !(mTXBean!!.inType == "1001" && mTXBean!!.toType == "1001"
-                        || mTXBean!!.inType == "1000" && mTXBean!!.toType == "1000")) {
+        } else if (mTXBean != null && (mTXBean!!.inType == "1001" && mTXBean!!.toType == "1000"
+                        || mTXBean!!.inType == "1000" && mTXBean!!.toType == "1001")) {
             //如果是跳纤，并且是装置与交换机，
             mAdapter2 = ConnectionListItem2RecyclerAdapter(activity!!, mConnectionList2)
             connectionTXRV.run {
                 layoutManager = LinearLayoutManager(activity)
                 adapter = mAdapter
             }
-        } else if (mGLBean != null && !(mGLBean!!.odfConnection.internal_device_type == 1001 && mGLBean!!.odfOutConnection.internal_device_type == 1000
+        } else if (mGLBean != null && (mGLBean!!.odfConnection.internal_device_type == 1001 && mGLBean!!.odfOutConnection.internal_device_type == 1000
                         || mGLBean!!.odfConnection.internal_device_type == 1000 && mGLBean!!.odfOutConnection.internal_device_type == 1001)) {
             //如果是光缆，并且是装置与交换机，
             mAdapter2 = ConnectionListItem2RecyclerAdapter(activity!!, mConnectionList2)
