@@ -120,6 +120,21 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
                 tvOutDeviceName.text = mWLBean!!.toSwitch!!.switch_name
                 tvOutModeTitle.text = mWLBean!!.toSwitch!!.switch_code
             }
+
+            if (mWLBean!!.inDevice != null && mWLBean!!.toSwitch != null
+                    || mWLBean!!.inSwitch != null && mWLBean!!.toDevice != null) {
+                //其中一边为装置，另外一边为交换机
+                connectionRV.visibility = View.GONE
+                outDeviceCard.visibility = View.GONE
+                connectionRV.visibility = View.VISIBLE
+                if (mWLBean!!.inDevice != null && mWLBean!!.toSwitch != null) {
+                    tvInDeviceName.text = mWLBean!!.inDevice!!.device_desc
+                    tvInModeTitle.text = mWLBean!!.inDevice!!.device_iedname
+                } else if (mWLBean!!.inSwitch != null && mWLBean!!.toDevice != null) {
+                    tvInDeviceName.text = mWLBean!!.toDevice!!.device_desc
+                    tvInModeTitle.text = mWLBean!!.toDevice!!.device_iedname
+                }
+            }
         }
 
         //----------如果是光缆连线点击进来------------
@@ -181,46 +196,143 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
 
             //--------------------尾缆连线点击进来-----start----------------------
             if (mWLBean != null) {
-                //输出装置的id，输入装置的id
-                val inModelId = if (mWLBean!!.inDevice != null) {
-                    mWLBean!!.inDevice!!.device_id.toString()
-                } else {
-                    mWLBean!!.inSwitch!!.switch_id.toString()
-                }
-                //输出端口Tx
-                val inModelPort = if (mWLBean!!.inDeviceConnection != null) {
-                    mWLBean!!.inDeviceConnection!!.from_port
-                } else {
-                    mWLBean!!.inSwitchConnection!!.from_port
-                }
-                val toModelId = if (mWLBean!!.toDevice != null) {
-                    mWLBean!!.toDevice!!.device_id.toString()
-                } else {
-                    mWLBean!!.toSwitch!!.switch_id.toString()
-                }
-                //输入端口Rx
-                val toModelPort = if (mWLBean!!.inDeviceConnection != null) {
-                    mWLBean!!.inDeviceConnection!!.to_port
-                } else {
-                    mWLBean!!.inSwitchConnection!!.to_port
-                }
-                //从数据库中获取inModel 到outModel的连接信息
-                val inList = DataBaseUtil.getInputsFilter(mDbPath!!, inModelId, toModelId, toModelPort)
-                //从数据库中获取outModel 到intModel的连接信息
-                val outList = DataBaseUtil.getInputsFilter(mDbPath!!, toModelId, inModelId, inModelPort)
-                Log.e("----", "---------mWLBean:$mWLBean")
-                if (mWLBean!!.type == "Tx") {
-                    inList.forEach {
-                        Log.e("----", "---------inList each:$it")
-                        it.isInput = true
+                if (mWLBean!!.inDevice != null && mWLBean!!.toDevice != null) {
+                    //输出装置的id，输入装置的id
+                    val inModelId = mWLBean!!.inDevice!!.device_id.toString()
+                    //输出端口Tx
+                    val inModelPort = mWLBean!!.inDeviceConnection!!.from_port
+                    val toModelId = mWLBean!!.toDevice!!.device_id.toString()
+                    //输入端口Rx
+                    val toModelPort = mWLBean!!.inDeviceConnection!!.to_port
+
+                    //从数据库中获取inModel 到outModel的连接信息
+                    val inList = DataBaseUtil.getInputsFilter(mDbPath!!, inModelId, toModelId, toModelPort)
+                    //从数据库中获取outModel 到intModel的连接信息
+                    val outList = DataBaseUtil.getInputsFilter(mDbPath!!, toModelId, inModelId, inModelPort)
+                    Log.e("----", "---------mWLBean:$mWLBean")
+                    if (mWLBean!!.type == "Tx") {
+                        inList.forEach {
+                            Log.e("----", "---------inList each:$it")
+                            it.isInput = true
+                        }
+                        mConnectionList.addAll(inList)
+                    } else {
+                        outList.forEach {
+                            Log.e("----", "---------outList each:$it")
+                            it.isInput = false
+                        }
+                        mConnectionList.addAll(outList)
                     }
-                    mConnectionList.addAll(inList)
-                } else {
-                    outList.forEach {
-                        Log.e("----", "---------outList each:$it")
-                        it.isInput = false
+                } else if (mWLBean!!.inDevice != null && mWLBean!!.toSwitch != null) {
+                    if (mWLBean!!.type == "Tx") {
+                        //发 Tx
+                        DataBaseUtil.getInputsFilterFrom(mDbPath!!, mWLBean!!.inDevice!!.device_id.toString())
+                                .forEach { item ->
+                                    val toDevice = deviceDateList.filter { it.device_id == item.model_id_to }
+                                    item.isInput = true
+
+                                    if (switchDataConnection.none { item.port_to == it.from_port }.not()) {
+                                        //如果在交换机连接里面找到了，说明是连的交换机
+                                        if (mConnectionList2.none { toDevice[0].device_desc == it.outDeviceName }) {
+                                            val inputList = ArrayList<Inputs>()
+                                            inputList.add(item)
+                                            ConnectionBean(toDevice[0].device_desc, toDevice[0].device_code, inputList)
+                                        } else {
+                                            mConnectionList2.filter { toDevice[0].device_desc == it.outDeviceName }[0]
+                                                    .inputList.add(item)
+                                        }
+                                    } else {
+                                        //在交换机连接信息的表里面没有找到，就去odfConnection找
+                                        val odfConnection = odfConnectionDataList.filter {
+                                            it.internal_device_type == 1001 && it.internal_device_id == item.model_id_to
+                                        }
+                                        if (odfConnection.isNotEmpty()) {
+                                            if (odfConnectionDataList.filter { it.odf_id == odfConnection[0].external_odf_id }[0].internal_device_type == 1000) {
+                                                //odf外接的设备为交换机
+                                                if (mConnectionList2.none { toDevice[0].device_desc == it.outDeviceName }) {
+                                                    val inputList = ArrayList<Inputs>()
+                                                    inputList.add(item)
+                                                    ConnectionBean(toDevice[0].device_desc, toDevice[0].device_code, inputList)
+                                                } else {
+                                                    mConnectionList2.filter { toDevice[0].device_desc == it.outDeviceName }[0]
+                                                            .inputList.add(item)
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                    } else {
+                        //收 "Rx"
+                        DataBaseUtil.getInputsFilterTo(mDbPath!!, mWLBean!!.inDevice!!.device_id.toString())
+                                .forEach { item ->
+                                    val fromDevice = deviceDateList.filter { it.device_id == item.model_id_from }
+                                    item.isInput = false
+
+                                    if (mConnectionList2.none { fromDevice[0].device_desc == it.outDeviceName }) {
+                                        val inputList = ArrayList<Inputs>()
+                                        inputList.add(item)
+                                        ConnectionBean(fromDevice[0].device_desc, fromDevice[0].device_code, inputList)
+                                    } else {
+                                        mConnectionList2.filter { fromDevice[0].device_desc == it.outDeviceName }[0]
+                                                .inputList.add(item)
+                                    }
+                                }
                     }
-                    mConnectionList.addAll(outList)
+                } else if (mWLBean!!.inSwitch != null && mWLBean!!.toDevice != null) {
+                    if (mWLBean!!.type == "Tx") {
+                        //发 Tx
+                        DataBaseUtil.getInputsFilterFrom(mDbPath!!, mWLBean!!.toDevice!!.device_id.toString())
+                                .forEach { item ->
+                                    val toDevice = deviceDateList.filter { it.device_id == item.model_id_to }
+                                    item.isInput = true
+
+                                    if (switchDataConnection.none { item.port_to == it.from_port }.not()) {
+                                        //如果在交换机连接里面找到了，说明是连的交换机
+                                        if (mConnectionList2.none { toDevice[0].device_desc == it.outDeviceName }) {
+                                            val inputList = ArrayList<Inputs>()
+                                            inputList.add(item)
+                                            ConnectionBean(toDevice[0].device_desc, toDevice[0].device_code, inputList)
+                                        } else {
+                                            mConnectionList2.filter { toDevice[0].device_desc == it.outDeviceName }[0]
+                                                    .inputList.add(item)
+                                        }
+                                    } else {
+                                        //在交换机连接信息的表里面没有找到，就去odfConnection找
+                                        val odfConnection = odfConnectionDataList.filter {
+                                            it.internal_device_type == 1001 && it.internal_device_id == item.model_id_to
+                                        }
+                                        if (odfConnection.isNotEmpty()) {
+                                            if (odfConnectionDataList.filter { it.odf_id == odfConnection[0].external_odf_id }[0].internal_device_type == 1000) {
+                                                //odf外接的设备为交换机
+                                                if (mConnectionList2.none { toDevice[0].device_desc == it.outDeviceName }) {
+                                                    val inputList = ArrayList<Inputs>()
+                                                    inputList.add(item)
+                                                    ConnectionBean(toDevice[0].device_desc, toDevice[0].device_code, inputList)
+                                                } else {
+                                                    mConnectionList2.filter { toDevice[0].device_desc == it.outDeviceName }[0]
+                                                            .inputList.add(item)
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                    } else {
+                        //收 "Rx"
+                        DataBaseUtil.getInputsFilterTo(mDbPath!!, mWLBean!!.toDevice!!.device_id.toString())
+                                .forEach { item ->
+                                    val fromDevice = deviceDateList.filter { it.device_id == item.model_id_from }
+                                    item.isInput = false
+
+                                    if (mConnectionList2.none { fromDevice[0].device_desc == it.outDeviceName }) {
+                                        val inputList = ArrayList<Inputs>()
+                                        inputList.add(item)
+                                        ConnectionBean(fromDevice[0].device_desc, fromDevice[0].device_code, inputList)
+                                    } else {
+                                        mConnectionList2.filter { fromDevice[0].device_desc == it.outDeviceName }[0]
+                                                .inputList.add(item)
+                                    }
+                                }
+                    }
                 }
             }
             //--------------------尾缆连线点击进来-----end----------------------
@@ -562,7 +674,15 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
             return
         }
 
-        if (mTXBean != null && !(mTXBean!!.inType == "1001" && mTXBean!!.toType == "1001"
+        if (mWLBean != null && !(mWLBean!!.inDevice != null && mWLBean!!.toDevice != null
+                        || mWLBean!!.inSwitch != null && mWLBean!!.toSwitch != null)) {
+            //如果是尾缆，并且是装置与交换机，
+            mAdapter2 = ConnectionListItem2RecyclerAdapter(activity!!, mConnectionList2)
+            connectionTXRV.run {
+                layoutManager = LinearLayoutManager(activity)
+                adapter = mAdapter
+            }
+        } else if (mTXBean != null && !(mTXBean!!.inType == "1001" && mTXBean!!.toType == "1001"
                         || mTXBean!!.inType == "1000" && mTXBean!!.toType == "1000")) {
             //如果是跳纤，并且是装置与交换机，
             mAdapter2 = ConnectionListItem2RecyclerAdapter(activity!!, mConnectionList2)

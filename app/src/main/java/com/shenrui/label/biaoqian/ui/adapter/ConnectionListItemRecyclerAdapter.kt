@@ -1,7 +1,6 @@
 package com.shenrui.label.biaoqian.ui.adapter
 
 import android.content.Context
-import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +9,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.luckongo.tthd.mvp.model.bean.Inputs
 import com.shenrui.label.biaoqian.R
-import com.shenrui.label.biaoqian.mvp.model.bean.PanelBean
 
 /**
  * 设备间信息连接的 Adapter 最后一个图

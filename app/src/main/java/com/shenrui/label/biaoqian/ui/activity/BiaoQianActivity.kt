@@ -265,6 +265,7 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
                     // 二维码详情： No:WL1101-2  From: 2N/3n/10/BTx To:3N/4-2n/10/BRx JSNT50FHB/4E-WL-4132A-1/34E1/1-40n/1/BTx
                     searchWLXXData(resultArray[1], panelId)
                 5 -> {
+                    //                         JSNT50FHB/IL2201-TX-01/ODF/A/01
                     //                         JSNT50FHB/34E1-TX-05/ODF1/A/01
                     // 跳纤缆二维码结构 ：     JSNT50RDB/1A-TX-01/1n/10/ETx     TX-01
                     // 二维码详情： No:2N-Tx-01  From: 3n/7/ATx  To:1n/1/1Rx

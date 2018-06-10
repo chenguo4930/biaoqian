@@ -1,6 +1,7 @@
 package com.shenrui.label.biaoqian.ui.adapter
 
 import android.content.Context
+import android.support.v7.widget.CardView
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -12,6 +13,8 @@ import com.luckongo.tthd.mvp.model.bean.Inputs
 import com.shenrui.label.biaoqian.R
 import com.shenrui.label.biaoqian.mvp.model.bean.ConnectionBean
 import com.shenrui.label.biaoqian.mvp.model.bean.PanelBean
+import com.shenrui.label.biaoqian.utils.Util
+import kotlinx.android.synthetic.main.fragment_gx_connection.*
 
 /**
  * 设备间信息连接的 Adapter 最后一个图
@@ -30,6 +33,17 @@ class ConnectionListItem2RecyclerAdapter(private val context1: Context,
             layoutManager = LinearLayoutManager(context1)
             adapter = ConnectionListItemRecyclerAdapter(context1, item.inputList)
         }
+
+        /**
+         * 当数据长度大于了4条，就动态增加左右两边控件的高度
+         */
+        holder.outDeviceCard.apply {
+            layoutParams.height = if (item.inputList.size > 3) {
+                Util.dip2px(context1, 50 * item.inputList.size)
+            } else {
+                Util.dip2px(context1, 150)
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
@@ -46,5 +60,6 @@ class ConnectionListItem2RecyclerAdapter(private val context1: Context,
         val connectionRv: RecyclerView = view.findViewById(R.id.connectionRV)
         val outTitleTv: TextView = view.findViewById(R.id.tvOutModeTitle)
         val outDeviceNameTv: TextView = view.findViewById(R.id.tvOutDeviceName)
+        val outDeviceCard: CardView = view.findViewById(R.id.outDeviceCard)
     }
 }
