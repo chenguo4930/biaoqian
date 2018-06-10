@@ -173,13 +173,17 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
                             mTXConnectionList.add(TXConnectionBean(inDevice!![0].device_desc, inDevice[0].device_id,
                                     inDevice[0].device_iedname, toDevice[0].device_desc, toDevice[0].device_id,
                                     toDevice[0].device_iedname, "Tx", it.from_port, it.to_port,
-                                    tailFiberTx[0].tail_cable_number, tailFiberTx[0].tail_fiber_desc))
+                                    tailFiberTx[0].tail_cable_number, tailFiberTx[0].tail_fiber_desc,
+                                    "1001",
+                                    "1001"))
                         }
                         if (mTXConnectionList.none { it.tailCableNumber == tailFiberRx[0].tail_cable_number }) {
                             mTXConnectionList.add(TXConnectionBean(inDevice!![0].device_desc, inDevice[0].device_id,
                                     inDevice[0].device_iedname, toDevice[0].device_desc, toDevice[0].device_id,
                                     toDevice[0].device_iedname, "Rx", it.from_port, it.to_port,
-                                    tailFiberRx[0].tail_cable_number, tailFiberRx[0].tail_fiber_desc))
+                                    tailFiberRx[0].tail_cable_number, tailFiberRx[0].tail_fiber_desc,
+                                    "1001",
+                                    "1001"))
                         }
                     } else {
                         //找到这条连线连接的外部屏柜panel
@@ -221,13 +225,17 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
                             mTXConnectionList.add(TXConnectionBean(inDevice!![0].device_desc, inDevice[0].device_id,
                                     inDevice[0].device_iedname, toSwitch[0].switch_name, toSwitch[0].switch_id,
                                     toSwitch[0].switch_code, "Tx", it.from_port, it.to_port,
-                                    tailFiberTx[0].tail_cable_number, tailFiberTx[0].tail_fiber_desc))
+                                    tailFiberTx[0].tail_cable_number, tailFiberTx[0].tail_fiber_desc,
+                                    "1001",
+                                    "1000"))
                         }
                         if (mTXConnectionList.none { it.tailCableNumber == tailFiberRx[0].tail_cable_number }) {
                             mTXConnectionList.add(TXConnectionBean(inDevice!![0].device_desc, inDevice[0].device_id,
                                     inDevice[0].device_iedname, toSwitch[0].switch_name, toSwitch[0].switch_id,
                                     toSwitch[0].switch_code, "Rx", it.from_port, it.to_port,
-                                    tailFiberRx[0].tail_cable_number, tailFiberRx[0].tail_fiber_desc))
+                                    tailFiberRx[0].tail_cable_number, tailFiberRx[0].tail_fiber_desc,
+                                    "1001",
+                                    "1000"))
                         }
                     } else {
                         //找到这条连线连接的外部屏柜panel
@@ -245,7 +253,7 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
                         val wlTxBean = WLConnectionBean("Tx", tailFiberTxWL[0], panel[0].panel_name,
                                 inDevice!![0], it, null, null, null, toSwitch[0])
                         val wlRxBean = WLConnectionBean("Rx", tailFiberRxWL[0], panel[0].panel_name,
-                                inDevice!![0], it, null, null, null, toSwitch[0])
+                                inDevice[0], it, null, null, null, toSwitch[0])
 
                         mWLConnectionList.add(wlTxBean)
                         mWLConnectionList.add(wlRxBean)
@@ -287,13 +295,17 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
                             mTXConnectionList.add(TXConnectionBean(inSwitch!![0].switch_name, inSwitch[0].switch_id,
                                     inSwitch[0].switch_code, toSwitch[0].switch_name, toSwitch[0].switch_id,
                                     toSwitch[0].switch_code, "Tx", it.from_port, it.to_port,
-                                    tailFiberTx[0].tail_cable_number, tailFiberTx[0].tail_fiber_desc))
+                                    tailFiberTx[0].tail_cable_number, tailFiberTx[0].tail_fiber_desc,
+                                    "1000",
+                                    "1000"))
                         }
                         if (mTXConnectionList.none { it.tailCableNumber == tailFiberRx[0].tail_cable_number }) {
                             mTXConnectionList.add(TXConnectionBean(inSwitch!![0].switch_name, inSwitch[0].switch_id,
                                     inSwitch[0].switch_code, toSwitch[0].switch_name, toSwitch[0].switch_id,
                                     toSwitch[0].switch_code, "Rx", it.from_port, it.to_port,
-                                    tailFiberRx[0].tail_cable_number, tailFiberRx[0].tail_fiber_desc))
+                                    tailFiberRx[0].tail_cable_number, tailFiberRx[0].tail_fiber_desc,
+                                    "1000",
+                                    "1000"))
                         }
                     } else {
                         //找到这条连线连接的外部屏柜panel
@@ -335,13 +347,17 @@ class PanelFragment : BaseFragment(), FragmentBackHandler {
                             mTXConnectionList.add(TXConnectionBean(inSwitch!![0].switch_name, inSwitch[0].switch_id,
                                     inSwitch[0].switch_code, toDevice[0].device_desc, toDevice[0].device_id,
                                     toDevice[0].device_iedname, "Tx", it.from_port, it.to_port,
-                                    tailFiberTx[0].tail_cable_number, tailFiberTx[0].tail_fiber_desc))
+                                    tailFiberTx[0].tail_cable_number, tailFiberTx[0].tail_fiber_desc,
+                                    "1000",
+                                    "1001"))
                         }
                         if (mTXConnectionList.none { it.tailCableNumber == tailFiberTx[0].tail_cable_number }) {
                             mTXConnectionList.add(TXConnectionBean(inSwitch!![0].switch_name, inSwitch[0].switch_id,
                                     inSwitch[0].switch_code, toDevice[0].device_desc, toDevice[0].device_id,
                                     toDevice[0].device_iedname, "Rx", it.from_port, it.to_port,
-                                    tailFiberRx[0].tail_cable_number, tailFiberRx[0].tail_fiber_desc))
+                                    tailFiberRx[0].tail_cable_number, tailFiberRx[0].tail_fiber_desc,
+                                    "1000",
+                                    "1001"))
                         }
                     } else {
                         //找到这条连线连接的外部屏柜panel

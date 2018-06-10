@@ -33,6 +33,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
+        android:layout_marginBottom="3dp"
         android:layout_marginTop="3dp"
         android:layout_weight="2"
         android:background="@drawable/shape_rectangle_solid_ffffff_border_1dp_c3"

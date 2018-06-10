@@ -17,13 +17,17 @@ data class TXConnectionBean(val inDeviceName: String,
                             val inPort: String,
                             val outPort: String,
                             val tailCableNumber: String,
-                            val desc: String) : Parcelable {
+                            val desc: String,
+                            val inType: String,
+                            val toType: String) : Parcelable {
     constructor(source: Parcel) : this(
             source.readString(),
             source.readInt(),
             source.readString(),
             source.readString(),
             source.readInt(),
+            source.readString(),
+            source.readString(),
             source.readString(),
             source.readString(),
             source.readString(),
@@ -46,6 +50,8 @@ data class TXConnectionBean(val inDeviceName: String,
         writeString(outPort)
         writeString(tailCableNumber)
         writeString(desc)
+        writeString(inType)
+        writeString(toType)
     }
 
     companion object {

@@ -445,6 +445,65 @@ class DataBaseUtil {
         }
 
         /**
+         * from: 输出设备
+         */
+        fun getInputsFilterFrom(dbPath: String, from: String): ArrayList<Inputs> {
+            val database = SQLiteDatabase.openOrCreateDatabase(dbPath, null)
+            val cursor = database.query("Inputs", null, "model_id_from == ?",
+                    arrayOf(from), null, null, null)
+            val inputsList = ArrayList<Inputs>()
+            while (cursor.moveToNext()) {
+                val model_id_from = cursor.getInt(cursor.getColumnIndex("model_id_from"))
+                val from_index = cursor.getInt(cursor.getColumnIndex("from_index"))
+                val model_id_to = cursor.getInt(cursor.getColumnIndex("model_id_to"))
+                val to_index = cursor.getInt(cursor.getColumnIndex("to_index"))
+                val is_goose = cursor.getInt(cursor.getColumnIndex("is_goose"))
+                val p2p = cursor.getInt(cursor.getColumnIndex("p2p"))
+                val in_addr = cursor.getString(cursor.getColumnIndex("in_addr"))
+                val desc_to = cursor.getString(cursor.getColumnIndex("desc_to"))
+                val out_addr = cursor.getString(cursor.getColumnIndex("out_addr"))
+                val desc_from = cursor.getString(cursor.getColumnIndex("desc_from"))
+                val input_desc = cursor.getString(cursor.getColumnIndex("input_desc"))
+                val port_to = cursor.getString(cursor.getColumnIndex("port_to"))
+
+                inputsList.add(Inputs(model_id_from, from_index, model_id_to, to_index, is_goose,
+                        p2p, in_addr, desc_to, out_addr, desc_from, input_desc, port_to))
+            }
+            cursor.close()
+            return inputsList
+        }
+
+        /**
+         * to: 输出到设备
+         */
+        fun getInputsFilterTo(dbPath: String, to: String): ArrayList<Inputs> {
+            val database = SQLiteDatabase.openOrCreateDatabase(dbPath, null)
+            val cursor = database.query("Inputs", null, "model_id_to == ?",
+                    arrayOf(to), null, null, null)
+            val inputsList = ArrayList<Inputs>()
+            while (cursor.moveToNext()) {
+                val model_id_from = cursor.getInt(cursor.getColumnIndex("model_id_from"))
+                val from_index = cursor.getInt(cursor.getColumnIndex("from_index"))
+                val model_id_to = cursor.getInt(cursor.getColumnIndex("model_id_to"))
+                val to_index = cursor.getInt(cursor.getColumnIndex("to_index"))
+                val is_goose = cursor.getInt(cursor.getColumnIndex("is_goose"))
+                val p2p = cursor.getInt(cursor.getColumnIndex("p2p"))
+                val in_addr = cursor.getString(cursor.getColumnIndex("in_addr"))
+                val desc_to = cursor.getString(cursor.getColumnIndex("desc_to"))
+                val out_addr = cursor.getString(cursor.getColumnIndex("out_addr"))
+                val desc_from = cursor.getString(cursor.getColumnIndex("desc_from"))
+                val input_desc = cursor.getString(cursor.getColumnIndex("input_desc"))
+                val port_to = cursor.getString(cursor.getColumnIndex("port_to"))
+
+                inputsList.add(Inputs(model_id_from, from_index, model_id_to, to_index, is_goose,
+                        p2p, in_addr, desc_to, out_addr, desc_from, input_desc, port_to))
+            }
+            cursor.close()
+            return inputsList
+        }
+
+
+        /**
          * 查找TerminalPhysconn
          * val model_id: Int, val port: String, val plate_id: Int,
         val rt_type: Int, val descinfo: String
