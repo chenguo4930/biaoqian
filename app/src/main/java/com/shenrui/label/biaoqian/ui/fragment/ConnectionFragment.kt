@@ -62,7 +62,6 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
     private val mConnectionList2 = ArrayList<ConnectionBean>()
 
     private lateinit var mAdapter: ConnectionListItemRecyclerAdapter
-    private lateinit var mAdapter2: ConnectionListItem2RecyclerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -677,26 +676,23 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
         if (mWLBean != null && (mWLBean!!.inDevice != null && mWLBean!!.toSwitch != null
                         || mWLBean!!.inSwitch != null && mWLBean!!.toDevice != null)) {
             //如果是尾缆，并且是装置与交换机，
-            mAdapter2 = ConnectionListItem2RecyclerAdapter(activity!!, mConnectionList2)
             connectionTXRV.run {
                 layoutManager = LinearLayoutManager(activity)
-                adapter = mAdapter
+                adapter = ConnectionListItem2RecyclerAdapter(activity!!, mConnectionList2)
             }
         } else if (mTXBean != null && (mTXBean!!.inType == "1001" && mTXBean!!.toType == "1000"
                         || mTXBean!!.inType == "1000" && mTXBean!!.toType == "1001")) {
             //如果是跳纤，并且是装置与交换机，
-            mAdapter2 = ConnectionListItem2RecyclerAdapter(activity!!, mConnectionList2)
             connectionTXRV.run {
                 layoutManager = LinearLayoutManager(activity)
-                adapter = mAdapter
+                adapter = ConnectionListItem2RecyclerAdapter(activity!!, mConnectionList2)
             }
         } else if (mGLBean != null && (mGLBean!!.odfConnection.internal_device_type == 1001 && mGLBean!!.odfOutConnection.internal_device_type == 1000
                         || mGLBean!!.odfConnection.internal_device_type == 1000 && mGLBean!!.odfOutConnection.internal_device_type == 1001)) {
             //如果是光缆，并且是装置与交换机，
-            mAdapter2 = ConnectionListItem2RecyclerAdapter(activity!!, mConnectionList2)
             connectionTXRV.run {
                 layoutManager = LinearLayoutManager(activity)
-                adapter = mAdapter
+                adapter = ConnectionListItem2RecyclerAdapter(activity!!, mConnectionList2)
             }
         } else {
             mAdapter = ConnectionListItemRecyclerAdapter(activity!!, mConnectionList)
