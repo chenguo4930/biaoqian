@@ -148,7 +148,7 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
                 //其中一边为装置，另外一边为交换机
                 connectionRV.visibility = View.GONE
                 outDeviceCard.visibility = View.GONE
-                connectionRV.visibility = View.VISIBLE
+                connectionTXRV.visibility = View.VISIBLE
                 if (mGLBean!!.odfConnection.internal_device_type == 1001 && mGLBean!!.odfOutConnection.internal_device_type == 1000) {
                     tvInDeviceName.text = mGLBean!!.inDeviceName
                     tvInModeTitle.text = mGLBean!!.inDeviceCode
@@ -172,7 +172,7 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
                 //其中一边为装置，另外一边为交换机
                 connectionRV.visibility = View.GONE
                 outDeviceCard.visibility = View.GONE
-                connectionRV.visibility = View.VISIBLE
+                connectionTXRV.visibility = View.VISIBLE
                 if (mTXBean!!.inType == "1001") {
                     tvInDeviceName.text = mTXBean!!.inDeviceName
                     tvInModeTitle.text = mTXBean!!.inDeviceCode
@@ -230,7 +230,7 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
                                     val toDevice = deviceDateList.filter { it.device_id == item.model_id_to }
                                     item.isInput = true
 
-                                    if (switchDataConnection.none { item.port_to == it.from_port }.not()) {
+                                    if (switchDataConnection.none { item.port_to == it.to_port }.not()) {
                                         //如果在交换机连接里面找到了，说明是连的交换机
                                         if (mConnectionList2.none { toDevice[0].device_desc == it.outDeviceName }) {
                                             val inputList = ArrayList<Inputs>()
@@ -285,7 +285,7 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
                                     val toDevice = deviceDateList.filter { it.device_id == item.model_id_to }
                                     item.isInput = true
 
-                                    if (switchDataConnection.none { item.port_to == it.from_port }.not()) {
+                                    if (switchDataConnection.none { item.port_to == it.to_port }.not()) {
                                         //如果在交换机连接里面找到了，说明是连的交换机
                                         if (mConnectionList2.none { toDevice[0].device_desc == it.outDeviceName }) {
                                             val inputList = ArrayList<Inputs>()
@@ -381,7 +381,7 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
                                         val toDevice = deviceDateList.filter { it.device_id == item.model_id_to }
                                         item.isInput = true
 
-                                        if (switchDataConnection.none { item.port_to == it.from_port }.not()) {
+                                        if (switchDataConnection.none { item.port_to == it.to_port }.not()) {
                                             //如果在交换机连接里面找到了，说明是连的交换机
                                             if (mConnectionList2.none { toDevice[0].device_desc == it.outDeviceName }) {
                                                 val inputList = ArrayList<Inputs>()
@@ -436,7 +436,7 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
                                         val toDevice = deviceDateList.filter { it.device_id == item.model_id_to }
                                         item.isInput = true
 
-                                        if (switchDataConnection.none { item.port_to == it.from_port }.not()) {
+                                        if (switchDataConnection.none { item.port_to == it.to_port }.not()) {
                                             //如果在交换机连接里面找到了，说明是连的交换机
                                             if (mConnectionList2.none { toDevice[0].device_desc == it.outDeviceName }) {
                                                 val inputList = ArrayList<Inputs>()
@@ -532,7 +532,7 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
                                         val toDevice = deviceDateList.filter { it.device_id == item.model_id_to }
                                         item.isInput = true
 
-                                        if (switchDataConnection.none { item.port_to == it.from_port }.not()) {
+                                        if (switchDataConnection.none { item.port_to == it.to_port }.not()) {
                                             //如果在交换机连接里面找到了，说明是连的交换机
                                             if (mConnectionList2.none { toDevice[0].device_desc == it.outDeviceName }) {
                                                 val inputList = ArrayList<Inputs>()
@@ -606,7 +606,7 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
                                         val toDevice = deviceDateList.filter { it.device_id == item.model_id_to }
                                         item.isInput = true
 
-                                        if (switchDataConnection.none { item.port_to == it.from_port }.not()) {
+                                        if (switchDataConnection.none { item.port_to == it.to_port }.not()) {
                                             //如果在交换机连接里面找到了，说明是连的交换机
                                             if (mConnectionList2.none { toDevice[0].device_desc == it.outDeviceName }) {
                                                 val inputList = ArrayList<Inputs>()
@@ -673,26 +673,23 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
             return
         }
 
-        if (mWLBean != null && (mWLBean!!.inDevice != null && mWLBean!!.toSwitch != null
-                        || mWLBean!!.inSwitch != null && mWLBean!!.toDevice != null)) {
+        if (mWLBean != null && mConnectionList2.isNotEmpty()) {
             logE("----mWLBean------mConnectionList2.size = ${mConnectionList2.size}--mConnectionList2=$mConnectionList2--")
             //如果是尾缆，并且是装置与交换机，
             connectionTXRV.run {
                 layoutManager = LinearLayoutManager(activity)
                 adapter = ConnectionListItem2RecyclerAdapter(activity!!, mConnectionList2)
             }
-        } else if (mTXBean != null && (mTXBean!!.inType == "1001" && mTXBean!!.toType == "1000"
-                        || mTXBean!!.inType == "1000" && mTXBean!!.toType == "1001")) {
-            logE("----mTXBean------mConnectionList2.size = ${mConnectionList2.size}--mConnectionList2=$mConnectionList2---")
-            //如果是跳纤，并且是装置与交换机，
+        } else if (mGLBean != null && mConnectionList2.isNotEmpty()) {
+            logE("----mGLBean------mConnectionList2.size = ${mConnectionList2.size}--mConnectionList2=$mConnectionList2---")
+            //如果是光缆，并且是装置与交换机，
             connectionTXRV.run {
                 layoutManager = LinearLayoutManager(activity)
                 adapter = ConnectionListItem2RecyclerAdapter(activity!!, mConnectionList2)
             }
-        } else if (mGLBean != null && (mGLBean!!.odfConnection.internal_device_type == 1001 && mGLBean!!.odfOutConnection.internal_device_type == 1000
-                        || mGLBean!!.odfConnection.internal_device_type == 1000 && mGLBean!!.odfOutConnection.internal_device_type == 1001)) {
-            logE("----mGLBean------mConnectionList2.size = ${mConnectionList2.size}--mConnectionList2=$mConnectionList2---")
-            //如果是光缆，并且是装置与交换机，
+        } else if (mTXBean != null && mConnectionList2.isNotEmpty()) {
+            logE("----mTXBean------mConnectionList2.size = ${mConnectionList2.size}--mConnectionList2=$mConnectionList2---")
+            //如果是跳纤，并且是装置与交换机，
             connectionTXRV.run {
                 layoutManager = LinearLayoutManager(activity)
                 adapter = ConnectionListItem2RecyclerAdapter(activity!!, mConnectionList2)
@@ -706,6 +703,7 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
             }
         }
 
+
         /**
          * 当数据长度大于了4条，就动态增加左右两边控件的高度
          */
@@ -718,13 +716,18 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
             }
         }
 
+
         /**
          * 如果是1对多，左边的设备需要动态变高
          */
         var size = 0
         if (mConnectionList2.isNotEmpty()) {
             mConnectionList2.forEach {
-                size += it.inputList.size
+                size += if (it.inputList.size < 3) {
+                    3
+                } else {
+                    it.inputList.size
+                }
             }
         }
         if (size > 4) {
