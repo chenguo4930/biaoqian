@@ -7,10 +7,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import com.github.ikidou.fragmentBackHandler.BackHandlerHelper
-import com.luckongo.tthd.mvp.model.bean.DeviceConnection
-import com.luckongo.tthd.mvp.model.bean.ODF
-import com.luckongo.tthd.mvp.model.bean.ODFConnection
-import com.luckongo.tthd.mvp.model.bean.SwitchConnection
+import com.luckongo.tthd.mvp.model.bean.*
 import com.shenrui.label.biaoqian.R
 import com.shenrui.label.biaoqian.constrant.AllSubStation.Companion.subStation
 import com.shenrui.label.biaoqian.extension.logE
@@ -414,10 +411,11 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
                 switchDataConnection.forEach {
                     if (it.from_id == item.switch_id) {
                         switchConnection.add(it)
-                        Log.e("-----", "-----DeviceConnection=$it")
+                        logE("-----DeviceConnection=$it")
                     }
                 }
             }
+
             //根据每条连接线判断是否是WL还是跳纤TX
             switchConnection.forEach {
                 //如果连接到的设备是交换机
@@ -429,7 +427,6 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
                     val inSwitch = switchList.filter { item ->
                         it.from_id == item.switch_id
                     }
-
                     //如果to设备的panelId等于当前屏柜的id，说明这条deviceConnection是跳纤，如果不是就是尾缆（WL）
                     if (toSwitch[0].panel_id == panelId) {
 
@@ -457,7 +454,6 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
                         }
                     }
                 } else if (it.to_dev_type == "1001") { //如果连接到的设备是装置
-
                     //帅选出这条连线的to设备
                     val toDevice = deviceDateList.filter { item ->
                         item.device_id == it.to_id
@@ -493,13 +489,84 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
                 }
             }
             //解析跳纤数据------------------end-----------------------
-
-            val txList = txConnectionList.filter {
-                it.tailCableNumber == txName
+            var txList: List<TXConnectionBean>? = null
+            if (txConnectionList.isNotEmpty()) {
+                txList = txConnectionList!!.filter {
+                    it.tailCableNumber == txName
+                }
             }
-            logE("---------跳纤的纤芯数据-txList[0] = ${txList[0]}-")
 
-            it.onNext(txList[0])
+            if (txList != null && txList.isNotEmpty()) {
+                logE("---------跳纤的纤芯数据-txList[0] = ${txList[0]}-")
+                it.onNext(txList[0])
+            } else {
+                //如果没有找到直连的跳纤
+                val odfList = DataBaseUtil.getODFByPanelId(mDbPath!!, panelId)
+                val odfConnectionList = ArrayList<ODFConnection>()
+
+                DataBaseUtil.getODFConnection(mDbPath!!).forEach {
+                    odfList.forEach { item ->
+                        if (item.odf_id == it.odf_id) {
+                            odfConnectionList.add(it)
+                        }
+                    }
+                }
+                val odfConnectionBeanFrom = odfConnectionList.filter { it.internal_optical_fiber_number == txName }[0]
+                val odfConnectionBeanTo = DataBaseUtil.getODFConnection(mDbPath!!).filter { it.odf_id == odfConnectionBeanFrom.external_odf_id }[0]
+                val deviceFrom = if (odfConnectionBeanFrom.internal_device_type == 1001) {
+                    deviceDateList.filter { it.device_id == odfConnectionBeanFrom.internal_device_id }[0]
+                } else {
+                    switchDateList.filter { it.switch_id == odfConnectionBeanFrom.internal_device_id }[0]
+                }
+                val deviceTo = if (odfConnectionBeanTo.internal_device_type == 1001) {
+                    deviceDateList.filter { it.device_id == odfConnectionBeanTo.internal_device_id }[0]
+                } else {
+                    switchDateList.filter { it.switch_id == odfConnectionBeanTo.internal_device_id }[0]
+                }
+
+                val inputType = if (odfConnectionBeanFrom.internal_rt_type == 1) {
+                    "Tx"
+                } else {
+                    "Rx"
+                }
+                val inType = if (odfConnectionBeanFrom.internal_device_type == 1001) {
+                    "1001"
+                } else {
+                    "1000"
+                }
+                val toType = if (odfConnectionBeanTo.internal_device_type == 1001) {
+                    "1001"
+                } else {
+                    "1000"
+                }
+                when {
+                    deviceFrom is Device && deviceTo is Device -> {
+                        it.onNext(TXConnectionBean(deviceFrom.device_desc, deviceFrom.device_id, deviceFrom.device_code,
+                                deviceTo.device_desc, deviceTo.device_id, deviceTo.device_code,
+                                inputType, odfConnectionBeanFrom.internal_device_port!!, odfConnectionBeanTo.internal_device_port!!,
+                                null, null, inType, toType))
+                    }
+                    deviceFrom is Device && deviceTo is Switch -> {
+                        it.onNext(TXConnectionBean(deviceFrom.device_desc, deviceFrom.device_id, deviceFrom.device_code,
+                                deviceTo.switch_name, deviceTo.switch_id, deviceTo.switch_code,
+                                inputType, odfConnectionBeanFrom.internal_device_port!!, odfConnectionBeanTo.internal_device_port!!,
+                                null, null, inType, toType))
+                    }
+                    deviceFrom is Switch && deviceTo is Device -> {
+                        it.onNext(TXConnectionBean(deviceFrom.switch_name, deviceFrom.switch_id, deviceFrom.switch_code,
+                                deviceTo.device_desc, deviceTo.device_id, deviceTo.device_code,
+                                inputType, odfConnectionBeanFrom.internal_device_port!!, odfConnectionBeanTo.internal_device_port!!,
+                                null, null, inType, toType))
+                    }
+                    deviceFrom is Switch && deviceTo is Switch -> {
+                        it.onNext(TXConnectionBean(deviceFrom.switch_name, deviceFrom.switch_id, deviceFrom.switch_code,
+                                deviceTo.switch_name, deviceTo.switch_id, deviceTo.switch_code,
+                                inputType, odfConnectionBeanFrom.internal_device_port!!, odfConnectionBeanTo.internal_device_port!!,
+                                null, null, inType, toType))
+                    }
+                }
+
+            }
             it.onComplete()
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
