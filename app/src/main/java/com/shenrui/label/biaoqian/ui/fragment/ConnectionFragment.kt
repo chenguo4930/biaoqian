@@ -125,7 +125,7 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
                 //其中一边为装置，另外一边为交换机
                 connectionRV.visibility = View.GONE
                 outDeviceCard.visibility = View.GONE
-                connectionRV.visibility = View.VISIBLE
+                connectionTXRV.visibility = View.VISIBLE
                 if (mWLBean!!.inDevice != null && mWLBean!!.toSwitch != null) {
                     tvInDeviceName.text = mWLBean!!.inDevice!!.device_desc
                     tvInModeTitle.text = mWLBean!!.inDevice!!.device_iedname
@@ -235,7 +235,7 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
                                         if (mConnectionList2.none { toDevice[0].device_desc == it.outDeviceName }) {
                                             val inputList = ArrayList<Inputs>()
                                             inputList.add(item)
-                                            ConnectionBean(toDevice[0].device_desc, toDevice[0].device_code, inputList)
+                                            mConnectionList2.add(ConnectionBean(toDevice[0].device_desc, toDevice[0].device_code, inputList))
                                         } else {
                                             mConnectionList2.filter { toDevice[0].device_desc == it.outDeviceName }[0]
                                                     .inputList.add(item)
@@ -251,7 +251,7 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
                                                 if (mConnectionList2.none { toDevice[0].device_desc == it.outDeviceName }) {
                                                     val inputList = ArrayList<Inputs>()
                                                     inputList.add(item)
-                                                    ConnectionBean(toDevice[0].device_desc, toDevice[0].device_code, inputList)
+                                                    mConnectionList2.add(ConnectionBean(toDevice[0].device_desc, toDevice[0].device_code, inputList))
                                                 } else {
                                                     mConnectionList2.filter { toDevice[0].device_desc == it.outDeviceName }[0]
                                                             .inputList.add(item)
@@ -270,7 +270,7 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
                                     if (mConnectionList2.none { fromDevice[0].device_desc == it.outDeviceName }) {
                                         val inputList = ArrayList<Inputs>()
                                         inputList.add(item)
-                                        ConnectionBean(fromDevice[0].device_desc, fromDevice[0].device_code, inputList)
+                                        mConnectionList2.add(ConnectionBean(fromDevice[0].device_desc, fromDevice[0].device_code, inputList))
                                     } else {
                                         mConnectionList2.filter { fromDevice[0].device_desc == it.outDeviceName }[0]
                                                 .inputList.add(item)
@@ -290,7 +290,7 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
                                         if (mConnectionList2.none { toDevice[0].device_desc == it.outDeviceName }) {
                                             val inputList = ArrayList<Inputs>()
                                             inputList.add(item)
-                                            ConnectionBean(toDevice[0].device_desc, toDevice[0].device_code, inputList)
+                                            mConnectionList2.add(ConnectionBean(toDevice[0].device_desc, toDevice[0].device_code, inputList))
                                         } else {
                                             mConnectionList2.filter { toDevice[0].device_desc == it.outDeviceName }[0]
                                                     .inputList.add(item)
@@ -306,7 +306,7 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
                                                 if (mConnectionList2.none { toDevice[0].device_desc == it.outDeviceName }) {
                                                     val inputList = ArrayList<Inputs>()
                                                     inputList.add(item)
-                                                    ConnectionBean(toDevice[0].device_desc, toDevice[0].device_code, inputList)
+                                                    mConnectionList2.add(ConnectionBean(toDevice[0].device_desc, toDevice[0].device_code, inputList))
                                                 } else {
                                                     mConnectionList2.filter { toDevice[0].device_desc == it.outDeviceName }[0]
                                                             .inputList.add(item)
@@ -325,7 +325,7 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
                                     if (mConnectionList2.none { fromDevice[0].device_desc == it.outDeviceName }) {
                                         val inputList = ArrayList<Inputs>()
                                         inputList.add(item)
-                                        ConnectionBean(fromDevice[0].device_desc, fromDevice[0].device_code, inputList)
+                                        mConnectionList2.add(ConnectionBean(fromDevice[0].device_desc, fromDevice[0].device_code, inputList))
                                     } else {
                                         mConnectionList2.filter { fromDevice[0].device_desc == it.outDeviceName }[0]
                                                 .inputList.add(item)
@@ -386,7 +386,7 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
                                             if (mConnectionList2.none { toDevice[0].device_desc == it.outDeviceName }) {
                                                 val inputList = ArrayList<Inputs>()
                                                 inputList.add(item)
-                                                ConnectionBean(toDevice[0].device_desc, toDevice[0].device_code, inputList)
+                                                mConnectionList2.add(ConnectionBean(toDevice[0].device_desc, toDevice[0].device_code, inputList))
                                             } else {
                                                 mConnectionList2.filter { toDevice[0].device_desc == it.outDeviceName }[0]
                                                         .inputList.add(item)
@@ -402,7 +402,7 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
                                                     if (mConnectionList2.none { toDevice[0].device_desc == it.outDeviceName }) {
                                                         val inputList = ArrayList<Inputs>()
                                                         inputList.add(item)
-                                                        ConnectionBean(toDevice[0].device_desc, toDevice[0].device_code, inputList)
+                                                        mConnectionList2.add(ConnectionBean(toDevice[0].device_desc, toDevice[0].device_code, inputList))
                                                     } else {
                                                         mConnectionList2.filter { toDevice[0].device_desc == it.outDeviceName }[0]
                                                                 .inputList.add(item)
@@ -421,7 +421,7 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
                                         if (mConnectionList2.none { fromDevice[0].device_desc == it.outDeviceName }) {
                                             val inputList = ArrayList<Inputs>()
                                             inputList.add(item)
-                                            ConnectionBean(fromDevice[0].device_desc, fromDevice[0].device_code, inputList)
+                                            mConnectionList2.add(ConnectionBean(fromDevice[0].device_desc, fromDevice[0].device_code, inputList))
                                         } else {
                                             mConnectionList2.filter { fromDevice[0].device_desc == it.outDeviceName }[0]
                                                     .inputList.add(item)
@@ -441,7 +441,7 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
                                             if (mConnectionList2.none { toDevice[0].device_desc == it.outDeviceName }) {
                                                 val inputList = ArrayList<Inputs>()
                                                 inputList.add(item)
-                                                ConnectionBean(toDevice[0].device_desc, toDevice[0].device_code, inputList)
+                                                mConnectionList2.add(ConnectionBean(toDevice[0].device_desc, toDevice[0].device_code, inputList))
                                             } else {
                                                 mConnectionList2.filter { toDevice[0].device_desc == it.outDeviceName }[0]
                                                         .inputList.add(item)
@@ -457,7 +457,7 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
                                                     if (mConnectionList2.none { toDevice[0].device_desc == it.outDeviceName }) {
                                                         val inputList = ArrayList<Inputs>()
                                                         inputList.add(item)
-                                                        ConnectionBean(toDevice[0].device_desc, toDevice[0].device_code, inputList)
+                                                        mConnectionList2.add(ConnectionBean(toDevice[0].device_desc, toDevice[0].device_code, inputList))
                                                     } else {
                                                         mConnectionList2.filter { toDevice[0].device_desc == it.outDeviceName }[0]
                                                                 .inputList.add(item)
@@ -476,7 +476,7 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
                                         if (mConnectionList2.none { fromDevice[0].device_desc == it.outDeviceName }) {
                                             val inputList = ArrayList<Inputs>()
                                             inputList.add(item)
-                                            ConnectionBean(fromDevice[0].device_desc, fromDevice[0].device_code, inputList)
+                                            mConnectionList2.add(ConnectionBean(fromDevice[0].device_desc, fromDevice[0].device_code, inputList))
                                         } else {
                                             mConnectionList2.filter { fromDevice[0].device_desc == it.outDeviceName }[0]
                                                     .inputList.add(item)
@@ -537,7 +537,7 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
                                             if (mConnectionList2.none { toDevice[0].device_desc == it.outDeviceName }) {
                                                 val inputList = ArrayList<Inputs>()
                                                 inputList.add(item)
-                                                ConnectionBean(toDevice[0].device_desc, toDevice[0].device_code, inputList)
+                                                mConnectionList2.add(ConnectionBean(toDevice[0].device_desc, toDevice[0].device_code, inputList))
                                             } else {
                                                 mConnectionList2.filter { toDevice[0].device_desc == it.outDeviceName }[0]
                                                         .inputList.add(item)
@@ -553,7 +553,7 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
                                                     if (mConnectionList2.none { toDevice[0].device_desc == it.outDeviceName }) {
                                                         val inputList = ArrayList<Inputs>()
                                                         inputList.add(item)
-                                                        ConnectionBean(toDevice[0].device_desc, toDevice[0].device_code, inputList)
+                                                        mConnectionList2.add(ConnectionBean(toDevice[0].device_desc, toDevice[0].device_code, inputList))
                                                     } else {
                                                         mConnectionList2.filter { toDevice[0].device_desc == it.outDeviceName }[0]
                                                                 .inputList.add(item)
@@ -572,7 +572,7 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
                                         if (mConnectionList2.none { fromDevice[0].device_desc == it.outDeviceName }) {
                                             val inputList = ArrayList<Inputs>()
                                             inputList.add(item)
-                                            ConnectionBean(fromDevice[0].device_desc, fromDevice[0].device_code, inputList)
+                                            mConnectionList2.add(ConnectionBean(fromDevice[0].device_desc, fromDevice[0].device_code, inputList))
                                         } else {
                                             mConnectionList2.filter { fromDevice[0].device_desc == it.outDeviceName }[0]
                                                     .inputList.add(item)
@@ -592,7 +592,7 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
                                         if (mConnectionList2.none { fromDevice[0].device_desc == it.outDeviceName }) {
                                             val inputList = ArrayList<Inputs>()
                                             inputList.add(item)
-                                            ConnectionBean(fromDevice[0].device_desc, fromDevice[0].device_code, inputList)
+                                            mConnectionList2.add(ConnectionBean(fromDevice[0].device_desc, fromDevice[0].device_code, inputList))
                                         } else {
                                             mConnectionList2.filter { fromDevice[0].device_desc == it.outDeviceName }[0]
                                                     .inputList.add(item)
@@ -611,7 +611,7 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
                                             if (mConnectionList2.none { toDevice[0].device_desc == it.outDeviceName }) {
                                                 val inputList = ArrayList<Inputs>()
                                                 inputList.add(item)
-                                                ConnectionBean(toDevice[0].device_desc, toDevice[0].device_code, inputList)
+                                                mConnectionList2.add(ConnectionBean(toDevice[0].device_desc, toDevice[0].device_code, inputList))
                                             } else {
                                                 mConnectionList2.filter { toDevice[0].device_desc == it.outDeviceName }[0]
                                                         .inputList.add(item)
@@ -627,7 +627,7 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
                                                     if (mConnectionList2.none { toDevice[0].device_desc == it.outDeviceName }) {
                                                         val inputList = ArrayList<Inputs>()
                                                         inputList.add(item)
-                                                        ConnectionBean(toDevice[0].device_desc, toDevice[0].device_code, inputList)
+                                                        mConnectionList2.add(ConnectionBean(toDevice[0].device_desc, toDevice[0].device_code, inputList))
                                                     } else {
                                                         mConnectionList2.filter { toDevice[0].device_desc == it.outDeviceName }[0]
                                                                 .inputList.add(item)
@@ -675,7 +675,7 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
 
         if (mWLBean != null && (mWLBean!!.inDevice != null && mWLBean!!.toSwitch != null
                         || mWLBean!!.inSwitch != null && mWLBean!!.toDevice != null)) {
-            logE("----mWLBean------mConnectionList2.size = ${mConnectionList2.size}-----")
+            logE("----mWLBean------mConnectionList2.size = ${mConnectionList2.size}--mConnectionList2=$mConnectionList2--")
             //如果是尾缆，并且是装置与交换机，
             connectionTXRV.run {
                 layoutManager = LinearLayoutManager(activity)
@@ -683,7 +683,7 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
             }
         } else if (mTXBean != null && (mTXBean!!.inType == "1001" && mTXBean!!.toType == "1000"
                         || mTXBean!!.inType == "1000" && mTXBean!!.toType == "1001")) {
-            logE("----mTXBean------mConnectionList2.size = ${mConnectionList2.size}-----")
+            logE("----mTXBean------mConnectionList2.size = ${mConnectionList2.size}--mConnectionList2=$mConnectionList2---")
             //如果是跳纤，并且是装置与交换机，
             connectionTXRV.run {
                 layoutManager = LinearLayoutManager(activity)
@@ -691,7 +691,7 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
             }
         } else if (mGLBean != null && (mGLBean!!.odfConnection.internal_device_type == 1001 && mGLBean!!.odfOutConnection.internal_device_type == 1000
                         || mGLBean!!.odfConnection.internal_device_type == 1000 && mGLBean!!.odfOutConnection.internal_device_type == 1001)) {
-            logE("----mGLBean------mConnectionList2.size = ${mConnectionList2.size}-----")
+            logE("----mGLBean------mConnectionList2.size = ${mConnectionList2.size}--mConnectionList2=$mConnectionList2---")
             //如果是光缆，并且是装置与交换机，
             connectionTXRV.run {
                 layoutManager = LinearLayoutManager(activity)
@@ -718,6 +718,20 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
             }
         }
 
+        /**
+         * 如果是1对多，左边的设备需要动态变高
+         */
+        var size = 0
+        if (mConnectionList2.isNotEmpty()) {
+            mConnectionList2.forEach {
+                size += it.inputList.size
+            }
+        }
+        if (size > 4) {
+            inDeviceCard.apply {
+                layoutParams.height = Util.dip2px(activity!!, 50 * size)
+            }
+        }
     }
 
     override fun onBackPressed() = BackHandlerHelper.handleBackPress(this)
