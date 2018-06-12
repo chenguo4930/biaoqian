@@ -205,23 +205,21 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
                     val toModelPort = mWLBean!!.inDeviceConnection!!.to_port
 
                     //从数据库中获取inModel 到outModel的连接信息
-                    val inList = DataBaseUtil.getInputsFilter(mDbPath!!, inModelId, toModelId, toModelPort)
                     //从数据库中获取outModel 到intModel的连接信息
-                    val outList = DataBaseUtil.getInputsFilter(mDbPath!!, toModelId, inModelId, inModelPort)
                     Log.e("----", "---------mWLBean:$mWLBean")
+
                     if (mWLBean!!.type == "Tx") {
-                        inList.forEach {
-                            Log.e("----", "---------inList each:$it")
-                            it.isInput = true
-                        }
-                        mConnectionList.addAll(inList)
+                        // 发 Tx
+                        val txList = DataBaseUtil.getInputsFilter(mDbPath!!, inModelId, toModelId, toModelPort)
+                        mConnectionList.addAll(txList)
+                        mConnectionList.forEach { it.isInput = true }
                     } else {
-                        outList.forEach {
-                            Log.e("----", "---------outList each:$it")
-                            it.isInput = false
-                        }
-                        mConnectionList.addAll(outList)
+                        // 收 Rx
+                        val rxList = DataBaseUtil.getInputsFilter(mDbPath!!, toModelId, inModelId, inModelPort)
+                        mConnectionList.addAll(rxList)
+                        mConnectionList.forEach { it.isInput = false }
                     }
+
                 } else if (mWLBean!!.inDevice != null && mWLBean!!.toSwitch != null) {
                     if (mWLBean!!.type == "Tx") {
                         //发 Tx
@@ -339,38 +337,16 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
             //--------------------光缆连线点击进来-----start----------------------
             if (mGLBean != null) {
                 if (mGLBean!!.odfConnection.internal_device_type == 1001 && mGLBean!!.odfOutConnection.internal_device_type == 1001) {
-                    val inTxTypeStr = if (mGLBean!!.odfConnection.internal_rt_type == 0) {
-                        "Rx"
+                    if (mGLBean!!.odfConnection.internal_rt_type == 1) {
+                        // 发 Tx
+                        val txList = DataBaseUtil.getInputsFilter(mDbPath!!,  mGLBean!!.inDeviceId, mGLBean!!.outDeviceId, mGLBean!!.odfOutConnection.internal_device_port!!)
+                        mConnectionList.addAll(txList)
+                        mConnectionList.forEach { it.isInput = true }
                     } else {
-                        "Tx"
-                    }
-                    val inPort = if (mGLBean!!.odfConnection.internal_rt_type == 0) {
-                        mGLBean!!.odfConnection.internal_device_port!!
-                    } else {
-                        mGLBean!!.odfOutConnection.internal_device_port!!
-                    }
-                    val toPort = if (mGLBean!!.odfOutConnection.internal_rt_type == 0) {
-                        mGLBean!!.odfOutConnection.internal_device_port!!
-                    } else {
-                        mGLBean!!.odfConnection.internal_device_port!!
-                    }
-                    //从数据库中获取inModel 到outModel的连接信息
-                    val inList = DataBaseUtil.getInputsFilter(mDbPath!!, mGLBean!!.inDeviceId, mGLBean!!.outDeviceId, toPort)
-                    //从数据库中获取outModel 到intModel的连接信息
-                    val outList = DataBaseUtil.getInputsFilter(mDbPath!!, mGLBean!!.outDeviceId, mGLBean!!.inDeviceId, inPort)
-                    Log.e("----", "---------mGLBean:$mGLBean")
-                    if (inTxTypeStr == "Tx") {
-                        inList.forEach {
-                            Log.e("----", "---------inList each:$it")
-                            it.isInput = true
-                        }
-                        mConnectionList.addAll(inList)
-                    } else {
-                        outList.forEach {
-                            Log.e("----", "---------outList each:$it")
-                            it.isInput = false
-                        }
-                        mConnectionList.addAll(outList)
+                        // 收 Rx
+                        val rxList = DataBaseUtil.getInputsFilter(mDbPath!!,  mGLBean!!.outDeviceId, mGLBean!!.inDeviceId, mGLBean!!.odfConnection.internal_device_port!!)
+                        mConnectionList.addAll(rxList)
+                        mConnectionList.forEach { it.isInput = false }
                     }
                 } else {
                     if (mGLBean!!.odfConnection.internal_device_type == 1001 && mGLBean!!.odfOutConnection.internal_device_type == 1000) {
@@ -492,33 +468,19 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
             if (mTXBean != null) {
                 if (mTXBean!!.inType == "1001" && mTXBean!!.toType == "1001") {
                     //如果跳纤是装置到装置
-                    val inPort = if (mTXBean!!.inputType == "Tx") {
-                        mTXBean!!.inPort
-                    } else {
-                        mTXBean!!.outPort
-                    }
-                    val toPort = if (mTXBean!!.inputType == "Rx") {
-                        mTXBean!!.inPort
-                    } else {
-                        mTXBean!!.outPort
-                    }
 
-                    //从数据库中获取inModel 到outModel的连接信息
-                    val inList = DataBaseUtil.getInputsFilter(mDbPath!!, mTXBean!!.inDeviceId.toString(), mTXBean!!.outDeviceId.toString(), toPort)
-                    //从数据库中获取outModel 到intModel的连接信息
-                    val outList = DataBaseUtil.getInputsFilter(mDbPath!!, mTXBean!!.outDeviceId.toString(), mTXBean!!.inDeviceId.toString(), inPort)
                     if (mTXBean!!.inputType == "Tx") {
-                        inList.forEach {
-                            Log.e("----", "-----txBean----inList each:$it")
-                            it.isInput = true
-                        }
-                        mConnectionList.addAll(inList)
+                        // 发 Tx
+                        val txList = DataBaseUtil.getInputsFilter(mDbPath!!, mTXBean!!.inDeviceId.toString(),
+                                mTXBean!!.outDeviceId.toString(), mTXBean!!.outPort)
+                        mConnectionList.addAll(txList)
+                        mConnectionList.forEach { it.isInput = true }
                     } else {
-                        outList.forEach {
-                            Log.e("----", "-----txBean----outList each:$it")
-                            it.isInput = false
-                        }
-                        mConnectionList.addAll(outList)
+                        // 收 Rx
+                        val rxList = DataBaseUtil.getInputsFilter(mDbPath!!, mTXBean!!.outDeviceId.toString(),
+                                mTXBean!!.inDeviceId.toString(), mTXBean!!.inPort)
+                        mConnectionList.addAll(rxList)
+                        mConnectionList.forEach { it.isInput = false }
                     }
                 } else {
 
