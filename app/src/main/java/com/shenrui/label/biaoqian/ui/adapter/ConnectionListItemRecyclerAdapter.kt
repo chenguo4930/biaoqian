@@ -20,12 +20,17 @@ class ConnectionListItemRecyclerAdapter(private val context1: Context,
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val item = list[position]
+        if (item.isInput) {
+            holder.inMsgTv.text = item.desc_from
+            holder.outMsgTv.text = item.desc_to
+        } else {
+            holder.inMsgTv.text = item.desc_to
+            holder.outMsgTv.text = item.desc_from
+        }
 
-        holder.inMsgTv.text = item.desc_from
-        holder.outMsgTv.text = item.desc_to
-        if (item.isInput){
+        if (item.isInput) {
             holder.directionImg.setImageResource(R.drawable.ic_connection_right)
-        }else{
+        } else {
             holder.directionImg.setImageResource(R.drawable.ic_connection_left)
         }
     }
