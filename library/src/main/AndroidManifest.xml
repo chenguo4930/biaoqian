@@ -7,7 +7,6 @@
         <activity
             android:name=".PermissionActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
             android:theme="@style/CustomTheme_Dialog"/>
 
     </application>

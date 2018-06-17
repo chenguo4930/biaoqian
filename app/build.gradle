@@ -67,10 +67,12 @@ dependencies {
     //rxBus
     implementation 'com.hwangjr.rxbus:rxbus:1.0.6'
     //ZXing扫描二维码 lib
-    implementation project(':libzxing')
+//    implementation project(':libzxing')
     //fragment返回监听
     implementation 'com.github.ikidou:FragmentBackHandler:2.1'
     implementation project(':baselib')
     //权限
     implementation project(':library')
+
+    implementation 'cn.yipianfengye.android:zxing-library:2.2'
 }

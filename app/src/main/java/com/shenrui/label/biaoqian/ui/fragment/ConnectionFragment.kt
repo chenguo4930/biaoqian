@@ -1,5 +1,6 @@
 package com.shenrui.label.biaoqian.ui.fragment
 
+import android.app.ProgressDialog
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
@@ -185,6 +186,9 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
     }
 
     private fun initData() {
+        val progressDialog = ProgressDialog.show(activity, null, "正在查询数据...", false, false)
+        progressDialog.show()
+
         Observable.create(ObservableOnSubscribe<String> {
             //数据库数据
             val switchDataConnection = DataBaseUtil.getSwitchConnection(mDbPath!!)
@@ -339,12 +343,12 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
                 if (mGLBean!!.odfConnection.internal_device_type == 1001 && mGLBean!!.odfOutConnection.internal_device_type == 1001) {
                     if (mGLBean!!.odfConnection.internal_rt_type == 1) {
                         // 发 Tx
-                        val txList = DataBaseUtil.getInputsFilter(mDbPath!!,  mGLBean!!.inDeviceId, mGLBean!!.outDeviceId, mGLBean!!.odfOutConnection.internal_device_port!!)
+                        val txList = DataBaseUtil.getInputsFilter(mDbPath!!, mGLBean!!.inDeviceId, mGLBean!!.outDeviceId, mGLBean!!.odfOutConnection.internal_device_port!!)
                         mConnectionList.addAll(txList)
                         mConnectionList.forEach { it.isInput = true }
                     } else {
                         // 收 Rx
-                        val rxList = DataBaseUtil.getInputsFilter(mDbPath!!,  mGLBean!!.outDeviceId, mGLBean!!.inDeviceId, mGLBean!!.odfConnection.internal_device_port!!)
+                        val rxList = DataBaseUtil.getInputsFilter(mDbPath!!, mGLBean!!.outDeviceId, mGLBean!!.inDeviceId, mGLBean!!.odfConnection.internal_device_port!!)
                         mConnectionList.addAll(rxList)
                         mConnectionList.forEach { it.isInput = false }
                     }
@@ -614,10 +618,12 @@ class ConnectionFragment : BaseFragment(), FragmentBackHandler {
 
                     override fun onComplete() {
 //                        toast("成功读取数据库")
+                        progressDialog.dismiss()
                         initRecycler()
                     }
 
                     override fun onError(e: Throwable) {
+                        progressDialog.dismiss()
                         toast("读取数据库失败，请检查数据库是否存在")
                     }
 

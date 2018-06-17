@@ -20,7 +20,7 @@ import com.shenrui.label.biaoqian.mvp.model.bean.WLConnectionBean
 import com.shenrui.label.biaoqian.mvp.presenter.BiaoQianPresenter
 import com.shenrui.label.biaoqian.ui.fragment.*
 import com.shenrui.label.biaoqian.utils.DataBaseUtil
-import com.xys.libzxing.zxing.activity.CaptureActivity
+import com.uuzuche.lib_zxing.activity.CodeUtils
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
 import io.reactivex.Observer
@@ -150,14 +150,8 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
      * 打开默认二维码扫描界面
      */
     private fun goToScanActivity() {
-        val intent = Intent(this@BiaoQianActivity, CaptureActivity::class.java)
+        val intent = Intent(this@BiaoQianActivity, MyCaptureActivity::class.java)
         startActivityForResult(intent, REQUEST_CODE)
-//        Handler().postDelayed({
-//            /**
-//             * 只有当摄像头打开后才能，打开闪光灯
-//             */
-//            CodeUtils.isLightEnable(true)
-//        }, 2000)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -169,7 +163,7 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
             //处理扫描结果（在界面上显示）
             if (null != data) {
                 val bundle: Bundle? = data.extras ?: return
-                val result = bundle?.getString("result")
+                val result = bundle?.getString(CodeUtils.RESULT_STRING)
                 toast("解析结果:$result")
                 logE("---------解析结果:$result---")
                 analysisResult(result)
@@ -237,6 +231,11 @@ class BiaoQianActivity : BaseActivity<BiaoQianContract.View,
                     break
                 }
             }
+            if (mDbPath == null) {
+                toast("数据库中没有找到对应的数据库文件")
+                return
+            }
+
             //根据panel编号来查找panel
             val panelList = if (resultArray.size == 5) {
                 DataBaseUtil.getPanelByCode(mDbPath!!, resultArray[1].split("-")[0])

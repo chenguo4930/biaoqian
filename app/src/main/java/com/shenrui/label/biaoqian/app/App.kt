@@ -1,6 +1,7 @@
 package com.shenrui.label.biaoqian.app
 
 import android.app.Application
+import com.uuzuche.lib_zxing.activity.ZXingLibrary
 
 /**
  * Created by cheng on 2018/3/4.
@@ -14,5 +15,6 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         mApplication = this
+        ZXingLibrary.initDisplayOpinion(this)
     }
 }
